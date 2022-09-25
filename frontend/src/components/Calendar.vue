@@ -25,9 +25,7 @@ const test = (day) => {
 };
 </script>
 <template>
-    <div class="flex justify-center p-6">
-        <div class="bg-white rounded-lg border border-gray-400 px-4 lg:px-6 py-6 lg:py-4">
-            <Calendar :attributes="calendarAttrs" @dayclick="test" class="rounded-none border-0" />
-        </div>
+    <div class="bg-white rounded-lg border border-gray-400 px-4 lg:px-6 py-6 lg:py-4">
+        <Calendar :attributes="calendarAttrs" @dayclick="test" class="rounded-none border-0" />
     </div>
 </template>
