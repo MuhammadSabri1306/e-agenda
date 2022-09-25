@@ -22,10 +22,24 @@
 		opacity: .8!important;
 		cursor: default!important;
 	}
+
+	input:focus, button:focus, select:focus {
+		@apply outline-none;
+	}
 }
 
 @layer components {
 	.container {
 		@apply mx-auto md:px-8;
+	}
+}
+
+@layer utilities {
+	.text-shadow-black {
+		text-shadow: 0 0 0.25rem rgba(0,0,0,0.2);
+	}
+
+	.white {
+		text-shadow: 0 0 0.25rem rgba(255,255,255,0.2);
 	}
 }

@@ -8,19 +8,19 @@ dns.setDefaultResultOrder("verbatim");
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode, ssrBuild }) => {
-    const config = {
-        plugins: [vue()],
-        base: (command == "serve") ? "/" : "/",
-        resolve: {
+    const plugins = [vue()],
+        base = (command == "serve") ? "/" : "/",
+        resolve = {
             alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) }
         },
-        server: { host: null, port: null }
-    };
+        server = {};
 
-    if(command === "serve")
-        copyUrl(config.server);
-    else
-        delete config.server;
+    if(command !== "serve")
+        return { plugins, base, resolve };
 
-    return config;
+    const host = server.host || "localhost",
+        port = server.port || 5173;
+    copyUrl({ host, port });
+    
+    return { plugins, base, resolve, server };
 });

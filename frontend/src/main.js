@@ -1,9 +1,14 @@
 import { createApp } from "vue";
-import "./style.css";
-import App from "./App.vue";
+
+import "v-calendar/dist/style.css";
+import { SetupCalendar } from "v-calendar";
 
 import FontAwesomeIcon from "./FontAwesomeIcon";
 
-createApp(App)
-	.component("font-awesome-icon", FontAwesomeIcon)
-	.mount("#app");
+import "./style.css";
+import App from "./App.vue";
+
+const app = createApp(App);
+app.component("font-awesome-icon", FontAwesomeIcon);
+app.use(SetupCalendar, {});
+app.mount("#app");
