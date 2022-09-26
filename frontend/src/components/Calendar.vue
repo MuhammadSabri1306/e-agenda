@@ -16,7 +16,7 @@ const calendarAttrs = [
     },
     {
         highlight: "purple",
-        dates: new Date(year, month, 26)
+        dates: new Date(year, month, 29)
     }
 ];
 
@@ -26,11 +26,15 @@ const test = (day) => {
 </script>
 <template>
     <div class="bg-white px-4 lg:px-6 py-6 lg:py-4">
-        <Calendar is-expanded :attributes="calendarAttrs" @dayclick="test" class="rounded-none border-0" />
+        <Calendar :attributes="calendarAttrs" @dayclick="test" class="rounded-none border-0" />
     </div>
 </template>
 <style>
-    .vc-days {
-        @apply aspect-square;
-    }
+/*    .vc-days {
+        @apply p-8;
+    }*/
+
+    /*.vc-day-content {
+        @apply md:text-lg md:h-24;
+    }*/
 </style>

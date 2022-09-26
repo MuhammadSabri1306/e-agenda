@@ -5,9 +5,9 @@
             <slot name="topNav"></slot>
         </div>
 
-        <div class="container">
+        <div class="basic-main">
 
-            <div id="sideNav" class="h-full">
+            <div id="sideNav" class="h-full pr-4">
                 <slot name="sideNav"></slot>
             </div>
 
@@ -28,11 +28,11 @@
         @apply flex flex-col min-h-screen;
     }
 
-    #basicWrapper .container {
+    #basicWrapper .basic-main {
         @apply grow grid grid-cols-[17rem_1fr] p-8;
     }
 
     #basicWrapper .basic-content {
-        @apply grid grid-cols-3 pl-8 gap-4 items-start;
+        @apply pl-8;
     }
 </style>

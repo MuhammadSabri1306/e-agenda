@@ -32,6 +32,10 @@
 	.container {
 		@apply mx-auto md:px-8;
 	}
+
+	.basic-card {
+		@apply rounded-2xl shadow bg-white;
+	}
 }
 
 @layer utilities {

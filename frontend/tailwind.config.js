@@ -14,7 +14,7 @@ module.exports = {
       colors: {
         black: "#17252a",
         white: "#feffff",
-        primary: colors.indigo,
+        primary: colors.sky,
         secondary: colors.purple,
         danger: colors.rose,
         warning: colors.yellow
