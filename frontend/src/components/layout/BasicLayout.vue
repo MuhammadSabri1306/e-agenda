@@ -1,15 +1,38 @@
 <template>
-    <div id="wrapper">
-        <slot name="topNav"></slot>
-        <main class="grow bg-gray-100">
-            <slot name="article"></slot>
-            <slot name="toolBox"></slot>
-        </main>
+    <main id="basicWrapper">
+
+        <div id="topNav">
+            <slot name="topNav"></slot>
+        </div>
+
+        <div class="container">
+
+            <div id="sideNav" class="h-full">
+                <slot name="sideNav"></slot>
+            </div>
+
+            <div class="basic-content">
+                <slot name="main"></slot>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer id="footer">
         <slot name="footer"></slot>
-    </div>
+    </footer>
 </template>
-<style scoped>
-    #wrapper {
+<style>
+    #basicWrapper {
         @apply flex flex-col min-h-screen;
+    }
+
+    #basicWrapper .container {
+        @apply grow grid grid-cols-[17rem_1fr] p-8;
+    }
+
+    #basicWrapper .basic-content {
+        @apply grid grid-cols-3 pl-8 gap-4 items-start;
     }
 </style>

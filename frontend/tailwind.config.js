@@ -16,7 +16,8 @@ module.exports = {
         white: "#feffff",
         primary: colors.indigo,
         secondary: colors.purple,
-        accent: colors.rose
+        danger: colors.rose,
+        warning: colors.yellow
       }
     },
   },

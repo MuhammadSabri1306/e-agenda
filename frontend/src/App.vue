@@ -1,6 +1,6 @@
 <script setup>
-import Dashboard from "./components/views/Dashboard.vue";
+import Agenda from "./views/Agenda.vue";
 </script>
 <template>
-    <Dashboard />
+    <Agenda />
 </template>
