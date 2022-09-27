@@ -1,15 +1,19 @@
 <script setup>
 import { ref, watch, computed } from "vue";
 
-const emit = defineEmits(["changed"]);
+const emit = defineEmits(["change"]);
 const props = defineProps({
 	label: String,
 	checked: Boolean
 });
 
+watch(() => props.checked, isChecked.value = props.checked);
 const isChecked = ref(props.checked);
-watch(isChecked, val => emit("changed", val));
 
+const onClick = () => {
+	isChecked.value = !isChecked.value;
+	emit("change", isChecked.value);
+};
 </script>
 <template>
 	<button class="chips-filter inline-flex items-center whitespace-nowrap" :class="{ checked: isChecked}" @click="isChecked = !isChecked">

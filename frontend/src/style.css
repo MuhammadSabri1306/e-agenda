@@ -36,6 +36,26 @@
 	.basic-card {
 		@apply rounded-2xl shadow bg-white;
 	}
+
+	.custom-select [role=listbox] {
+		@apply px-3 py-1 text-sm min-w-[10rem] rounded-md text-gray-700 bg-gray-100 hover:bg-white/50 focus:bg-white border border-gray-300 focus:border-primary-500;
+	}
+
+	.custom-select .dropdown-icon {
+		@apply w-4 h-4 mr-2 text-gray-500;
+	}
+
+	.custom-select [role=option] {
+		@apply text-sm font-semibold bg-white disabled:bg-gray-100 hover:bg-gray-100 text-gray-600 disabled:text-gray-500 text-left py-1 px-4;
+	}
+
+	.custom-select [role=option][aria-selected=true]{
+		@apply text-gray-700;
+	}
+
+	.custom-select .selected-icon {
+		@apply w-4;
+	}
 }
 
 @layer utilities {
@@ -43,7 +63,7 @@
 		text-shadow: 0 0 0.25rem rgba(0,0,0,0.2);
 	}
 
-	.white {
+	.text-shadow-white {
 		text-shadow: 0 0 0.25rem rgba(255,255,255,0.2);
 	}
 }
