@@ -33,4 +33,7 @@ const isUseBasicLayout = computed(() => basicLayoutViews.indexOf(route.name) >= 
 
         </BasicLayout>
     </div>
+    <div class="v-else">
+        <router-view />
+    </div>
 </template>

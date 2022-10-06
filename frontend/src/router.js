@@ -1,10 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
+import Home from "./views/Home.vue";
 import Agenda from "./views/Agenda.vue";
 
 const useBuildPath = false;
 const routes = {
-    agenda: {
+    home: {
         path: "/",
+        component: Home
+    },
+    agenda: {
+        path: "/agenda",
         component: Agenda
     }
 };

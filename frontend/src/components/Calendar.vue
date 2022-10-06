@@ -1,28 +1,31 @@
 <script setup>
+import { computed } from "vue"; 
+import { useAgendaStore } from "@/stores/agenda";
 import { Calendar } from "v-calendar";
 
-const date = new Date();
-const month = date.getMonth(),
-    year = date.getFullYear();
+const storeAgenda = useAgendaStore();
 
-const calendarAttrs = [
-    {
+const calendarAttrs = computed(() => {
+    const agendaAttrs = storeAgenda.model.map(item => {
+        const highlight = item.color;
+        const dates = {
+            start: new Date(item.startDate),
+            end: new Date(item.endDate)
+        };
+
+        return { highlight, dates };
+    });
+
+    const nowAttr = {
         key: "today",
-        dot: "green",
+        bar: "green",
         dates: new Date()
-    }, {
-        highlight: "red",
-        dates: new Date(year, month, 23)
-    },
-    {
-        highlight: "purple",
-        dates: new Date(year, month, 29)
-    }
-];
+    };
 
-const test = (day) => {
-    console.log(day);
-};
+    return [...agendaAttrs, nowAttr];
+});
+
+const test = (val) => console.log(val);
 </script>
 <template>
     <div class="bg-white px-4 lg:px-6 py-6 lg:py-4">
@@ -30,11 +33,7 @@ const test = (day) => {
     </div>
 </template>
 <style>
-/*    .vc-days {
-        @apply p-8;
-    }*/
-
-    /*.vc-day-content {
-        @apply md:text-lg md:h-24;
-    }*/
+    .vc-days {
+        @apply w-[40px] h-[40px];
+    }
 </style>
