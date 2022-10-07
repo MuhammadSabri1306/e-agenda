@@ -18,7 +18,7 @@ const calendarAttrs = computed(() => {
 
     const nowAttr = {
         key: "today",
-        bar: "green",
+        highlight: { color: "green", fillMode: "outline" },
         dates: new Date()
     };
 

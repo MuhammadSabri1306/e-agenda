@@ -31,6 +31,19 @@ const changeSort = val => null;
 const isAscSort = computed(() => storeAgenda.sort.isAsc);
 const toggleSortOrder = () => storeAgenda.toggleSortAsc();
 
+const tailwindColor = {
+	gray: "bg-gray-500",
+    red: "bg-red-500",
+    orange: "bg-orange-500",
+    yellow: "bg-yellow-500",
+    green: "bg-green-500",
+    teal: "bg-teal-500",
+    blue: "bg-blue-500",
+    indigo: "bg-indigo-500",
+    purple: "bg-purple-500",
+    pink: "bg-pink-500"
+};
+
 const data = computed(() => {
 	return storeAgenda.model.map(item => {
 		const startDate = new Date(item.startDate),
@@ -38,7 +51,7 @@ const data = computed(() => {
 
 		const date = `${ startDate.getDate() }/${ startDate.getMonth() + 1 }/${ startDate.getFullYear() } - ${ endDate.getDate() }/${ endDate.getMonth() + 1 }/${ endDate.getFullYear() }`;
 		const title = item.title;
-		const twColor = "bg-" + item.color + "-500";
+		const twColor = tailwindColor[item.color];
 
 		return { date, title, twColor };
 	});
