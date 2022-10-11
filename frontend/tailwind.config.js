@@ -13,7 +13,7 @@ module.exports = {
     extend: {
       colors: {
         black: "#17252a",
-        white: "#feffff",
+        whitemute: "#feffff",
         primary: colors.sky,
         secondary: colors.purple,
         danger: colors.rose,
