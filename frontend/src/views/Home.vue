@@ -1,9 +1,49 @@
 <script setup>
-import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useAccountStore } from "@/stores/account";
 
+const router = useRouter();
 const route = useRoute();
 const isLoginPage = computed(() => route.name == "login");
+
+const accountStore = useAccountStore();
+const formLoginElm = ref(null);
+
+const username = ref("");
+const password = ref("");
+
+const isUsernameValid = ref(true);
+const isPasswordValid = ref(true);
+
+const login = () => {
+	if(accountStore.isAuthed) {
+		router.push("/agenda");
+		return;
+	}
+
+	if(username.value != "sabri123") {
+		username.value = "";
+		isUsernameValid.value = false;
+		formLoginElm.value["username"].focus();
+	} else if(!isUsernameValid.value)
+		isUsernameValid.value = true;
+
+	if(password.value != "sabri123") {
+		password.value = "";
+		isPasswordValid.value = false;
+		isUsernameValid.value && formLoginElm.value["password"].focus();
+	} else if(!isPasswordValid.value)
+		isPasswordValid.value = true;
+
+	if(!isUsernameValid || !isPasswordValid)
+		return;
+
+	accountStore.setUser({ id: 1, name: "Muhammad Sabri", username: "sabri123", role: "user" });
+	accountStore.setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ik11aGFtbWFkIFNhYnJpIiwidXNlcm5hbWUiOiJzYWJyaTEyMyIsInJvbGUiOiJ1c2VyIn0.gFCd1OQk35gs4HkCP7nzNx6CihPVnV3ABtsUvb8ThKY");
+
+	router.push("/agenda");
+};
 </script>
 <template>
 	<main class="bg-gradient-to-bl from-indigo-600/10 to-white">
@@ -59,21 +99,25 @@ const isLoginPage = computed(() => route.name == "login");
 			</div>
 		</div>
 		<Transition duration="500" name="right-slide">
-			<div v-if="isLoginPage" class="fixed top-0 right-0 h-screen bg-white shadow">
-				<div class="login-card">
-					<div class="form-group">
-						<label for="inputUsername">Username</label>
-						<input type="text" id="inputUsername" placeholder="ahmad123">
+			<div v-if="isLoginPage" class="fixed top-0 right-0 bg-white shadow">
+				<form ref="formLoginElm" @submit.prevent="login">
+					<div class="login-card w-[35rem]">
+						<div class="form-group">
+							<label for="inputUsername">Username</label>
+							<input v-model="username" type="text" name="username" id="inputUsername" placeholder="Contoh: ahmad123" :class="{ 'border-danger-700': !isUsernameValid }">
+							<p v-if="!isUsernameValid" class="text-xs font-semibold text-danger-700">Username tidak benar.</p>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword">Password</label>
+							<input v-model="password" type="password" name="password" id="inputPassword" placeholder="Contoh: qwerty123" :class="{ 'border-danger-700': !isPasswordValid }">
+							<p v-if="!isPasswordValid" class="text-xs font-semibold text-danger-700">Password tidak benar.</p>
+						</div>
+						<div class="flex justify-between items-center py-4">
+							<RouterLink to="/" class="text-xs font-medium border-b transition-all text-black/80 hover:text-black border-transparent hover:border-black">Kembali</RouterLink>
+							<button type="submit" class="px-6 py-2 rounded-lg text-white font-semibold bg-primary-700 hover:bg-primary-900">Log In</button>
+						</div>
 					</div>
-					<div class="form-group">
-						<label for="inputPassword">Password</label>
-						<input type="password" id="inputPassword" placeholder="Contoh: qwerty123">
-					</div>
-					<div class="flex justify-between items-center py-4">
-						<RouterLink to="/" class="text-xs font-medium border-b transition-all text-black/80 hover:text-black border-transparent hover:border-black">Kembali</RouterLink>
-						<button class="px-6 py-2 rounded-lg text-white font-semibold bg-primary-700 hover:bg-primary-900">Log In</button>
-					</div>
-				</div>
+				</form>
 			</div>
 		</Transition>
 	</main>
@@ -82,7 +126,7 @@ const isLoginPage = computed(() => route.name == "login");
 <style scoped>
 
 .login-card {
-	@apply h-full flex flex-col justify-center py-8 pl-16 pr-16 md:pr-24;
+	@apply h-screen flex flex-col justify-center py-8 pl-16 pr-16 md:pr-24;
 }
 
 .login-card .form-group {
@@ -94,7 +138,7 @@ const isLoginPage = computed(() => route.name == "login");
 }
 
 .login-card .form-group > input {
-	@apply w-full block text-black rounded-lg w-80 px-4 py-2 border text-sm;
+	@apply w-full block text-black rounded-lg px-4 py-2 border text-sm;
 }
 
 .fade-bg-enter-active, .fade-bg-leave-active {
@@ -131,55 +175,53 @@ const isLoginPage = computed(() => route.name == "login");
 
 .btn-primary {
 	@apply inline-flex items-center overflow-hidden text-lg font-bold bg-white border-2 rounded-[50rem] transition-all duration-200 ease-in text-black hover:text-white border-black/90 hover:border-primary-700 px-6 hover:px-12 focus:px-12 py-2 hover:py-3 focus:py-3;
-	/*box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.5), inset 3px 5px 5px theme(colors.primary.600), inset -3px -5px 5px theme(colors.primary.800);*/
 	box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.5);
 }
 
 .btn-primary:active {
-  box-shadow: inset 4px 4px 12px #c5c5c5,
-             inset -4px -4px 12px #ffffff;
+	box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
 }
 
 .btn-primary:before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) scaleY(1) scaleX(1.25);
-  top: 100%;
-  width: 140%;
-  height: 180%;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 50%;
-  display: block;
-  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
-  z-index: -1;
+	content: "";
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%) scaleY(1) scaleX(1.25);
+	top: 100%;
+	width: 140%;
+	height: 180%;
+	background-color: rgba(0, 0, 0, 0.05);
+	border-radius: 50%;
+	display: block;
+	transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+	z-index: -1;
 }
 
 .btn-primary:after {
-  content: "";
-  position: absolute;
-  left: 55%;
-  transform: translateX(-50%) scaleY(1) scaleX(1.45);
-  top: 180%;
-  width: 160%;
-  height: 190%;
-  background-color: theme(colors.primary.700);
-  border-radius: 50%;
-  display: block;
-  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
-  z-index: -1;
+	content: "";
+	position: absolute;
+	left: 55%;
+	transform: translateX(-50%) scaleY(1) scaleX(1.45);
+	top: 180%;
+	width: 160%;
+	height: 190%;
+	background-color: theme(colors.primary.700);
+	border-radius: 50%;
+	display: block;
+	transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+	z-index: -1;
 }
 
 .btn-primary:hover:before {
-  top: -35%;
-  background-color: theme(colors.primary.700);
-  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+	top: -35%;
+	background-color: theme(colors.primary.700);
+	transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
 .btn-primary:hover:after {
-  top: -45%;
-  background-color: theme(colors.primary.700);
-  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+	top: -45%;
+	background-color: theme(colors.primary.700);
+	transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
 </style>

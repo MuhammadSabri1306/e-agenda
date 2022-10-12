@@ -6,7 +6,6 @@ import HeaderBasic from "@/components/HeaderBasic.vue"
 import Calendar from "@/components/Calendar.vue";
 import CustomSelect from "@/components/ui/CustomSelect.vue";
 import ButtonSort from "@/components/ButtonSort.vue";
-import TableTimePoint from "@/components/TableTimePoint.vue";
 
 const storeAgenda = useAgendaStore();
 storeAgenda.fetchModel();
@@ -32,20 +31,31 @@ const changeSort = val => null;
 const isAscSort = computed(() => storeAgenda.sort.isAsc);
 const toggleSortOrder = () => storeAgenda.toggleSortAsc();
 
-const data = computed(() => {
-	return storeAgenda.list.map(item => {
-		const startDate = item.date.start,
-			endDate = item.date.end;
+const tailwindColor = {
+	gray: "bg-gray-500",
+    red: "bg-red-500",
+    orange: "bg-orange-500",
+    yellow: "bg-yellow-500",
+    green: "bg-green-500",
+    teal: "bg-teal-500",
+    blue: "bg-blue-500",
+    indigo: "bg-indigo-500",
+    purple: "bg-purple-500",
+    pink: "bg-pink-500"
+};
 
-		const date = `${ startDate.date }/${ startDate.month }/${ startDate.year } - ${ endDate.date }/${ endDate.month }/${ endDate.year }`;
+const data = computed(() => {
+	return storeAgenda.model.map(item => {
+		const startDate = new Date(item.startDate),
+			endDate = new Date(item.endDate);
+
+		const date = `${ startDate.getDate() }/${ startDate.getMonth() + 1 }/${ startDate.getFullYear() } - ${ endDate.getDate() }/${ endDate.getMonth() + 1 }/${ endDate.getFullYear() }`;
 		const title = item.title;
-		const twColor = item.color;
+		const twColor = tailwindColor[item.color];
 
 		return { date, title, twColor };
 	});
 });
-
-const timePoint = ref(Date.now());
 </script>
 <template>
 	<div class="flex flex-wrap">
@@ -62,11 +72,6 @@ const timePoint = ref(Date.now());
 				</div>
 				<ButtonSort :ascending="isAscSort" @click="toggleSortOrder" class="ml-6" />
 			</div>
-			<div class="basic-card grid grid-cols-1 mb-6 p-4">
-				<div class="h-96 overflow-y-auto border-y custom-scrollbar">
-					<TableTimePoint />
-				</div>
-			</div>
 			<div class="basic-card flex flex-col py-4 mb-6">
 				<div v-for="(item, index) in data" class="py-2 border-b border-gray-100" :class="{ 'border-t': index === 0 }">
 					<a role="button" class="flex items-end">
@@ -82,21 +87,3 @@ const timePoint = ref(Date.now());
 		</div>
 	</div>
 </template>
-<style scoped>
-
-.custom-scrollbar::-webkit-scrollbar {
-	@apply w-3;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-	@apply bg-white;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-	@apply bg-gray-300 rounded-[50rem];
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-	@apply bg-gray-400;
-}
-</style>
