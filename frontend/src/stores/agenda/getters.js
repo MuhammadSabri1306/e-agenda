@@ -31,6 +31,15 @@ export default {
 			return { id, title, date, time, ket, tempat, color };
 		});
 	},
+	getById(){
+		const list = this.list;
+		return id => {
+			const index = list.findIndex(lItem => lItem.id == id);
+			if(index < 0)
+				return null;
+			return list[index];
+		};
+	},
 	today(){
 		const curDate = new Date();
 		return this.list.filter(item => {

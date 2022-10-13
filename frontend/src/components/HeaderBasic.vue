@@ -1,9 +1,8 @@
 <script setup>
 import toIdDateFormat from "@/modules/toIdDateFormat";
 
-const headingTitle = "Agenda Terbaru";
+const headingTitle = "Agenda Hari Ini";
 const dateId = toIdDateFormat(new Date());
-// console.log(dateId);
 const subHeadingDay = dateId.toStr ? dateId.toStr() : "";
 
 </script>
