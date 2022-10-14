@@ -32,7 +32,7 @@ const point = computed(() => {
 	<div>
 		<div v-for="(item, index) in point" class="grid grid-cols-[auto_1fr]" :class="{ 'border-y': index === 0, 'border-b': index > 0 }">
 			<p class="w-24 flex justify-center items-center text-xs font-semibold h-8 text-gray-600">{{ item.key }}</p>
-			<div :class="[item.bgColor]"></div>
+			<div :class="[item.bgColor]" class="opacity-80"></div>
 		</div>
 	</div>
 </template>

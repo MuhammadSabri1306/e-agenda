@@ -56,13 +56,15 @@ onUnmounted(() => window.addEventListener("resize", watchCalendarPosition));
 			<div class="flex flex-col gap-6 mb-6">
 				<CardAgenda v-for="itemId in agendaIdLists" :id="itemId" />
 			</div>
-			<div v-if="calendarPosition === 'left'">
-				<Calendar class="basic-card mb-6 ml-auto" />
-			</div>
-			<div class="basic-card grid grid-cols-1 mb-6 p-6">
-				<h4 class="text-black/80 text-xl leading-tight mb-4">Agenda per jam</h4>
-				<div class="h-96 overflow-y-auto border-y custom-scrollbar">
-					<TableTimePoint />
+			<div class="flex flex-wrap gap-6">
+				<div v-if="calendarPosition === 'left'">
+					<Calendar class="basic-card" />
+				</div>
+				<div :class="{ 'w-full' :calendarPosition === 'right', 'w-80' :calendarPosition === 'left' }" class="basic-card grid grid-cols-1 px-4 py-6">
+					<h4 class="text-black/80 text-xl leading-tight mb-4">Agenda per jam</h4>
+					<div class="h-96 overflow-y-auto border-y custom-scrollbar">
+						<TableTimePoint />
+					</div>
 				</div>
 			</div>
 		</div>

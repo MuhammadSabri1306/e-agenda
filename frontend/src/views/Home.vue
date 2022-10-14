@@ -76,13 +76,10 @@ const login = () => {
 			<div v-if="isLoginPage" class="absolute-layer bg-gradient-to-r from-purple-600 to-sky-700"></div>
 		</Transition>
 		<Transition duration="500" name="left-slide">
-			<div v-show="isLoginPage" class="absolute w-full h-full top-0 left-0 flex items-center">
-				<div class="w-[15rem] md:w-[24rem] ml-[15%] rounded-2xl shadow bg-white px-8 pt-4 pb-12 relative cursor-default">
-					<div class="my-8 flex">
-						<img src="/assets/img/app-illustration.webp" class="max-w-[15rem] mx-auto" alt="App Illustration">
-					</div>
-					<p class="text-sm font-bold text-black/80 text-center leading-relaxed mb-2">Selamat Datang di</p>
-					<h1 class="text-4xl font-light text-black/90 text-center">E-AGENDA</h1>
+			<div v-show="isLoginPage" class="hidden lg:absolute w-1/2 h-full top-0 left-0 flex justify-center items-center">
+				<div class="w-[15rem] md:w-[24rem] cursor-default scale-75 rounded-lg border-2 border-white/80 p-8">
+					<p class="text-sm font-bold text-white text-center leading-relaxed tracking-widest mb-2 text-shadow-black">Selamat Datang di</p>
+					<h1 class="text-4xl font-extralight text-white text-center text-shadow-black">E-AGENDA</h1>
 				</div>
 			</div>
 		</Transition>
@@ -101,7 +98,10 @@ const login = () => {
 		<Transition duration="500" name="right-slide">
 			<div v-if="isLoginPage" class="fixed top-0 right-0 bg-white shadow">
 				<form ref="formLoginElm" @submit.prevent="login">
-					<div class="login-card w-[35rem]">
+					<div class="login-card w-screen md:w-[30rem] lg:w-[35rem]">
+						<div class="flex justify-center mb-8">
+							<img src="/assets/img/app-illustration.webp" class="max-w-[15rem] mx-auto" alt="App Illustration">
+						</div>
 						<div class="form-group">
 							<label for="inputUsername">Username</label>
 							<input v-model="username" type="text" name="username" id="inputUsername" placeholder="Contoh: ahmad123" :class="{ 'border-danger-700': !isUsernameValid }">
