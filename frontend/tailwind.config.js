@@ -11,6 +11,9 @@ module.exports = {
       "body": ["Open Sans", ...defaultTheme.fontFamily.sans],
     },
     extend: {
+      borderRadius: {
+        pill: '50rem'
+      },
       colors: {
         black: "#17252a",
         whitemute: "#feffff",

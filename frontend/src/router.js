@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Home1 from "./views/Home1.vue";
+import Home2 from "./views/Home2.vue";
 import Agenda from "./views/Agenda.vue";
 
 const useBuildPath = false;
@@ -8,6 +9,7 @@ const routes = {
     home: { path: "/", component: Home },
     login: { path: "/login", component: Home },
     "home1": { path: "/home1", component: Home1 },
+    "home2": { path: "/home2", component: Home2 },
     agenda: { path: "/agenda", component: Agenda }
 };
 

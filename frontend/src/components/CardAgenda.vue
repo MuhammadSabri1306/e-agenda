@@ -46,5 +46,6 @@ const onCardClick = () => {
 			<font-awesome-icon icon="fa-regular fa-calendar" fixed-width />
 			<span class="text-xs font-semibold mt-1">{{ agenda.date }}</span>
 		</p>
+		<div class="bg-white"></div>
 	</a>
 </template>
