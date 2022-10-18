@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import FormAuthentication from "@/components/FormAuthentication.vue";
 
 const route = useRoute();
 const isHomePage = computed(() => route.name == "home");
@@ -14,11 +15,11 @@ const isHomePage = computed(() => route.name == "home");
 			<div class="w-screen h-full bg-hero opacity-70"></div>
 		</div>
 		<Transition name="home-section">
-			<div v-if="isHomePage" class="absolute-layer left-0 md:max-w-[50vw] lg:max-w-[36rem] p-4 md:px-16 flex">
+			<div v-if="isHomePage" class="absolute-layer left-0 max-w-full md:max-w-[50vw] lg:max-w-[36rem] p-4 md:px-16 flex">
 				<div class="m-auto">
-					<h2 class=" text-4xl font-body font-bold text-black text-center md:text-left md:ml-1 hover-margin mb-6">Selamat Datang di</h2>
+					<h2 class="text-2xl md:text-4xl font-body font-bold text-black text-center md:text-left md:ml-1 hover-margin mb-6">Selamat Datang di</h2>
 					<div class="flex items-end justify-center md:justify-start mb-6">
-						<h1 class="text-7xl font-black whitespace-nowrap text-blue-600 text-center md:text-left">E-AGENDA</h1>
+						<h1 class="text-5xl md:text-7xl font-black whitespace-nowrap text-blue-600 text-center md:text-left">E-AGENDA</h1>
 						<p class="text-sm font-body font-bold mb-3 text-black/90 text-center ml-1">V1.0.0</p>
 					</div>
 					<p class="text-lg text-black/80 text-center md:text-left md:ml-1 mb-16">Cek agenda yang akan dilaksanakan hari ini atau dalam waktu dekat. Anda juga bisa memeriksa aktifitas lama yang telah diagendakan.</p>
@@ -33,7 +34,12 @@ const isHomePage = computed(() => route.name == "home");
 				</div>
 			</div>
 		</Transition>
-		<header :class="{ 'bg-black': isHomePage, 'bg-transparent': !isHomePage }" class="absolute left-0 top-0 py-3 px-16 bg-black w-full md:w-auto transition-all rounded-br-2xl hover:rounded-br-sm">
+		<Transition name="form-section">
+			<div v-if="!isHomePage" class="absolute-layer right-0 w-full md:w-3/4 lg:w-[36rem] p-4 md:px-24 lg:px-32 flex flex-col items-stretch">
+				<FormAuthentication class="bg-white lg:bg-transparent shadow-lg lg:shadow-none border lg:border-0 rounded-lg my-auto px-8 py-12" />
+			</div>
+		</Transition>
+		<header :class="{ 'lg:bg-transparent': !isHomePage }" class="absolute left-0 top-0 py-3 px-16 bg-black w-full md:w-auto transition-all rounded-br-2xl hover:rounded-br-sm">
 			<RouterLink to="/" class="flex items-center text-shadow-black group">
 				<img src="/assets/img/logo-pemprov-sulsel.webp" class="h-12 w-auto transition-transform scale-100 group-hover:scale-105">
 				<div :class="{ 'text-warning-400': isHomePage, 'text-white': !isHomePage }">
@@ -43,7 +49,7 @@ const isHomePage = computed(() => route.name == "home");
 			</RouterLink>
 		</header>
 		<footer class="absolute w-full left-0 bottom-0 px-6 py-4">
-			<p :class="{ 'text-black/70': isHomePage, 'text-white': !isHomePage }" class="text-sm font-bold">&copy; Liny Jaya Informatika - 2022 . All rights reserved.</p>
+			<p :class="{ 'text-black/70': isHomePage, 'text-gray-700 md:text-white': !isHomePage }" class="text-sm font-bold text-center md:text-left">&copy; Liny Jaya Informatika - 2022 . All rights reserved.</p>
 		</footer>
 	</div>
 </template>
@@ -56,9 +62,21 @@ const isHomePage = computed(() => route.name == "home");
 .hero {
 	/*@apply bg-gradient-to-tr from-indigo-600 to-red-600;*/
 	left: 50%;
-	clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+	clip-path: polygon(45% 0%, 85% 0%, 100% 100%, 0% 100%);
 	overflow: hidden;
     transition: left 0.3s ease-in-out;
+}
+
+@media screen(lg) {
+	.hero {
+		clip-path: polygon(45% 0%, 85% 0%, 100% 100%, 0% 100%);
+	}
+}
+
+@media screen(lg) {
+	.hero {
+		clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+	}
 }
 
 .hero.hero-login {
@@ -82,8 +100,12 @@ const isHomePage = computed(() => route.name == "home");
 	left: -100%;
 }
 
-.home-section-enter-to, .home-section-leave-from {
-	left: 0;
+.form-section-enter-active, .form-section-leave-active {
+	transition: right 0.3s ease-in-out;
+}
+
+.form-section-enter-from, .form-section-leave-to {
+	right: -100%;
 }
 
 .btn-primary {
