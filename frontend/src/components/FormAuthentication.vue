@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { required } from "@vuelidate/validators";
+import { useAccountStore } from "@/stores/account";
 import { useDataForm } from "@/modules/dataForm";
 
 const { data, v$ } = useDataForm({
@@ -8,10 +10,20 @@ const { data, v$ } = useDataForm({
 	password: { required }
 });
 
+const accountStore = useAccountStore();
+const router = useRouter();
 const hasSubmitted = ref(false);
-const onLogin = () => {
+
+const onLogin = async () => {
 	hasSubmitted.value = true;
-	v$.$validate().then().catch();
+	const isValid = await v$.value.$validate();
+	console.log(isValid);
+	if(!isValid)
+		return;
+
+	if(accountStore.login(data.username, data.password)) {
+		router.push("/agenda");
+	}
 };
 </script>
 <template>

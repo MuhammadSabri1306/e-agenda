@@ -2,7 +2,8 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useAgendaStore } from "@/stores/agenda";
 import * as breakpoint from "@/modules/screenBreakpoint";
-import HeaderBasic from "@/components/HeaderBasic.vue"
+import BasicLayout from "@/components/basic-layout/Layout.vue";
+import HeaderBasic from "@/components/HeaderBasic.vue";
 import Calendar from "@/components/Calendar.vue";
 import CustomSelect from "@/components/ui/CustomSelect.vue";
 import ButtonSort from "@/components/ButtonSort.vue";
@@ -50,28 +51,32 @@ onMounted(() => watchCalendarPosition() && window.addEventListener("resize", wat
 onUnmounted(() => window.addEventListener("resize", watchCalendarPosition));
 </script>
 <template>
-	<div class="flex flex-wrap">
-		<div class="grow mr-6">
-			<HeaderBasic class="mb-6 ml-4" />
-			<div class="flex flex-col gap-6 mb-6">
-				<CardAgenda v-for="itemId in agendaIdLists" :id="itemId" />
-			</div>
-			<div class="flex flex-wrap gap-6">
-				<div v-if="calendarPosition === 'left'">
-					<Calendar class="basic-card" />
-				</div>
-				<div :class="{ 'w-full' :calendarPosition === 'right', 'w-80' :calendarPosition === 'left' }" class="basic-card grid grid-cols-1 px-4 py-6">
-					<h4 class="text-black/80 text-xl leading-tight mb-4">Agenda per jam</h4>
-					<div class="h-96 overflow-y-auto border-y custom-scrollbar">
-						<TableTimePoint />
+	<BasicLayout>
+		<template #main>
+			<div class="flex flex-wrap">
+				<div class="grow mr-6">
+					<HeaderBasic class="mb-6 ml-4" />
+					<div class="flex flex-col gap-6 mb-6">
+						<CardAgenda v-for="itemId in agendaIdLists" :id="itemId" />
+					</div>
+					<div class="flex flex-wrap gap-6">
+						<div v-if="calendarPosition === 'left'">
+							<Calendar class="basic-card" />
+						</div>
+						<div :class="{ 'w-full' :calendarPosition === 'right', 'w-80' :calendarPosition === 'left' }" class="basic-card grid grid-cols-1 px-4 py-6">
+							<h4 class="text-black/80 text-xl leading-tight mb-4">Agenda per jam</h4>
+							<div class="h-96 overflow-y-auto border-y custom-scrollbar">
+								<TableTimePoint />
+							</div>
+						</div>
 					</div>
 				</div>
+				<div v-if="calendarPosition === 'right'">
+					<Calendar class="basic-card mb-6 ml-auto" />
+				</div>
 			</div>
-		</div>
-		<div v-if="calendarPosition === 'right'">
-			<Calendar class="basic-card mb-6 ml-auto" />
-		</div>
-	</div>
+		</template>
+	</BasicLayout>
 </template>
 <style scoped>
 
