@@ -1,11 +1,13 @@
 <script setup>
 import Header from "./Header.vue";
-import Navbar from "./Navbar.vue"; 
+import Navbar from "./Navbar.vue";
+
+defineEmits(["new"]);
 </script>
 <template>
 	<div id="basicLayout">
 		<Header />
-		<Navbar />
+		<Navbar @new="$emit('new')" />
 
 		<main>
 			<slot name="main"></slot>

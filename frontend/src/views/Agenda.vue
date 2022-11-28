@@ -1,7 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed } from "vue";
 import { useAgendaStore } from "@/stores/agenda";
-import * as breakpoint from "@/modules/screenBreakpoint";
 import BasicLayout from "@/components/basic-layout/Layout.vue";
 import HeaderBasic from "@/components/HeaderBasic.vue";
 import Calendar from "@/components/Calendar.vue";
@@ -9,12 +8,14 @@ import CustomSelect from "@/components/ui/CustomSelect.vue";
 import ButtonSort from "@/components/ButtonSort.vue";
 import TableTimePoint from "@/components/TableTimePoint.vue";
 import CardAgenda from "@/components/CardAgenda.vue";
+import ModalAddAgenda from "@/components/ModalAddAgenda.vue";
 
 const storeAgenda = useAgendaStore();
-storeAgenda.fetchModel();
+storeAgenda.fetchAgenda();
+
+const agenda = computed(() => storeAgenda.agenda);
 
 const category = computed(() => storeAgenda.selectedCategory.title);
-
 const categoryList = computed(() => {
 	return storeAgenda.category.items.map(item => {
 		const value = item.title;
@@ -33,47 +34,29 @@ const changeSort = val => null;
 const isAscSort = computed(() => storeAgenda.sort.isAsc);
 const toggleSortOrder = () => storeAgenda.toggleSortAsc();
 
-const agendaIdLists = computed(() => {
-	return storeAgenda.list.map(({ id }) => id);
-})
-
-const calendarPosition = ref("left");
-
-const watchCalendarPosition = () => {
-	if(breakpoint.isExtraSmall() || breakpoint.isSmall() || breakpoint.isLarge()) {
-		calendarPosition.value = "left";
-	} else {
-		calendarPosition.value = "right";
-	}
-};
-
-onMounted(() => watchCalendarPosition() && window.addEventListener("resize", watchCalendarPosition));
-onUnmounted(() => window.addEventListener("resize", watchCalendarPosition));
+const showAddModal = ref(false);
+const onAdd = () => showAddModal.value = true;
 </script>
 <template>
-	<BasicLayout>
+	<BasicLayout @new="onAdd">
 		<template #main>
-			<div class="flex flex-wrap">
-				<div class="grow mr-6">
+			<div class="p-8 grid grid-cols-[auto_1fr] gap-8 bg-gray-100">
+				<div>
+					<Calendar class="basic-card mb-4" />
+					<div class="basic-card py-6">
+						<h4 class="text-gray-800 text-xl leading-tight mb-4 px-4">Agenda per jam</h4>
+						<div class="h-96 overflow-y-auto border-y custom-scrollbar">
+							<TableTimePoint />
+						</div>
+					</div>
+				</div>
+				<div>
 					<HeaderBasic class="mb-6 ml-4" />
-					<div class="flex flex-col gap-6 mb-6">
-						<CardAgenda v-for="itemId in agendaIdLists" :id="itemId" />
-					</div>
-					<div class="flex flex-wrap gap-6">
-						<div v-if="calendarPosition === 'left'">
-							<Calendar class="basic-card" />
-						</div>
-						<div :class="{ 'w-full' :calendarPosition === 'right', 'w-80' :calendarPosition === 'left' }" class="basic-card grid grid-cols-1 px-4 py-6">
-							<h4 class="text-black/80 text-xl leading-tight mb-4">Agenda per jam</h4>
-							<div class="h-96 overflow-y-auto border-y custom-scrollbar">
-								<TableTimePoint />
-							</div>
-						</div>
+					<div v-if="agenda.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+						<CardAgenda v-for="item in agenda" :id="item.id" />
 					</div>
 				</div>
-				<div v-if="calendarPosition === 'right'">
-					<Calendar class="basic-card mb-6 ml-auto" />
-				</div>
+				<ModalAddAgenda v-if="showAddModal" @cancel="showAddModal = false" />
 			</div>
 		</template>
 	</BasicLayout>

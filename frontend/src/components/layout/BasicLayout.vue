@@ -25,7 +25,7 @@
 </template>
 <style>
     #basicWrapper {
-        @apply flex flex-col min-h-screen;
+        @apply flex flex-col h-screen;
     }
 
     #basicWrapper .basic-main {

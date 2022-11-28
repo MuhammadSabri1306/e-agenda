@@ -23,7 +23,7 @@
 		cursor: default!important;
 	}
 
-	input:focus, button:focus, select:focus {
+	input:focus, textarea:focus, button:focus, select:focus {
 		@apply outline-none;
 	}
 }
@@ -56,6 +56,29 @@
 	.custom-select .selected-icon {
 		@apply w-4;
 	}
+
+	.form-group > label {
+		@apply block text-gray-700 text-sm font-medium mb-2;
+	}
+
+	.form-group > input,
+	.form-group > textarea {
+		@apply block border rounded text-gray-800 w-full text-sm transition-colors border-gray-200 hover:border-gray-300 focus:border-gray-300;
+	}
+
+	.form-group > input {
+		@apply px-4 py-2;
+	}
+
+	.form-group > textarea {
+		@apply p-4;
+	}
+
+	.form-group > input.invalid,
+	.form-group > textarea.invalid {
+		@apply border-red-400;
+		animation: justshake 0.3s forwards;
+	}
 }
 
 @layer utilities {
@@ -66,4 +89,11 @@
 	.text-shadow-white {
 		text-shadow: 0 0 0.25rem rgba(255,255,255,0.2);
 	}
+}
+
+@keyframes justshake {
+  25% { transform: translateX(5px); }
+  50% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+  100% { transform: translateX(-5px); }
 }

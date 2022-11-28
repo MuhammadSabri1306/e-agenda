@@ -10,9 +10,6 @@ const agendaStore = useAgendaStore();
 const agendaToday = computed(() => agendaStore.today);
 
 const getTimeItem = () => Array.from(new Array(24).keys()).map(item => item + 1);
-/*const point = computed(() => {
-
-});*/
 
 const point = computed(() => {
 	return getTimeItem().map(tItem => {
@@ -30,9 +27,20 @@ const point = computed(() => {
 </script>
 <template>
 	<div>
-		<div v-for="(item, index) in point" class="grid grid-cols-[auto_1fr]" :class="{ 'border-y': index === 0, 'border-b': index > 0 }">
+		<div v-for="item in point" class="time-item">
 			<p class="w-24 flex justify-center items-center text-xs font-semibold h-8 text-gray-600">{{ item.key }}</p>
 			<div :class="[item.bgColor]" class="opacity-80"></div>
 		</div>
 	</div>
 </template>
+<style scoped>
+	
+.time-item {
+	@apply grid grid-cols-[auto_1fr];
+}
+
+.time-item:not(:last-child) {
+	@apply border-b;
+}
+
+</style>

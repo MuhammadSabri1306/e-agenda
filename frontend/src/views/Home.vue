@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import FormAuthentication from "@/components/FormAuthentication.vue";
+import FormLogin from "@/components/FormLogin.vue";
 
 const route = useRoute();
 const isHomePage = computed(() => route.name == "home");
@@ -36,7 +36,7 @@ const isHomePage = computed(() => route.name == "home");
 		</Transition>
 		<Transition name="form-section">
 			<div v-if="!isHomePage" class="absolute-layer right-0 w-full md:w-3/4 lg:w-[36rem] p-4 md:px-24 lg:px-32 flex flex-col items-stretch">
-				<FormAuthentication class="bg-white lg:bg-transparent shadow-lg lg:shadow-none border lg:border-0 rounded-lg my-auto px-8 py-12" />
+				<FormLogin />
 			</div>
 		</Transition>
 		<header :class="{ 'lg:bg-transparent': !isHomePage }" class="absolute left-0 top-0 py-3 px-16 bg-black w-full md:w-auto transition-all rounded-br-2xl hover:rounded-br-sm">

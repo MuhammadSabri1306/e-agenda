@@ -1,5 +1,10 @@
+<script setup>
+
+defineEmits(["new"]);
+
+</script>
 <template>
-    <nav class="sticky bg-white z-[2] sticky top-0 w-screen shadow-sm">
+    <nav class="sticky bg-white z-[2] sticky top-0 w-full shadow-sm">
         <div class="container">
             <div class="flex items-stretch px-16">
             	<ul class="nav-menu">
@@ -28,11 +33,14 @@
 						</a>
 					</li>
             	</ul>
-                <a role="button" class="navbar-btn">
-                    <font-awesome-icon icon="fa-solid fa-circle-user" fixed-width />
+            	<a role="button" class="navbar-btn" @click="$emit('new')">
+                    <font-awesome-icon icon="fa-solid fa-plus" fixed-width />
                 </a>
                 <a role="button" class="navbar-btn">
                     <font-awesome-icon icon="fa-solid fa-gear" fixed-width />
+                </a>
+                <a role="button" class="navbar-btn">
+                    <font-awesome-icon icon="fa-regular fa-circle-user" fixed-width />
                 </a>
             </div>
         </div>
@@ -45,23 +53,19 @@
 }
 
 .navbar-btn {
-	@apply text-gray-400 hover:text-gray-600 flex justify-center items-center p-4 text-2xl;
-}
-
-.nav-menu {
-	@apply flex;
+	@apply flex justify-center items-center p-4 text-xl transition-colors bg-transparent hover:bg-gray-100 text-gray-400 hover:text-primary-600;
 }
 
 .nav-link {
-	@apply h-full flex flex-col md:flex-row justify-center items-center p-4 gap-1 text-gray-700;
+	@apply h-full flex flex-col md:flex-row justify-center items-center p-4 gap-1 transition-colors bg-transparent hover:bg-gray-100 text-gray-700 hover:text-primary-700;
 }
 
 .nav-link > span:not(.icon) {
-	@apply text-sm font-semibold;
+	@apply text-sm font-medium ;
 }
 
 .nav-link .icon > svg {
-	@apply w-6 h-6;
+	@apply w-4 h-4;
 }
 
 </style>

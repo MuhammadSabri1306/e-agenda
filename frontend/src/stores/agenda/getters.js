@@ -8,7 +8,7 @@ export default {
 	},
 	selectedCategory: state => state.category.items[state.category.selectedIndex],
 	list: state => {
-		return state.model.map(agenda => {
+		return state.agenda.map(agenda => {
 			const { id, title, ket, tempat } = agenda;
 			const color = state.calendarColors[agenda.color];
 			const time = { start: agenda.startTime, end: agenda.endTime }
@@ -33,12 +33,7 @@ export default {
 	},
 	getById(){
 		const list = this.list;
-		return id => {
-			const index = list.findIndex(lItem => lItem.id == id);
-			if(index < 0)
-				return null;
-			return list[index];
-		};
+		return id => list.find(lItem => lItem.id == id);;
 	},
 	today(){
 		const curDate = new Date();

@@ -6,7 +6,7 @@ import { Calendar } from "v-calendar";
 const storeAgenda = useAgendaStore();
 
 const calendarAttrs = computed(() => {
-    const agendaAttrs = storeAgenda.model.map(item => {
+    const agendaAttrs = storeAgenda.agenda.map(item => {
         const highlight = item.color;
         const dates = {
             start: new Date(item.startDate),

@@ -22,7 +22,7 @@ export const useAgendaStore = defineStore("agenda", {
 			isAsc: true,
 			use: false
 		},
-		model: [],
+		agenda: [],
 		calendarColors: {
 			gray: "bg-gray-500",
 		    red: "bg-red-500",
