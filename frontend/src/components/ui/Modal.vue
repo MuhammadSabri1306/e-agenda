@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted } from "vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps({

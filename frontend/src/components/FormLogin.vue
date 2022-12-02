@@ -5,6 +5,7 @@ import { required } from "@vuelidate/validators";
 import { useAccountStore } from "@/stores/account";
 import { useViewStore } from "@/stores/view";
 import { useDataForm } from "@/modules/data-form";
+import { fetchLogin } from "@/modules/sample-data";
 import LoadingLine from "@/components/ui/LoadingLine.vue";
 
 const { data, v$ } = useDataForm({
@@ -19,7 +20,7 @@ const route = useRoute();
 const router = useRouter();
 
 const hasSubmitted = ref(false);
-const showLoader = ref(true);
+const showLoader = ref(false);
 
 const onLogin = async () => {
 	hasSubmitted.value = true;
@@ -28,10 +29,11 @@ const onLogin = async () => {
 	if(!isValid)
 		return;
 
+	showLoader.value = true;
 	const { username, password } = data;
 	accountStore.login({ username, password }, success => {
-
 		if(!success) {
+			showLoader.value = false;
 			viewStore.showToast("Gagal Login", "Silahkan login menggunakan data yang benar.", false);
 			return console.log("fail");
 		}

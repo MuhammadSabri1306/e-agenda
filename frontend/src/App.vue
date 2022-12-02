@@ -13,7 +13,7 @@ router.beforeEach((to, from) => {
         (to.meta.needAdminRole && !accountStore.isRoleAdmin),
         (to.meta.needOperatorRole && !accountStore.isRoleOperator),
         (to.meta.needMemberRole && !accountStore.isRoleMember),
-        (to.meta.needLogin && !accountStore.isRolePublic)
+        (to.meta.needLogin && accountStore.isRolePublic)
     ];
 
     if(needLogin.indexOf(true) >= 0)

@@ -1,46 +1,21 @@
 <script setup>
 import { ref, computed } from "vue";
-import { useAgendaStore } from "@/stores/agenda";
+import { useRoute } from "vue-router";
 import BasicLayout from "@/components/basic-layout/Layout.vue";
-import HeaderBasic from "@/components/HeaderBasic.vue";
 import Calendar from "@/components/Calendar.vue";
-import CustomSelect from "@/components/ui/CustomSelect.vue";
-import ButtonSort from "@/components/ButtonSort.vue";
 import TableTimePoint from "@/components/TableTimePoint.vue";
-import CardAgenda from "@/components/CardAgenda.vue";
-import ModalAddAgenda from "@/components/ModalAddAgenda.vue";
+import OffcanvasAgenda from "@/components/OffcanvasAgenda.vue";
+import ListAgenda from "@/components/ListAgenda.vue";
+import FormAddAgenda from "@/components/FormAddAgenda.vue";
 
-const storeAgenda = useAgendaStore();
-storeAgenda.fetchAgenda();
-
-const agenda = computed(() => storeAgenda.agenda);
-
-const category = computed(() => storeAgenda.selectedCategory.title);
-const categoryList = computed(() => {
-	return storeAgenda.category.items.map(item => {
-		const value = item.title;
-		const disabled = false;
-		return { value, disabled };
-	});
-});
-
-const changeCategory = val => {
-	const index = categoryList.value.findIndex(item => item.value === val);
-	storeAgenda.setCategoryIndex(index);
-};
-
-const changeSort = val => null;
-
-const isAscSort = computed(() => storeAgenda.sort.isAsc);
-const toggleSortOrder = () => storeAgenda.toggleSortAsc();
-
-const showAddModal = ref(false);
-const onAdd = () => showAddModal.value = true;
+const detailAgendaId = ref(null);
+const route = useRoute();
+const showFormAdd = computed(() => route.name == "agendaNew");
 </script>
 <template>
-	<BasicLayout @new="onAdd">
+	<BasicLayout @new="$router.push('/agenda/new')">
 		<template #main>
-			<div class="p-8 grid grid-cols-[auto_1fr] gap-8 bg-gray-100">
+			<div class="p-8 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 bg-gray-100">
 				<div>
 					<Calendar class="basic-card mb-4" />
 					<div class="basic-card py-6">
@@ -50,13 +25,9 @@ const onAdd = () => showAddModal.value = true;
 						</div>
 					</div>
 				</div>
-				<div>
-					<HeaderBasic class="mb-6 ml-4" />
-					<div v-if="agenda.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-						<CardAgenda v-for="item in agenda" :id="item.id" />
-					</div>
-				</div>
-				<ModalAddAgenda v-if="showAddModal" @cancel="showAddModal = false" />
+				<FormAddAgenda v-if="showFormAdd" />
+				<ListAgenda v-else @showDetail="val => detailAgendaId = val" />
+				<OffcanvasAgenda v-if="detailAgendaId" :agendaId="detailAgendaId" @close="detailAgendaId = null" />
 			</div>
 		</template>
 	</BasicLayout>

@@ -1,16 +1,25 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Agenda from "./views/Agenda.vue";
-// import Home1 from "./views/Home1.vue";
-// import Home2 from "./views/Home2.vue";
+import Invitation from "./views/Invitation.vue";
+import Contact from "./views/Contact.vue";
+import Attendance from "./views/Attendance.vue";
 
 const useBuildPath = false;
 const routes = {
     home: { path: "/", component: Home },
     login: { path: "/login", component: Home },
-    agenda: { path: "/agenda", component: Agenda, meta: { needLogin: true } }
-    // home1: { path: "/home1", component: Home1 },
-    // home2: { path: "/home2", component: Home2 },
+    
+    agenda: { path: "/agenda", component: Agenda, meta: { needLogin: true } },
+    agendaNew: { path: "/agenda/new", component: Agenda, meta: { needLogin: true } },
+
+    invitation: { path: "/inv", component: Invitation, meta: { needLogin: true } },
+
+    contact: { path: "/contact", component: Contact, meta: { needLogin: true } },
+    contactNew: { path: "/contact/new", component: Contact, meta: { needLogin: true } },
+    contactEdit: { path: "/contact/:status/:id", component: Contact, meta: { needLogin: true } },
+
+    attendance: { path: "/att", component: Attendance, meta: { needLogin: true } }
 };
 
 const defineMyRouter = routesObj => {

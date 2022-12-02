@@ -3,9 +3,12 @@ import Header from "./Header.vue";
 import Navbar from "./Navbar.vue";
 
 defineEmits(["new"]);
+defineProps({
+	baseBgClass: { type: String }
+});
 </script>
 <template>
-	<div id="basicLayout">
+	<div id="basicLayout" :class="baseBgClass">
 		<Header />
 		<Navbar @new="$emit('new')" />
 
@@ -21,7 +24,7 @@ body,
 body > #app,
 body > #app > div,
 #basicLayout {
-	@apply max-h-screen;
+	@apply h-screen max-w-full overflow-x-hidden;
 }
 
 #basicLayout main {

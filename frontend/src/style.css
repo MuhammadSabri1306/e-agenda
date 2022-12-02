@@ -37,6 +37,10 @@
 		@apply rounded-2xl shadow bg-white;
 	}
 
+	.basic-card-lg {
+		@apply rounded-2xl shadow-lg border bg-white;
+	}
+
 	.custom-select [role=listbox] {
 		@apply px-3 py-1 text-sm min-w-[10rem] rounded-md text-gray-700 bg-gray-100 hover:bg-white/50 focus:bg-white border border-gray-300 focus:border-primary-500;
 	}
@@ -57,27 +61,47 @@
 		@apply w-4;
 	}
 
-	.form-group > label {
-		@apply block text-gray-700 text-sm font-medium mb-2;
+	.form-group {
+		@apply grid grid-cols-1 gap-2;
 	}
 
-	.form-group > input,
-	.form-group > textarea {
+	.form-group label {
+		@apply block text-gray-700 text-sm font-medium;
+	}
+
+	.form-group input,
+	.form-group textarea {
 		@apply block border rounded text-gray-800 w-full text-sm transition-colors border-gray-200 hover:border-gray-300 focus:border-gray-300;
 	}
 
-	.form-group > input {
+	.form-group input {
 		@apply px-4 py-2;
 	}
 
-	.form-group > textarea {
+	.form-group textarea {
 		@apply p-4;
 	}
 
-	.form-group > input.invalid,
-	.form-group > textarea.invalid {
-		@apply border-red-400;
+	.form-group input.invalid,
+	.form-group textarea.invalid {
+		@apply border-red-400 bg-red-300/10;
 		animation: justshake 0.3s forwards;
+	}
+
+	.btn {
+		@apply px-3 py-2 rounded text-sm font-medium;
+	}
+
+	.btn-icon {
+		@apply inline-flex justify-center items-center;
+	}
+
+	.btn-icon svg {
+		@apply w-4 h-4;
+	}
+
+	.hover-margin {
+		@apply transition-all mt-0 hover:-mt-1 mb-0 hover:mb-1;
 	}
 }
 

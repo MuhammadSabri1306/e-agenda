@@ -40,7 +40,7 @@ const onCollapseBlur = event => {
 			<font-awesome-icon icon="fa-regular fa-calendar" fixed-width />
 			<span class="text-xs font-semibold mt-1">{{ agenda.date }}</span>
 		</p>
-		<a href="#" class="absolute w-full h-full top-0 left-0"></a>
+		<a role="button" @click="$emit('expand', 1)" class="absolute w-full h-full top-0 left-0"></a>
 		<div class="absolute right-2 top-2">
 			<div class="relative">
 				<button type="button" @click="showCollapse = !showCollapse" @focusout="onCollapseBlur" class="rounded-full h-8 w-8 text-gray-500 text-xl flex justify-center items-center bg-transparent hover:bg-gray-200 focus:bg-gray-200" >
@@ -51,6 +51,12 @@ const onCollapseBlur = event => {
 						<ul @focusout="onCollapseBlur" class="flex flex-col" tabindex="-1">
 							<li class="card-collapse-item">
 								<button type="button">Edit Agenda</button>
+							</li>
+							<li class="card-collapse-item">
+								<button type="button">Absensi Kehadiran</button>
+							</li>
+							<li class="card-collapse-item">
+								<button type="button">Undangan Agenda</button>
 							</li>
 							<li class="card-collapse-item">
 								<button type="button">Hapus Agenda</button>

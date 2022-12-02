@@ -5,6 +5,11 @@ import FormLogin from "@/components/FormLogin.vue";
 
 const route = useRoute();
 const isHomePage = computed(() => route.name == "home");
+
+const onLoginShow = () => {
+	const inputElm = document.querySelector("input");
+	inputElm && inputElm.focus();
+}
 </script>
 <template>
 	<div class="relative w-screen overflow-x-hidden">
@@ -19,7 +24,7 @@ const isHomePage = computed(() => route.name == "home");
 				<div class="m-auto">
 					<h2 class="text-2xl md:text-4xl font-body font-bold text-black text-center md:text-left md:ml-1 hover-margin mb-6">Selamat Datang di</h2>
 					<div class="flex items-end justify-center md:justify-start mb-6">
-						<h1 class="text-5xl md:text-7xl font-black whitespace-nowrap text-blue-600 text-center md:text-left">E-AGENDA</h1>
+						<h1 class="text-5xl md:text-7xl font-black whitespace-nowrap text-blue-600 text-center md:text-left">E-RAPAT</h1>
 						<p class="text-sm font-body font-bold mb-3 text-black/90 text-center ml-1">V1.0.0</p>
 					</div>
 					<p class="text-lg text-black/80 text-center md:text-left md:ml-1 mb-16">Cek agenda yang akan dilaksanakan hari ini atau dalam waktu dekat. Anda juga bisa memeriksa aktifitas lama yang telah diagendakan.</p>
@@ -34,7 +39,7 @@ const isHomePage = computed(() => route.name == "home");
 				</div>
 			</div>
 		</Transition>
-		<Transition name="form-section">
+		<Transition name="form-section" @after-enter="onLoginShow">
 			<div v-if="!isHomePage" class="absolute-layer right-0 w-full md:w-3/4 lg:w-[36rem] p-4 md:px-24 lg:px-32 flex flex-col items-stretch">
 				<FormLogin />
 			</div>

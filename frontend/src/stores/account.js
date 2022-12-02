@@ -4,7 +4,8 @@ import { fetchLogin } from "@/modules/sample-data";
 
 export const useAccountStore = defineStore("account", {
 	state: () => ({
-		user: null,
+		username: null,
+		name: null,
 		token: null,
 		role: null
 	}),
@@ -21,44 +22,39 @@ export const useAccountStore = defineStore("account", {
 		async login({ username, password }, callback = null) {
 			try {
 
-				const data = await fetchLogin({ username, password });
-				this.user = {
-					username: data.username,
-					name: data.name
-				};
-				this.role = data.role;
-				this.token = data.token;
+				const response = await fetchLogin({ username, password });
+				const data = response.data;
+				
+				if(!data) {
+					callback && callback(false);
+					return;
+				}
 
 				this.updateAccount(data);
 				callback && callback(true);
 
 			} catch(err) {
-
 				console.error(err);
 				callback && callback(false);
-
 			}
 		},
 
-		updateAccount(params) {
-			let user = this.user;
-
-			if(params.username || params.name) {
-				const user = this.user || {};
-				if(params.username)
-					user.username = params.username;
-				if(params.name)
-					user.name = params.username;
-				this.user = user;
-			}
-
-			if(params.token)
+		updateAccount(params, updateCookie = true) {
+			if(params.name && params.name !== undefined)
+				this.name = params.name;
+			if(params.username && params.username !== undefined)
+				this.username = params.username;
+			if(params.token && params.token !== undefined)
 				this.token = params.token;
-			if(params.role)
+			if(params.role && params.role !== undefined)
 				this.role = params.role;
 
+			if(!updateCookie)
+				return;
+
 			const data = {
-				user: this.user,
+				username: this.username,
+				name: this.name,
 				role: this.role,
 				token: this.token
 			};
@@ -70,19 +66,20 @@ export const useAccountStore = defineStore("account", {
 			const data = getCookie("user");
 			let params = {};
 
-			if(!data)
-				return;
+			if(data && data !== undefined) {
 
-			if(data.user && data.user.username)
-				params.username = data.user.username;
-			if(data.user && data.user.name)
-				params.name = data.user.name;
-			if(data.role)
-				params.role = data.role;
-			if(data.token)
-				params.token = data.token;
+				if(data.username)
+					params.username = data.username;
+				if(data.name)
+					params.name = data.name;
+				if(data.role)
+					params.role = data.role;
+				if(data.token)
+					params.token = data.token;
 
-			this.updateAccount(params);
+				this.updateAccount(params, false);
+
+			}
 		}
 
 	}

@@ -4,7 +4,8 @@ import { useAgendaStore } from "@/stores/agenda";
 
 const emit = defineEmits(["change"]);
 const props = defineProps({
-	defaultValue: { type: String, default: "blue" }
+	defaultValue: { type: String, default: "blue" },
+	position: { type: String, default: "bottom" }
 })
 
 const agendaStore = useAgendaStore();
@@ -16,7 +17,6 @@ const getCalendarColors = () => {
 	for(let key in calColors) {
 		data.push({ key, val: calColors[key] });
 	}
-	console.log(data);
 	return data;
 };
 
@@ -53,7 +53,7 @@ const onOptionsClick = index => {
 			</span>
 		</button>
 		<Transition name="fade">
-			<ul v-show="showOptions" ref="optionsBody" @focusout="onOptionsBlur" class="option-body" tabindex="-1">
+			<ul v-show="showOptions" ref="optionsBody" @focusout="onOptionsBlur" :class="{ 'body-post-top': position == 'top' }" class="option-body" tabindex="-1">
 				<li v-for="(item, index) in colors">
 					<button type="button" @click="onOptionsClick(index)" :class="{ 'active': index === selectedIndex }" class="option-item px-4 py-2 text-left">
 						<div :class="item.val" class="color-circle"></div>
@@ -72,6 +72,10 @@ const onOptionsClick = index => {
 
 .option-body {
 	@apply absolute w-full flex flex-col bg-white rounded border shadow-sm max-h-[10rem] overflow-y-auto;
+}
+
+.option-body.body-post-top {
+	@apply bottom-full;
 }
 
 .option-item > li:not(:last-child) {
@@ -108,6 +112,11 @@ const onOptionsClick = index => {
 .fade-enter-from,
 .fade-leave-to {
 	@apply opacity-0 -mt-2 mb-2;
+}
+
+.fade-enter-from.body-post-top,
+.fade-leave-to.body-post-top {
+	@apply mt-2 -mb-2;
 }
 
 </style>
