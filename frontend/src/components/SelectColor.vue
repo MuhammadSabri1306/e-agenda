@@ -6,7 +6,7 @@ const emit = defineEmits(["change"]);
 const props = defineProps({
 	defaultValue: { type: String, default: "blue" },
 	position: { type: String, default: "bottom" }
-})
+});
 
 const agendaStore = useAgendaStore();
 const getCalendarColors = () => {

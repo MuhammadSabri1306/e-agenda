@@ -1,7 +1,10 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
+import { useAgendaStore } from "@/stores/agenda";
 import { required } from "@vuelidate/validators";
 import { useDataForm } from "@/modules/data-form";
+import { objToTimeStr } from "@/modules/date-id";
 import SelectColor from "@/components/SelectColor.vue";
 import { DatePicker } from "v-calendar";
 import LoadingLine from "@/components/ui/LoadingLine.vue";
@@ -22,6 +25,30 @@ const { data, v$ } = useDataForm({
 	endTime: { value: "00:00" }
 });
 
+const isLoaded = ref(false);
+const route = useRoute();
+const agendaId = computed(() => route.params.id);
+
+const agendaStore = useAgendaStore();
+agendaStore.fetchAgenda(false, success => {
+	if(!success)
+		return;
+
+	const currAgenda = agendaStore.agenda.find(item => item.id == agendaId.value);
+	if(!currAgenda)
+		return;
+
+	data.title = currAgenda.title;
+	data.location = currAgenda.location;
+	data.color = currAgenda.color;
+	data.desc = currAgenda.desc;
+	data.date.start = new Date(currAgenda.startDate);
+	data.date.end = new Date(currAgenda.endDate);
+	data.startTime = objToTimeStr(currAgenda.startTime, ":").time;
+	data.endTime = objToTimeStr(currAgenda.endTime, ":").time;
+	isLoaded.value = true;
+});
+
 const showLoader = ref(false);
 const hasSubmitted = ref(false);
 const onSubmit = async () => {
@@ -40,6 +67,7 @@ const onSubmit = async () => {
 		startTime: data.startTime,
 		endTime: data.endTime
 	};
+	showLoader.value = true;
 	console.log(body);
 };
 </script>
@@ -49,7 +77,7 @@ const onSubmit = async () => {
 		<div class="flex items-center mb-8">
 			<ButtonBack />
 		</div>
-		<form @submit.prevent="onSubmit">
+		<form v-if="isLoaded" @submit.prevent="onSubmit">
 			<div class="basic-card">
 				<div class="h-1 relative">
 					<LoadingLine v-if="showLoader" />
@@ -81,7 +109,7 @@ const onSubmit = async () => {
 							</div>
 							<div class="form-group">
 								<label>Warna *</label>
-								<SelectColor position="top" defaultValue="data.color" @change="value => data.color = value" class="w-[10rem]" />
+								<SelectColor position="top" :defaultValue="data.color" @change="value => data.color = value" class="w-[10rem]" />
 							</div>
 						</div>
 						<div class="form-group">

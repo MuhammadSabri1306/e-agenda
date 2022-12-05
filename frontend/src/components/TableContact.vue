@@ -5,15 +5,13 @@ import CardTable from "@/components/ui/CardTable.vue";
 
 const contactStore = useContactStore();
 const contact = computed(() => contactStore.contact);
+contactStore.fetchContact();
 
-contactStore.fetchContactAnggota();
-contactStore.fetchContactOpd();
-
-const getEditContactUrl = (currStatus, currId) => `/contact/${ currStatus }/${ currId }`;
+const getEditContactUrl = currId => `/contact/edit/${ currId }`;
 </script>
 <template>
 	<div>
-		<h2 class="text-gray-800 text-2xl mb-4">Kontak</h2>
+		<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Kontak</h2>
 		<div v-if="contact.length < 1">
 			<p class="text-sm font-semibold text-gray-700">Belum ada kontak.</p>
 		</div>
@@ -34,7 +32,7 @@ const getEditContactUrl = (currStatus, currId) => `/contact/${ currStatus }/${ c
 					</tr>
 				</template>
 				<template #tbody>
-					<tr v-for="(item, index) in contact" @click="$router.push(getEditContactUrl(item.status, item.id))">
+					<tr v-for="(item, index) in contact" @click="$router.push(getEditContactUrl(item.id))">
 						<td>{{ index + 1 }}</td>
 						<td>{{ item.name }}</td>
 						<td>{{ item.wa }}</td>
@@ -55,7 +53,7 @@ const getEditContactUrl = (currStatus, currId) => `/contact/${ currStatus }/${ c
 <style scoped>
 	
 .badge-contact-category {
-	@apply whitespace-nowrap px-2 py-1 text-xs font-semibold text-white bg-primary-500 rounded-pill cursor-default;
+	@apply whitespace-nowrap px-2 py-1 text-xs font-semibold text-white bg-primary-500 rounded-pill cursor-pointer;
 }
 
 .table-contact td {

@@ -25,6 +25,8 @@ const agenda = computed(() => {
 const showCollapse = ref(false);
 const cardCollapse = ref(null);
 const onCollapseBlur = event => {
+	if(!cardCollapse.value)
+		return;
 	if(cardCollapse.value.contains(event.relatedTarget))
 		return;
 	showCollapse.value = false;
@@ -50,16 +52,16 @@ const onCollapseBlur = event => {
 					<div v-show="showCollapse" ref="cardCollapse" class="card-collapse">
 						<ul @focusout="onCollapseBlur" class="flex flex-col" tabindex="-1">
 							<li class="card-collapse-item">
-								<button type="button">Edit Agenda</button>
+								<button type="button" @click="$router.push('/agenda/edit/'+id)">Edit Rapat</button>
 							</li>
 							<li class="card-collapse-item">
 								<button type="button">Absensi Kehadiran</button>
 							</li>
 							<li class="card-collapse-item">
-								<button type="button">Undangan Agenda</button>
+								<button type="button">Undangan Rapat</button>
 							</li>
 							<li class="card-collapse-item">
-								<button type="button">Hapus Agenda</button>
+								<button type="button">Hapus Rapat</button>
 							</li>
 						</ul>
 					</div>

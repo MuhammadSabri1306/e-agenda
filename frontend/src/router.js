@@ -12,14 +12,19 @@ const routes = {
     
     agenda: { path: "/agenda", component: Agenda, meta: { needLogin: true } },
     agendaNew: { path: "/agenda/new", component: Agenda, meta: { needLogin: true } },
+    agendaEdit: { path: "/agenda/edit/:id", component: Agenda, meta: { needLogin: true } },
 
     invitation: { path: "/inv", component: Invitation, meta: { needLogin: true } },
+    invitationNew: { path: "/inv/new/:agendaId", component: Invitation, meta: { needLogin: true } },
+    invitationEdit: { path: "/inv/edit/:id", component: Invitation, meta: { needLogin: true } },
 
     contact: { path: "/contact", component: Contact, meta: { needLogin: true } },
     contactNew: { path: "/contact/new", component: Contact, meta: { needLogin: true } },
-    contactEdit: { path: "/contact/:status/:id", component: Contact, meta: { needLogin: true } },
+    contactEdit: { path: "/contact/edit/:id", component: Contact, meta: { needLogin: true } },
 
-    attendance: { path: "/att", component: Attendance, meta: { needLogin: true } }
+    attendance: { path: "/att", component: Attendance, meta: { needLogin: true } },
+    attendanceDetail: { path: "/att/:id", component: Attendance, meta: { needLogin: true } },
+    attendanceRegist: { path: "/att/regist/:ukey", component: Attendance }
 };
 
 const defineMyRouter = routesObj => {

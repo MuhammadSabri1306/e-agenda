@@ -7,25 +7,28 @@ import TableTimePoint from "@/components/TableTimePoint.vue";
 import OffcanvasAgenda from "@/components/OffcanvasAgenda.vue";
 import ListAgenda from "@/components/ListAgenda.vue";
 import FormAddAgenda from "@/components/FormAddAgenda.vue";
+import FormEditAgenda from "@/components/FormEditAgenda.vue";
 
 const detailAgendaId = ref(null);
 const route = useRoute();
 const showFormAdd = computed(() => route.name == "agendaNew");
+const showFormEdit = computed(() => route.name == "agendaEdit");
 </script>
 <template>
 	<BasicLayout @new="$router.push('/agenda/new')">
 		<template #main>
 			<div class="p-8 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 bg-gray-100">
 				<div>
-					<Calendar class="basic-card mb-4" />
+					<Calendar @select="val => detailAgendaId = val" class="basic-card mb-4" />
 					<div class="basic-card py-6">
-						<h4 class="text-gray-800 text-xl leading-tight mb-4 px-4">Agenda per jam</h4>
+						<h4 class="text-gray-800 text-xl leading-tight mb-4 px-4">Rapat hari ini</h4>
 						<div class="h-96 overflow-y-auto border-y custom-scrollbar">
 							<TableTimePoint />
 						</div>
 					</div>
 				</div>
 				<FormAddAgenda v-if="showFormAdd" />
+				<FormEditAgenda v-else-if="showFormEdit" />
 				<ListAgenda v-else @showDetail="val => detailAgendaId = val" />
 				<OffcanvasAgenda v-if="detailAgendaId" :agendaId="detailAgendaId" @close="detailAgendaId = null" />
 			</div>

@@ -1,6 +1,6 @@
 import { login } from "./user";
-import { agenda } from "./agenda";
-import { contactAnggota, contactOpd, komisi, fraksi, pansus, opd } from "./contact";
+import { agenda, invitation, attendance } from "./agenda";
+import { contact, komisi, fraksi, pansus, opd } from "./contact";
 
 const buildResponse = (success, data) => {
 	return new Promise((resolve, reject) => {
@@ -28,19 +28,27 @@ export const fetchAgenda = (id = null) => {
 	return buildResponse(true, data);
 };
 
-export const fetchContactAnggota = (id = null) => {
+export const fetchInvitation = (id = null) => {
 	if(!id)
-		return buildResponse(true, contactAnggota);
+		return buildResponse(true, invitation);
 
-	const data = contactAnggota.find(item => item.id == id);
+	const data = invitation.find(item => item.id == id);
 	return buildResponse(true, data);
 };
 
-export const fetchContactOpd = (id = null) => {
+export const fetchAttendance = (id = null) => {
 	if(!id)
-		return buildResponse(true, contactOpd);
+		return buildResponse(true, attendance);
 
-	const data = contactOpd.find(item => item.id == id);
+	const data = attendance.find(item => item.id == id);
+	return buildResponse(true, data);
+};
+
+export const fetchContact = (id = null) => {
+	if(!id)
+		return buildResponse(true, contact);
+
+	const data = contact.find(item => item.id == id);
 	return buildResponse(true, data);
 };
 

@@ -40,7 +40,7 @@ const onLoginShow = () => {
 			</div>
 		</Transition>
 		<Transition name="form-section" @after-enter="onLoginShow">
-			<div v-if="!isHomePage" class="absolute-layer right-0 w-full md:w-3/4 lg:w-[36rem] p-4 md:px-24 lg:px-32 flex flex-col items-stretch">
+			<div v-if="!isHomePage" class="absolute-layer right-0 w-full md:w-3/4 lg:w-[40rem] p-4 md:px-24 lg:px-32 flex flex-col items-stretch">
 				<FormLogin />
 			</div>
 		</Transition>

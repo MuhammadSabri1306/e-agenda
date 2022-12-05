@@ -1,11 +1,10 @@
 import { defineStore } from "pinia";
 import { orderCategory } from "@/modules/contact";
-import { fetchContactAnggota, fetchContactOpd, fetchKomisi, fetchFraksi, fetchPansus, fetchOpd } from "@/modules/sample-data";
+import { fetchContact, fetchKomisi, fetchFraksi, fetchPansus, fetchOpd } from "@/modules/sample-data";
 
 export const useContactStore = defineStore("contact", {
 	state: () => ({
-		contactAnggota: [],
-		contactOpd: [],
+		contact: [],
 		categoryType: ["fraksi", "komisi", "pansus", "opd"],
 		categoryTypeFilter: "fraksi",
 		fraksi: [],
@@ -14,24 +13,6 @@ export const useContactStore = defineStore("contact", {
 		opd: [],
 	}),
 	getters: {
-
-		contact: state => {
-			const anggota = state.contactAnggota.map(item => {
-				return { status: "member", opd: null, ...item };
-			});
-
-			const opd = state.contactOpd.map(item => {
-				return {
-					status: "opd",
-					komisi: null,
-					fraksi: null,
-					pansus: null,
-					...item
-				};
-			});
-
-			return [...anggota, ...opd];
-		},
 
 		category: state => {
 			const formatList = item => {
@@ -61,14 +42,14 @@ export const useContactStore = defineStore("contact", {
 	},
 	actions: {
 
-		async fetchContactAnggota(force = false, callback = null) {
-			if(!force && this.contactAnggota.length > 0) {
+		async fetchContact(force = false, callback = null) {
+			if(!force && this.contact.length > 0) {
 				callback && callback(true);
 				return;
 			}
 
 			try {
-				const response = await fetchContactAnggota();
+				const response = await fetchContact();
 				const data = response.data;
 				
 				if(!data) {
@@ -77,31 +58,7 @@ export const useContactStore = defineStore("contact", {
 					return;
 				}
 
-				this.contactAnggota = data;
-				callback && callback(true);
-			} catch(err) {
-				console.error(err);
-				callback && callback(false);
-			}
-		},
-
-		async fetchContactOpd(force = false, callback = null) {
-			if(!force && this.contactOpd.length > 0) {
-				callback && callback(true);
-				return;
-			}
-
-			try {
-				const response = await fetchContactOpd();
-				const data = response.data;
-				
-				if(!data) {
-					console.log(response.data);
-					callback && callback(false);
-					return;
-				}
-
-				this.contactOpd = data;
+				this.contact = data;
 				callback && callback(true);
 			} catch(err) {
 				console.error(err);

@@ -92,7 +92,7 @@ const getItemTitle = index => {
 }
 
 .dropdown-collapse {
-	@apply overflow-hidden absolute w-full left-0 top-full;
+	@apply overflow-hidden absolute w-full left-0 top-full bg-white z-[2] border;
 }
 
 .dropdown-collapse ul {

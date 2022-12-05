@@ -23,6 +23,8 @@ export const useAgendaStore = defineStore("agenda", {
 			use: false
 		},
 		agenda: [],
+		invitation: [],
+		attendance: [],
 		calendarColors: {
 			gray: "bg-gray-500",
 		    red: "bg-red-500",

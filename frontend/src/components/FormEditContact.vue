@@ -11,8 +11,7 @@ import ConfirmDialog from "@/components/ui/ConfirmDialog.vue";
 
 const emit = defineEmits(["cancel"]);
 const contactStore = useContactStore();
-const contactAnggota = computed(() => contactStore.contactAnggota);
-const contactOpd = computed(() => contactStore.contactOpd);
+const contact = computed(() => contactStore.contact);
 
 const isFraksiLoaded = ref(false);
 const fraksi = computed(() => contactStore.fraksi);
@@ -54,40 +53,25 @@ const { data, v$ } = useDataForm({
 });
 
 const route = useRoute();
-const watcherSrc = () => {
-	const currId = route.params.id;
-	const currStatus = route.params.status;
-	return { currId, currStatus };
-};
 const isLoaded = ref(false);
-const initData = (currId, currStatus) => {
-	let currContact = null;
-	if(currStatus == "member")
-		currContact = contactAnggota.value.find(item => item.id == currId);
-	else
-		currContact = contactOpd.value.find(item => item.id == currId);
+const initData = currId => {
+	let currContact = contact.value.find(item => item.id == currId);
 	if(!currContact)
 		return;
 
 	data.name = currContact.name;
 	data.wa = currContact.wa;
 	data.email = currContact.email;
-	data.isMember = currStatus == "member";
+	data.isMember = currContact.isMember;
+	data.fraksi = currContact.fraksi;
+	data.komisi = currContact.komisi;
+	data.pansus = currContact.pansus;
+	data.opd = currContact.opd;
 
-	if(currStatus == "member") {
-		data.fraksi = currContact.fraksi ? currContact.fraksi.id : null;
-		data.komisi = currContact.komisi ? currContact.komisi.id : null;
-		data.pansus = currContact.pansus ? currContact.pansus.id : null;
-	} else {
-		data.opd = currContact.opd ? currContact.opd.id : null;
-	}
 	isLoaded.value = true;
 };
 
-if(route.params.status == "member")
-	contactStore.fetchContactAnggota(false, success => initData(route.params.id, route.params.status));
-else
-	contactStore.fetchContactOpd(false, success => initData(route.params.id, route.params.status));
+contactStore.fetchContact(false, success => initData(route.params.id));
 
 const showLoader = ref(false);
 const hasSubmitted = ref(false);
@@ -120,13 +104,12 @@ const confirmDelete = async () => {
 		return;
 
 	const id = route.params.id;
-	const status = route.params.status;
-	console.log(status, id);
+	console.log(id);
 };
 </script>
 <template>
 	<div>
-		<h2 class="text-gray-800 text-2xl mb-4">Kontak</h2>
+		<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Kontak</h2>
 		<div class="flex items-center mb-8">
 			<ButtonBack />
 			<button type="button" @click="confirmDelete" class="ml-auto btn btn-icon text-white transition-colors bg-red-500 hover:bg-red-400 focus:bg-red-400">
@@ -159,19 +142,19 @@ const confirmDelete = async () => {
 							<label for="inputEmail">Email</label>
 							<input type="email" v-model="v$.email.$model" :class="{ 'invalid': hasSubmitted && v$.email.$invalid }" id="inputEmail">
 						</div>
-						<div v-if="data.isMember && isFraksiLoaded" class="form-group mb-8 flex items-center gap-4">
+						<div v-if="data.isMember && isFraksiLoaded" class="form-group flex items-center gap-4">
 							<label>Fraksi</label>
 							<Dropdown :value="data.fraksi" :options="fraksi" labelKey="name" valueKey="id" defaultTitle="Pilih Fraksi" class="dropdown-category" />
 						</div>
-						<div v-if="data.isMember && isKomisiLoaded" class="form-group mb-8 flex items-center gap-4">
+						<div v-if="data.isMember && isKomisiLoaded" class="form-group flex items-center gap-4">
 							<label>Komisi</label>
 							<Dropdown :value="data.komisi" :options="komisi" labelKey="name" valueKey="id" defaultTitle="Pilih Komisi" class="dropdown-category" />
 						</div>
-						<div v-if="data.isMember && isPansusLoaded" class="form-group mb-8 flex items-center gap-4">
+						<div v-if="data.isMember && isPansusLoaded" class="form-group flex items-center gap-4">
 							<label>Pansus</label>
 							<Dropdown :value="data.pansus" :options="pansus" labelKey="name" valueKey="id" defaultTitle="Pilih Pansus" class="dropdown-category" />
 						</div>
-						<div v-if="!data.isMember && isOpdLoaded" class="form-group mb-8 flex items-center gap-4">
+						<div v-if="!data.isMember && isOpdLoaded" class="form-group flex items-center gap-4">
 							<label>OPD</label>
 							<Dropdown :value="data.opd" :options="opd" labelKey="name" valueKey="id" defaultTitle="Pilih OPD" class="dropdown-category" />
 						</div>

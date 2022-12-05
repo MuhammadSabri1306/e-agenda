@@ -30,24 +30,27 @@ export const opd = [
 	{ id: 2, name: "RSKD. GIGI DAN MULUT" }
 ];
 
-export const contactAnggota = [
+export const contact = [
 	{
 		id: 1,
 		name: "Ir. Selle KS Dalle",
 		wa: "0811416526",
 		email: "selleksdalle@gmail.com",
+		isMember: true,
 		fraksi: fraksi.find(item => item.id == 4),
 		komisi: komisi.find(item => item.id == 5),
-		pansus: null
-	}
-];
-
-export const contactOpd = [
+		pansus: null,
+		opd: null
+	},
 	{
-		id: 1,
+		id: 2,
 		name: "ADIL ALIM, S. Tr.kes",
 		wa: "08124227532",
 		email: "selleksdalle@gmail.com",
+		isMember: false,
+		fraksi: null,
+		komisi: null,
+		pansus: null,
 		opd: opd.find(item => item.id == 2)
 	}
 ];

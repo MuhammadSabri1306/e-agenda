@@ -72,10 +72,10 @@ const saveEditCategory = (categoryType, categoryId, categoryName) => {
 </script>
 <template>
 	<div>
-		<h2 class="text-gray-800 text-2xl mb-4">Kategori</h2>
-		<div class="flex items-center mb-4">
-			<Dropdown :value="typeFilter" :options="type" @change="onTypeFilterChange" class="dropdown-category-filter" />
-			<button type="button" @click="openFormNewCategory" class="ml-auto rounded w-8 h-8 flex justify-center items-center text-gray-500 transition-colors bg-transparent hover:bg-gray-100 focus:bg-gray-100">
+		<h2 class="text-gray-800 text-lg font-bold p-4 border-t-4 border-primary-500 mb-4">Kategori</h2>
+		<div class="flex items-center mb-4 gap-2">
+			<Dropdown :value="typeFilter" :options="type" @change="onTypeFilterChange" class="dropdown-category-filter grow" />
+			<button type="button" @click="openFormNewCategory" class="ml-auto rounded w-10 h-10 flex justify-center items-center text-gray-500 transition-colors bg-transparent hover:bg-gray-100 focus:bg-gray-100">
 				<font-awesome-icon icon="fa-solid fa-plus" />
 			</button>
 		</div>

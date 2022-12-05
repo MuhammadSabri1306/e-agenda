@@ -1,6 +1,6 @@
 
 export const login = (username, password) => {
-	if(username !== "user123" || password !== "user123") {
+	if(username !== "admin@gmail.com" || password !== "qwerty") {
 		return {
 			success: false,
 			data: null
