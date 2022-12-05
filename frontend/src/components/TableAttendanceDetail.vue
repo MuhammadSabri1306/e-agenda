@@ -16,6 +16,7 @@ const currAtt = computed(() => agendaStore.attendance.find(item => item.id == at
 agendaStore.fetchAttendance(false, success => isAttLoaded.value = success);
 
 const isUpdate = ref(false);
+const qrcodeFilename = uniqueKey => "e-rapat_" + uniqueKey;
 </script>
 <template>
 	<div>
@@ -38,7 +39,7 @@ const isUpdate = ref(false);
 						</div>
 					</div>
 				</div>
-				<CardQrCode :targetUrl="currAtt.uniqueKey" />
+				<CardQrCode :targetUrl="currAtt.roomUrl" :filename="qrcodeFilename(currAtt.uniqueKey)" />
 			</div>
 			<h2 class="text-gray-800 text-xl font-body mb-4 ml-4 font-semibold">Daftar Hadir</h2>
 			<div v-if="currAtt.member.length < 1">
@@ -52,7 +53,6 @@ const isUpdate = ref(false);
 							<th>Waktu</th>
 							<th>Nama</th>
 							<th>No. Whatsapp</th>
-							<th>Email</th>
 						</tr>
 					</template>
 					<template #tbody>
@@ -61,7 +61,6 @@ const isUpdate = ref(false);
 							<td>{{ item.dateTime }}</td>
 							<td>{{ item.name }}</td>
 							<td>{{ item.wa }}</td>
-							<td>{{ item.email }}</td>
 						</tr>
 					</template>
 				</CardTable>
