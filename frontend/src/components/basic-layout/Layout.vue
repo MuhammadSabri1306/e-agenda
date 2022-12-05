@@ -2,6 +2,7 @@
 import Header from "./Header.vue";
 import Navbar from "./Navbar.vue";
 import Footer from "./Footer.vue";
+import BottomNav from "./BottomNav.vue";
 
 defineEmits(["new"]);
 defineProps({
@@ -17,6 +18,7 @@ defineProps({
 			<slot name="main"></slot>
 		</main>
 		<Footer />
+		<BottomNav />
 	</div>
 </template>
 <style scoped>

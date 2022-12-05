@@ -1,8 +1,8 @@
 <template>
 	<header class="bg-gray-900 py-12">
 		<div class="container mb-4 md:mb-0">
-			<router-link to="/" class="flex justify-start md:justify-center items-center py-4 transition-opacity opacity-100 hover:opacity-90">
-				<h1 class="text-4xl text-primary-600 font-bold font-body mr-4 leading-none text-shadow-black">E-RAPAT</h1>
+			<router-link to="/" class="flex justify-center items-center p-4 transition-opacity opacity-100 hover:opacity-90">
+				<h1 class="text-3xl md:text-4xl text-primary-600 font-bold font-body mr-4 leading-none text-shadow-black">E-RAPAT</h1>
 				<div class="flex items-center">
 					<img src="/assets/img/logo-pemprov-sulsel.webp" class="h-12 w-auto">
                     <div class="ml-2">

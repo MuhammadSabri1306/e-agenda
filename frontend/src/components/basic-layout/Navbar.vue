@@ -42,7 +42,7 @@ defineEmits(["new"]);
 						</router-link>
 					</li>
             	</ul>
-                <ButtonOptions />
+                <ButtonOptions class="ml-auto" />
                 <ButtonAccount />
             </div>
         </div>
@@ -51,11 +51,11 @@ defineEmits(["new"]);
 <style scoped>
 	
 .basic-navbar {
-	@apply sticky bg-white z-[2] sticky top-0 w-full shadow-sm;
+	@apply bg-white z-[2] md:sticky top-0 w-full md:shadow-sm;
 }
 
 .nav-menu {
-	@apply hidden md:flex mr-auto;
+	@apply hidden md:flex;
 }
 
 .nav-link {
@@ -75,7 +75,7 @@ defineEmits(["new"]);
 }
 
 .basic-navbar :deep(.navbar-btn) > svg {
-	@apply w-6 h-6;
+	@apply w-8 md:w-6 h-8 md:h-6;
 }
 
 </style>

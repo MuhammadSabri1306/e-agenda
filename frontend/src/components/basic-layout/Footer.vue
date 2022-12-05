@@ -1,13 +1,13 @@
 <template>
 	<footer class="bg-gray-900">
-		<div class="container p-16">
-			<div class="grid grid-cols-2 gap-16">
+		<div class="container py-16 px-8 md:px-16">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-16">
 				<div>
 					<router-link to="/" class="flex items-center mb-4 transition-opacity opacity-100 hover:opacity-80">
-						<img src="/assets/img/logo-pemprov-sulsel.webp" class="h-24 w-auto">
+						<img src="/assets/img/logo-pemprov-sulsel.webp" class="h-16 md:h-24 w-auto">
 						<div class="ml-2">
-							<h5 class="text-4xl leading-none font-bold tracking-widest text-warning-400 text-shadow-black">DPRD</h5>
-							<h6 class="text-base leading-none font-semibold text-warning-400 text-shadow-black">SULAWESI SELATAN</h6>
+							<h5 class="text-3xl md:text-4xl leading-none font-bold tracking-widest text-warning-400 text-shadow-black">DPRD</h5>
+							<h6 class="text-sm md:text-base leading-none font-semibold text-warning-400 text-shadow-black">SULAWESI SELATAN</h6>
 						</div>
 					</router-link>
 					<ul class="flex flex-col items-start mb-8">

@@ -15,7 +15,7 @@ const showFormEdit = computed(() => route.name == "invitationEdit");
 	<BasicLayout>
 		<template #main>
 			<div class="container py-8">
-				<div class="grid grid-cols-1 md:grid-cols-[17rem_1fr] gap-8">
+				<div class="grid grid-cols-1 md:grid-cols-[17rem_1fr] gap-8 px-4 md:px-0">
 					<div>
 						<ListInvitation />
 					</div>
