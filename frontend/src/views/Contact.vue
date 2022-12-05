@@ -23,7 +23,7 @@ const showFormEdit = computed(() => route.name == "contactEdit");
 					<div>
 						<ListContactCategory />
 					</div>
-					<div>
+					<div class="w-full overflow-x-hidden">
 						<FormAddContact v-if="showFormNew" />
 						<FormEditContact v-else-if="showFormEdit" />
 						<TableContact v-else />

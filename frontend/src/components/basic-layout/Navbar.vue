@@ -1,10 +1,11 @@
 <script setup>
+import ButtonOptions from "./ButtonOptions.vue";
+import ButtonAccount from "./ButtonAccount.vue";
 
 defineEmits(["new"]);
-
 </script>
 <template>
-    <nav class="sticky bg-white z-[2] sticky top-0 w-full shadow-sm">
+    <nav class="basic-navbar">
         <div class="container">
             <div class="flex items-stretch px-16">
             	<ul class="nav-menu">
@@ -41,27 +42,20 @@ defineEmits(["new"]);
 						</router-link>
 					</li>
             	</ul>
-            	<a role="button" class="navbar-btn" @click="$emit('new')">
-                    <font-awesome-icon icon="fa-solid fa-plus" fixed-width />
-                </a>
-                <a role="button" class="navbar-btn">
-                    <font-awesome-icon icon="fa-solid fa-gear" fixed-width />
-                </a>
-                <a role="button" class="navbar-btn">
-                    <font-awesome-icon icon="fa-regular fa-circle-user" fixed-width />
-                </a>
+                <ButtonOptions />
+                <ButtonAccount />
             </div>
         </div>
     </nav>
 </template>
 <style scoped>
 	
-.nav-menu {
-	@apply hidden md:flex mr-auto;
+.basic-navbar {
+	@apply sticky bg-white z-[2] sticky top-0 w-full shadow-sm;
 }
 
-.navbar-btn {
-	@apply flex justify-center items-center p-4 text-xl transition-colors bg-transparent hover:bg-gray-100 text-gray-400 hover:text-primary-600;
+.nav-menu {
+	@apply hidden md:flex mr-auto;
 }
 
 .nav-link {
@@ -74,6 +68,14 @@ defineEmits(["new"]);
 
 .nav-link .icon > svg {
 	@apply w-4 h-4;
+}
+
+.basic-navbar :deep(.navbar-btn) {
+	@apply flex justify-center items-center p-4 text-xl transition-colors bg-transparent hover:bg-gray-100 text-gray-700 hover:text-primary-700;
+}
+
+.basic-navbar :deep(.navbar-btn) > svg {
+	@apply w-6 h-6;
 }
 
 </style>

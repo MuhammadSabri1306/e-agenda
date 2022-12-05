@@ -42,7 +42,7 @@ const saveQrCode = () => {
 			</button>
 		</div>
 		<div class="p-4 flex justify-center">
-			<QrcodeVue :value="url" :size="150" level="H" />
+			<QrcodeVue :value="url" :size="200" level="H" />
 			<QrcodeVue ref="qrCodeCanvas" :value="url" :size="1000" level="H" render-as="canvas" class="hidden" />
 		</div>
 	</div>

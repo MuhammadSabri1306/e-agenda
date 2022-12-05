@@ -1,6 +1,7 @@
 <script setup>
 import Header from "./Header.vue";
 import Navbar from "./Navbar.vue";
+import Footer from "./Footer.vue";
 
 defineEmits(["new"]);
 defineProps({
@@ -12,10 +13,10 @@ defineProps({
 		<Header />
 		<Navbar @new="$emit('new')" />
 
-		<main>
+		<main class="pt-8 pb-16">
 			<slot name="main"></slot>
-			<footer></footer>
 		</main>
+		<Footer />
 	</div>
 </template>
 <style scoped>
@@ -24,11 +25,11 @@ body,
 body > #app,
 body > #app > div,
 #basicLayout {
-	@apply h-screen max-w-full overflow-x-hidden;
+	@apply h-screen max-w-full overflow-x-hidden flex flex-col;
 }
 
 #basicLayout main {
-	@apply text-gray-900 flex flex-col min-h-[100vh];
+	@apply text-gray-900 flex flex-col grow;
 }
 
 </style>

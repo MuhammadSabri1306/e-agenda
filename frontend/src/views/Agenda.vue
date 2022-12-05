@@ -15,9 +15,9 @@ const showFormAdd = computed(() => route.name == "agendaNew");
 const showFormEdit = computed(() => route.name == "agendaEdit");
 </script>
 <template>
-	<BasicLayout @new="$router.push('/agenda/new')">
+	<BasicLayout @new="$router.push('/agenda/new')" baseBgClass="bg-gray-100">
 		<template #main>
-			<div class="p-8 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 bg-gray-100">
+			<div class="p-8 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8">
 				<div>
 					<Calendar @select="val => detailAgendaId = val" class="basic-card mb-4" />
 					<div class="basic-card py-6">
@@ -27,9 +27,11 @@ const showFormEdit = computed(() => route.name == "agendaEdit");
 						</div>
 					</div>
 				</div>
-				<FormAddAgenda v-if="showFormAdd" />
-				<FormEditAgenda v-else-if="showFormEdit" />
-				<ListAgenda v-else @showDetail="val => detailAgendaId = val" />
+				<div class="w-full overflow-x-hidden">
+					<FormAddAgenda v-if="showFormAdd" />
+					<FormEditAgenda v-else-if="showFormEdit" />
+					<ListAgenda v-else @showDetail="val => detailAgendaId = val" />
+				</div>
 				<OffcanvasAgenda v-if="detailAgendaId" :agendaId="detailAgendaId" @close="detailAgendaId = null" />
 			</div>
 		</template>

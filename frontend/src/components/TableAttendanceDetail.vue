@@ -2,10 +2,11 @@
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useAgendaStore } from "@/stores/agenda";
+import { useDateId, toTimeStr } from "@/modules/date-id";
 import CardTable from "@/components/ui/CardTable.vue";
 import SwitchToggle from "@/components/ui/SwitchToggle.vue";
 import CardQrCode from "@/components/CardQrCode.vue";
-import { useDateId, toTimeStr } from "@/modules/date-id";
+import ButtonBack from "@/components/ButtonBack.vue";
 
 const route = useRoute();
 const attId = computed(() => route.params.id);
@@ -21,8 +22,11 @@ const qrcodeFilename = uniqueKey => "e-rapat_" + uniqueKey;
 <template>
 	<div>
 		<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Absensi Rapat</h2>
+		<div class="flex items-center mb-8">
+			<ButtonBack />
+		</div>
 		<div v-if="isAttLoaded">
-			<div class="mb-8 flex items-start gap-8">
+			<div class="mb-8 flex flex-wrap items-start gap-8">
 				<div class="basic-card card-attendance-desc">
 					<div class="form-group mb-4">
 						<label>Name Agenda :<br>{{ currAtt.agenda.title }}</label>
@@ -58,8 +62,8 @@ const qrcodeFilename = uniqueKey => "e-rapat_" + uniqueKey;
 					<template #tbody>
 						<tr v-for="(item, index) in currAtt.member">
 							<td>{{ index + 1 }}</td>
-							<td>{{ item.dateTime }}</td>
-							<td>{{ item.name }}</td>
+							<td class="whitespace-nowrap">{{ item.dateTime }}</td>
+							<td class="whitespace-nowrap">{{ item.name }}</td>
 							<td>{{ item.wa }}</td>
 						</tr>
 					</template>
@@ -75,7 +79,7 @@ const qrcodeFilename = uniqueKey => "e-rapat_" + uniqueKey;
 }
 
 td {
-	@apply text-xs font-semibold text-gray-600 !important;
+	@apply text-sm font-medium text-gray-600 !important;
 }
 
 </style>

@@ -19,7 +19,7 @@ const showFormEdit = computed(() => route.name == "invitationEdit");
 					<div>
 						<ListInvitation />
 					</div>
-					<div>
+					<div class="w-full overflow-x-hidden">
 						<FormAddInvitation v-if="showFormNew" />
 						<FormEditInvitation v-else-if="showFormEdit" />
 						<HeroInvitation v-else />

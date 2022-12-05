@@ -2,6 +2,7 @@
 import { ref, reactive, computed } from "vue";
 import { useAgendaStore } from "@/stores/agenda";
 import Dropdown from "@/components/ui/Dropdown.vue";
+import ModalFormAttendance from "@/components/ModalFormAttendance.vue";
 
 const appliedFilter = ref(1);
 const filters = [
@@ -26,12 +27,16 @@ const attendance = computed(() => {
 });
 
 const getEditUrl = attId => `/att/${ attId }`;
+const showFormAdd = ref(false);
 </script>
 <template>
 	<div>
 		<h2 class="text-gray-800 text-lg font-bold p-4 border-t-4 border-primary-500 mb-4">Agenda Rapat</h2>
 		<div class="flex items-center gap-2 mb-4">
-			<Dropdown :value="appliedFilter" labelKey="title" valueKey="id" :options="filters" @change="val => appliedFilter = val" class="w-48" />
+			<Dropdown :value="appliedFilter" labelKey="title" valueKey="id" :options="filters" @change="val => appliedFilter = val" class="grow" />
+			<button type="button" @click="showFormAdd = true" class="ml-auto rounded w-10 h-10 flex justify-center items-center text-gray-500 transition-colors bg-transparent hover:bg-gray-100 focus:bg-gray-100">
+				<font-awesome-icon icon="fa-solid fa-plus" />
+			</button>
 		</div>
 		<div v-if="isAttLoaded && attendance.length < 1">
 			<p class="text-sm font-semibold text-gray-700">Belum ada agenda rapat.</p>
@@ -41,6 +46,7 @@ const getEditUrl = attId => `/att/${ attId }`;
 				<router-link :to="getEditUrl(item.id)">{{ item.title }}</router-link>
 			</li>
 		</ul>
+		<ModalFormAttendance v-if="showFormAdd" @cancel="showFormAdd = false" />
 	</div>
 </template>
 

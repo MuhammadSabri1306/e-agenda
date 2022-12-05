@@ -18,7 +18,7 @@ const showDetail = computed(() => route.name == "attendanceDetail");
 					<div>
 						<ListAttendance />
 					</div>
-					<div>
+					<div class="w-full overflow-x-hidden">
 						<TableAttendanceDetail v-if="showDetail" />
 						<HeroAttendance v-else />
 					</div>

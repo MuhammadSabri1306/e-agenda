@@ -63,7 +63,7 @@ export const attendance = room.map(roomItem => {
 	const agendaId = roomItem.agenda.id;
 	const agendaDate = new Date(roomItem.agenda.startDate).getTime();
 
-	const uniqueKey = `room${ roomItem.id }agd${ agendaId }t${agendaDate}`;
+	const uniqueKey = `${ roomItem.id }agd${ agendaId }t${ agendaDate }`;
 	const roomUrl = "http://localhost:5173/att/room/" + uniqueKey;
 	return { ...roomItem, member, uniqueKey, roomUrl };
 });
