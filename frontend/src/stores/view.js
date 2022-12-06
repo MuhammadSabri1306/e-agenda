@@ -7,7 +7,6 @@ export const useViewStore = defineStore("view", {
 	actions: {
 
 		showToast(title, message, success) {
-			console.log(title);
 			this.toast = { title, message, success };
 		}
 

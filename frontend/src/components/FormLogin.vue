@@ -9,7 +9,7 @@ import { fetchLogin } from "@/modules/sample-data";
 import LoadingLine from "@/components/ui/LoadingLine.vue";
 
 const { data, v$ } = useDataForm({
-	username: { required },
+	email: { required },
 	password: { required }
 });
 
@@ -30,8 +30,8 @@ const onLogin = async () => {
 		return;
 
 	showLoader.value = true;
-	const { username, password } = data;
-	accountStore.login({ username, password }, success => {
+	const { email, password } = data;
+	accountStore.login({ email, password }, success => {
 		if(!success) {
 			showLoader.value = false;
 			viewStore.showToast("Gagal Login", "Silahkan login menggunakan data yang benar.", false);
@@ -53,10 +53,10 @@ const onLogin = async () => {
 			<form @submit.prevent="onLogin">
 				<div class="grid grid-cols-1 mb-4 gap-4">
 					<div class="form-group">
-						<input type="text" v-model="v$.username.$model" :class="{ 'invalid': v$.username.$invalid && hasSubmitted }" placeholder="Masukkan email atau nomor telepon">
+						<input type="email" v-model="v$.email.$model" :class="{ 'invalid': v$.email.$invalid && hasSubmitted }" placeholder="Masukkan email anda">
 					</div>
 					<div class="form-group">
-						<input type="password" v-model="v$.password.$model" :class="{ 'invalid': v$.password.$invalid && hasSubmitted }" placeholder="Masukkan password">
+						<input type="password" v-model="v$.password.$model" :class="{ 'invalid': v$.password.$invalid && hasSubmitted }" placeholder="Masukkan password anda">
 					</div>
 				</div>
 				<p class="text-right text-xs font-semibold mb-4">

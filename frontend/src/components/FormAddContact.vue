@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 import { useContactStore } from "@/stores/contact";
+import { useViewStore } from "@/stores/view";
 import { required } from "@vuelidate/validators";
 import { useDataForm } from "@/modules/data-form";
 import SwitchToggle from "@/components/ui/SwitchToggle.vue";
@@ -10,74 +12,89 @@ import ButtonBack from "@/components/ButtonBack.vue";
 
 const emit = defineEmits(["cancel"]);
 const contactStore = useContactStore();
+const isMember = ref(true);
+
+const pimpinanItem = ["Ketua", "Wakil Ketua", "Anggota"];
+const badanItem = ["Ketua", "Wakil Ketua", "Anggota", "Bukan Anggota"];
+const fraksiItem = ["Penasehat", "Ketua", "Wakil Ketua", "Sekretaris", "Bendahara", "Wakil Bendahara", "Wakil Sekretaris", "Anggota"];
+const komisiItem = ["Ketua", "Wakil Ketua", "Sekretaris", "Anggota", "Bukan Anggota"];
+
+const { data, v$ } = useDataForm({
+	nama: { required },
+	noHp: { required },
+	isJkelP: { value: false },
+	tmpLahir: {},
+	alamat: {},
+	fraksiId: {},
+	komisiId: {},
+	pimpinanDewan: { value: pimpinanItem[pimpinanItem.length - 1] },
+	kedudukanFraksi: { value: fraksiItem[fraksiItem.length - 1] },
+	kedudukanKomisi: { value: komisiItem[komisiItem.length - 1] },
+	kedudukanBadanMusyawarah: { value: badanItem[badanItem.length - 1] },
+	kedudukanBadanPembentukanPerda: { value: badanItem[badanItem.length - 1] },
+	kedudukanBadanAnggaran: { value: badanItem[badanItem.length - 1] },
+	kedudukanBadanKehormatan: { value: badanItem[badanItem.length - 1] },
+	jabatanOpd: {}
+});
 
 const isFraksiLoaded = ref(false);
 const fraksi = computed(() => contactStore.fraksi);
 contactStore.fetchFraksi(false, success => {
 	if(success)
-		isFraksiLoaded.value = true;
+		data.fraksiId = fraksi.value[0].id;
+	isFraksiLoaded.value = true;
 });
 
 const isKomisiLoaded = ref(false);
 const komisi = computed(() => contactStore.komisi);
-contactStore.fetchKomisi(false, success => {
-	if(success)
-		isKomisiLoaded.value = true;
-});
-
-const isPansusLoaded = ref(false);
-const pansus = computed(() => contactStore.pansus);
-contactStore.fetchPansus(false, success => {
-	if(success)
-		isPansusLoaded.value = true;
-});
+contactStore.fetchKomisi(false, success => isKomisiLoaded.value = true);
 
 const isOpdLoaded = ref(false);
 const opd = computed(() => contactStore.opd);
-contactStore.fetchOpd(false, success => {
-	if(success)
-		isOpdLoaded.value = true;
-});
-
-const { data, v$ } = useDataForm({
-	name: { value: null, required },
-	wa: { value: null, required },
-	email: { value: null, required },
-	isMember: { value: true },
-	fraksi: { value: null },
-	komisi: { value: null },
-	pansus: { value: null },
-	opd: { value: null }
-});
-
-const getData = (...keys) => {
-	const result = {};
-	keys.forEach(k => result[k] = data[k]);
-	return result;
-};
+contactStore.fetchOpd(false, success => isOpdLoaded.value = true);
 
 const showLoader = ref(false);
 const hasSubmitted = ref(false);
+const router = useRouter();
+const viewStore = useViewStore();
+
+const saveContactMember = () => {
+	showLoader.value = true;
+	const body = {
+		nama: data.nama,
+		no_hp: data.noHp,
+		jenis_kelamin: data.isJkelP ? "perempuan" : "laki-laki",
+		alamat: data.alamat,
+		tempat_lahir: data.tmpLahir,
+		fraksi_id: data.fraksiId,
+		komisi_id: data.komisiId,
+		pimpinan_dewan: data.pimpinanDewan,
+		kedudukan_fraksi: data.kedudukanFraksi,
+		kedudukan_komisi: data.kedudukanKomisi,
+		kedudukan_badan_musyawarah: data.kedudukanBadanMusyawarah,
+		kedudukan_badan_pembentukan_perda: data.kedudukanBadanPembentukanPerda,
+		kedudukan_badan_anggaran: data.kedudukanBadanAnggaran,
+		kedudukan_badan_kehormatan: data.kedudukanBadanKehormatan
+	};
+
+	contactStore.saveContactMember(body, success => {
+		showLoader.value = false;
+		if(!success)
+			return viewStore.showToast("Kontak tidak tersimpan", "Terjadi masalah saat menghubungi server.", false);
+		
+		contactStore.fetchContact(true);
+		router.push("/contact");
+	});
+};
+
 const onSubmit = async () => {
 	hasSubmitted.value = true;
 	const isValid = await v$.value.$validate();
 	if(!isValid)
 		return;
 
-	const body = {
-		name: data.name,
-		wa: data.wa,
-		email: data.email
-	};
-	if(data.isMember) {
-		body.fraksi = data.fraksi;
-		body.komisi = data.komisi;
-		body.pansus = data.pansus;
-	} else {
-		body.opd = data.opd;
-	}
-	showLoader.value = true;
-	console.log(body);
+	if(isMember.value)
+		saveContactMember();
 };
 </script>
 <template>
@@ -87,48 +104,97 @@ const onSubmit = async () => {
 			<ButtonBack />
 		</div>
 		<div class="basic-card">
-			<div class="h-1 relative mb-8">
-				<LoadingLine v-if="showLoader" />
-			</div>
 			<form @submit.prevent="onSubmit">
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 m-8">
 					<div>
+						<div class="field-group form-group mb-8">
+							<label class="field-group-title">Status</label>
+							<div class="flex items-center gap-2 ml-8">
+								<label>Anggota DPRD</label>
+								<SwitchToggle :value="true" @toggle="val => isMember = val" />
+							</div>
+						</div>
 						<div class="form-group mb-8">
 							<label for="inputName">Nama Kontak *</label>
-							<input type="text" v-model="v$.name.$model" :class="{ 'invalid': hasSubmitted && v$.name.$invalid }" id="inputName">
+							<input type="text" v-model="v$.nama.$model" :class="{ 'invalid': hasSubmitted && v$.nama.$invalid }" id="inputName">
 						</div>
 						<div class="form-group mb-8">
-							<label for="inputWa">No. Whatsapp *</label>
-							<input type="tele" v-model="v$.wa.$model" :class="{ 'invalid': hasSubmitted && v$.wa.$invalid }" id="inputWa">
+							<label for="inputNoHp">No. Telepon *</label>
+							<input type="tele" v-model="v$.noHp.$model" :class="{ 'invalid': hasSubmitted && v$.noHp.$invalid }" id="inputNoHp">
 						</div>
-						<div class="form-group">
-							<label for="inputEmail">Email</label>
-							<input type="email" v-model="v$.email.$model" :class="{ 'invalid': hasSubmitted && v$.email.$invalid }" id="inputEmail">
+						<div class="field-group form-group mb-8">
+							<label class="field-group-title">Jenis Kelamin</label>
+							<div class="flex items-center gap-2 ml-8">
+								<label>Laki-laki</label>
+								<SwitchToggle :value="data.isJkelP" @toggle="val => data.isJkelP = val" />
+								<label>Perempuan</label>
+							</div>
+						</div>
+						<div v-if="isMember" class="form-group mb-8">
+							<label for="textareaAlamat">Alamat</label>
+							<textarea id="textareaAlamat" v-model="v$.alamat.$model" :class="{ 'invalid': hasSubmitted && v$.alamat.$invalid }" rows="4"></textarea>
 						</div>
 					</div>
 					<div>
-						<div class="form-group mb-8">
-							<label class="mb-2">Status</label>
-							<div class="flex items-center gap-2 ml-8">
-								<label>Anggota DPRD</label>
-								<SwitchToggle :value="true" @toggle="val => data.isMember = val" />
+						<div v-if="!isMember" class="form-group mb-8">
+							<label for="textareaAlamat">Alamat</label>
+							<textarea id="textareaAlamat" v-model="v$.alamat.$model" :class="{ 'invalid': hasSubmitted && v$.alamat.$invalid }" rows="4"></textarea>
+						</div>
+						<div class="form-group mb-4 flex items-center gap-4">
+							<label>Pimpinan Dewan</label>
+							<Dropdown :options="pimpinanItem" :value="data.pimpinanDewan" @change="val => data.pimpinanDewan = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
+						</div>
+						<div v-if="isMember" class="field-group mb-8">
+							<label class="field-group-title">Badan Kelengkapan</label>
+							<div class="form-group mb-4 flex items-center gap-4">
+								<label>Badan Musyawarah</label>
+								<Dropdown :options="badanItem" :value="data.kedudukanBadanMusyawarah" @change="val => data.kedudukanBadanMusyawarah = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
+							</div>
+							<div class="form-group mb-4 flex items-center gap-4">
+								<label>Badan Pembentukan<br>Peraturan Daerah</label>
+								<Dropdown :options="badanItem" :value="data.kedudukanBadanPembentukanPerda" @change="val => data.kedudukanBadanPembentukanPerda = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
+							</div>
+							<div class="form-group mb-4 flex items-center gap-4">
+								<label>Badan Anggaran</label>
+								<Dropdown :options="badanItem" :value="data.kedudukanBadanAnggaran" @change="val => data.kedudukanBadanAnggaran = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
+							</div>
+							<div class="form-group flex items-center gap-4">
+								<label>Badan Kehormatan</label>
+								<Dropdown :options="badanItem" :value="data.kedudukanBadanKehormatan" @change="val => data.kedudukanBadanKehormatan = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
 							</div>
 						</div>
-						<div v-if="data.isMember && isFraksiLoaded" class="form-group mb-8 flex items-center gap-4">
-							<label>Fraksi</label>
-							<Dropdown :options="fraksi" labelKey="name" valueKey="id" defaultTitle="Pilih Fraksi" class="dropdown-category" />
+						<div v-if="isMember && isFraksiLoaded" class="field-group mb-8">
+							<label class="field-group-title">Fraksi</label>
+							<div class="form-group mb-4 flex items-center gap-4">
+								<label>Nama Fraksi</label>
+								<Dropdown :options="fraksi" :value="data.fraksiId" @change="val => data.fraksiId = val" labelKey="nama_fraksi" valueKey="id" defaultTitle="Pilih Opsi" class="dropdown-category" />
+							</div>
+							<div class="form-group flex items-center gap-4">
+								<label>Kedudukan Fraksi</label>
+								<Dropdown :options="fraksiItem" :value="data.kedudukanFraksi" @change="val => data.kedudukanFraksi = val" defaultTitle="Pilih Opsi" class="dropdown-category" />
+							</div>
 						</div>
-						<div v-if="data.isMember && isKomisiLoaded" class="form-group mb-8 flex items-center gap-4">
-							<label>Komisi</label>
-							<Dropdown :options="komisi" labelKey="name" valueKey="id" defaultTitle="Pilih Komisi" class="dropdown-category" />
+						<div v-if="isMember && isKomisiLoaded" class="field-group">
+							<label class="field-group-title">Komisi</label>
+							<div class="form-group mb-4 flex items-center gap-4">
+								<label>Nama Komisi</label>
+								<Dropdown :options="komisi" :value="data.komisiId" @change="val => data.komisiId = val" labelKey="nama_komisi" valueKey="id" defaultTitle="Pilih Opsi" class="dropdown-category" />
+							</div>
+							<div class="form-group flex items-center gap-4">
+								<label>Kedudukan Komisi</label>
+								<Dropdown :options="komisiItem" :value="data.kedudukanKomisi" @change="val => data.kedudukanKomisi = val" defaultTitle="Pilih Opsi" class="dropdown-category" />
+							</div>
 						</div>
-						<div v-if="data.isMember && isPansusLoaded" class="form-group mb-8 flex items-center gap-4">
-							<label>Pansus</label>
-							<Dropdown :options="pansus" labelKey="name" valueKey="id" defaultTitle="Pilih Pansus" class="dropdown-category" />
-						</div>
-						<div v-if="!data.isMember && isOpdLoaded" class="form-group mb-8 flex items-center gap-4">
-							<label>OPD</label>
-							<Dropdown :options="opd" labelKey="name" valueKey="id" defaultTitle="Pilih OPD" class="dropdown-category" />
+						<div v-if="!isMember && isOpdLoaded" class="field-group">
+							<label class="field-group-title">OPD</label>
+							<div class="form-group mb-4 flex items-center gap-4">
+								<label>Nama OPD</label>
+								<Dropdown :options="opd" labelKey="name" valueKey="id" defaultTitle="Pilih Opsi" class="dropdown-category" />
+							</div>
+							<div class="form-group flex items-center gap-4">
+								<label>Jabatan OPD</label>
+								<Dropdown :options="opd" labelKey="name" valueKey="id" defaultTitle="Pilih Opsi" class="dropdown-category" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -139,6 +205,9 @@ const onSubmit = async () => {
 					</button>
 				</div>
 			</form>
+			<div class="h-1 relative">
+				<LoadingLine v-if="showLoader" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -158,6 +227,14 @@ const onSubmit = async () => {
 
 .basic-card {
 	@apply overflow-hidden shadow-lg border;
+}
+
+.field-group {
+	@apply relative p-4 rounded-lg border;
+}
+
+.field-group-title {
+	@apply absolute top-[-10px] left-0 text-xs font-semibold text-gray-600 bg-white py-1 px-2 mx-4;
 }
 
 </style>

@@ -31,14 +31,14 @@ const onSubmit = async () => {
 		return;
 
 	const body = {
-		title: data.title,
-		location: data.location,
+		nama: data.title,
+		tempat: data.location,
 		color: data.color,
 		desc: data.desc,
-		startDate: data.date.start,
-		endDate: data.date.end,
-		startTime: data.startTime,
-		endTime: data.endTime
+		tanggal_mulai: data.date.start,
+		tanggal_selesai: data.date.end,
+		mulai_pukul: data.startTime,
+		sampai_pukul: data.endTime
 	};
 	console.log(body);
 };

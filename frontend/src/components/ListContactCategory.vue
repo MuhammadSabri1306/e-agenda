@@ -5,7 +5,38 @@ import Dropdown from "@/components/ui/Dropdown.vue";
 import ModalFormContactCategory from "@/components/ModalFormContactCategory.vue";
 
 const contactStore = useContactStore();
-const category = computed(() => contactStore.category);
+
+const fraksi = computed(() => contactStore.fraksi);
+const komisi = computed(() => contactStore.komisi);
+const opd = computed(() => contactStore.opd);
+
+const typeFilter = computed(() => contactStore.categoryTypeFilter);
+const type = computed(() => contactStore.categoryType);
+
+const category = computed(() => {
+	if(typeFilter.value == "fraksi") {
+		return fraksi.value.map(item => {
+			const id = item.id;
+			const name = item.nama_fraksi;
+			const type = "fraksi";
+			return { id, name, type };
+		});
+	} else if(typeFilter.value == "komisi") {
+		return komisi.value.map(item => {
+			const id = item.id;
+			const name = item.nama_komisi;
+			const type = "fraksi";
+			return { id, name, type };
+		});
+	} else {
+		return opd.value.map(item => {
+			const id = item.id;
+			const name = item.name;
+			const type = "opd";
+			return { id, name, type };
+		});
+	}
+});
 
 const fetchData = (...items) => {
 	items.forEach(key => {
@@ -13,17 +44,12 @@ const fetchData = (...items) => {
 			contactStore.fetchFraksi();
 		else if(key == "komisi")
 			contactStore.fetchKomisi();
-		else if(key == "pansus")
-			contactStore.fetchPansus();
 		else if(key == "opd")
 			contactStore.fetchOpd();
 	})
 };
 
-fetchData("fraksi", "komisi", "pansus", "opd");
-
-const typeFilter = computed(() => contactStore.categoryTypeFilter);
-const type = computed(() => contactStore.categoryType);
+fetchData("fraksi", "komisi", "opd");
 const onTypeFilterChange = val => contactStore.filterCategoryType(val);
 
 const dataModalForm = reactive({

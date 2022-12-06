@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import { getCookie, setCookie } from "@/modules/app-cookie";
-import { fetchLogin } from "@/modules/sample-data";
+import http from "@/modules/http-common";
+import { useViewStore } from "@/stores/view";
 
 export const useAccountStore = defineStore("account", {
 	state: () => ({
-		username: null,
 		name: null,
 		token: null,
 		role: null
@@ -13,17 +13,16 @@ export const useAccountStore = defineStore("account", {
 
 		isRoleAdmin: state => state.token && state.role == "admin",
 		isRoleOperator: state => state.token && state.role == "operator",
-		isRoleMember: state => state.token && state.role == "member",
 		isRolePublic: state => !state.token
 
 	},
 	actions: {
 
-		async login({ username, password }, callback = null) {
+		async login({ email, password }, callback = null) {
 			try {
 
-				const response = await fetchLogin({ username, password });
-				const data = response.data;
+				const response = await http.post("/login", { email, password }, );
+				const data = response.data.success;
 				
 				if(!data) {
 					callback && callback(false);
@@ -42,8 +41,6 @@ export const useAccountStore = defineStore("account", {
 		updateAccount(params, updateCookie = true) {
 			if(params.name && params.name !== undefined)
 				this.name = params.name;
-			if(params.username && params.username !== undefined)
-				this.username = params.username;
 			if(params.token && params.token !== undefined)
 				this.token = params.token;
 			if(params.role && params.role !== undefined)
@@ -53,7 +50,6 @@ export const useAccountStore = defineStore("account", {
 				return;
 
 			const data = {
-				username: this.username,
 				name: this.name,
 				role: this.role,
 				token: this.token
@@ -68,8 +64,6 @@ export const useAccountStore = defineStore("account", {
 
 			if(data && data !== undefined) {
 
-				if(data.username)
-					params.username = data.username;
 				if(data.name)
 					params.name = data.name;
 				if(data.role)

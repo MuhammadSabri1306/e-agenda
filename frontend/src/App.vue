@@ -12,7 +12,6 @@ router.beforeEach((to, from) => {
     const needLogin = [
         (to.meta.needAdminRole && !accountStore.isRoleAdmin),
         (to.meta.needOperatorRole && !accountStore.isRoleOperator),
-        (to.meta.needMemberRole && !accountStore.isRoleMember),
         (to.meta.needLogin && accountStore.isRolePublic)
     ];
 
