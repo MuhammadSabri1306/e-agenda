@@ -2,14 +2,17 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import FormLogin from "@/components/FormLogin.vue";
+import FormAttRegist from "@/components/FormAttRegist.vue";
 
 const route = useRoute();
 const isHomePage = computed(() => route.name == "home");
+const isLoginPage = computed(() => route.name == "login");
+const isAttPage = computed(() => route.name == "attendanceRegist");
 
-const onLoginShow = () => {
+const onFormLoad = () => {
 	const inputElm = document.querySelector("input");
 	inputElm && inputElm.focus();
-}
+};
 </script>
 <template>
 	<div class="relative w-screen overflow-x-hidden">
@@ -39,9 +42,14 @@ const onLoginShow = () => {
 				</div>
 			</div>
 		</Transition>
-		<Transition name="form-section" @after-enter="onLoginShow">
-			<div v-if="!isHomePage" class="absolute-layer right-0 w-full md:w-3/4 lg:w-[40rem] p-4 md:px-24 lg:px-32 flex flex-col items-stretch">
+		<Transition name="form-section" @after-enter="onFormLoad">
+			<div v-if="isLoginPage" class="absolute-layer right-0 w-full md:w-3/4 lg:w-[40rem] p-4 md:px-24 lg:px-32 flex flex-col items-stretch">
 				<FormLogin />
+			</div>
+		</Transition>
+		<Transition name="form-section" @after-enter="onFormLoad">
+			<div v-if="isAttPage" class="absolute-layer z-[2] right-0 w-full md:w-3/4 lg:w-[40rem] overflow-y-auto py-24 md:py-4 px-4 md:px-24 lg:px-32 flex flex-col items-stretch">
+				<FormAttRegist />
 			</div>
 		</Transition>
 		<header :class="{ 'lg:bg-transparent': !isHomePage }" class="absolute left-0 top-0 py-3 px-16 bg-black w-full md:w-auto transition-all rounded-br-2xl hover:rounded-br-sm">
@@ -54,7 +62,7 @@ const onLoginShow = () => {
 			</RouterLink>
 		</header>
 		<footer class="absolute w-full left-0 bottom-0 px-6 py-4">
-			<p :class="{ 'text-black/70': isHomePage, 'text-gray-700 md:text-white': !isHomePage }" class="text-sm font-bold text-center md:text-left">&copy; Liny Jaya Informatika - 2022 . All rights reserved.</p>
+			<p :class="{ 'text-black/70': isHomePage, 'text-gray-700 md:text-white': !isHomePage }" class="text-sm font-bold text-center md:text-left">&copy; Copyright 2022 DPRD Provinsi Sulawesi Selatan. All rights reserved.</p>
 		</footer>
 	</div>
 </template>

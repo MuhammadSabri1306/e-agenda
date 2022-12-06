@@ -24,7 +24,7 @@ const routes = {
 
     attendance: { path: "/att", component: Attendance, meta: { needLogin: true } },
     attendanceDetail: { path: "/att/:id", component: Attendance, meta: { needLogin: true } },
-    attendanceRegist: { path: "/att/regist/:ukey", component: Attendance }
+    attendanceRegist: { path: "/att/room/:ukey", component: Home }
 };
 
 const defineMyRouter = routesObj => {
