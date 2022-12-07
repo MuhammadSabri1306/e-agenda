@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 import { useAccountStore } from "@/stores/account";
 import { UserIcon, ArrowRightOnRectangleIcon } from "@heroicons/vue/24/outline";
 
@@ -9,9 +10,16 @@ const accountName = computed(() => accountStore.name);
 const showCollapse = ref(false);
 const collapseWrapper = ref(null);
 const onBlur = event => {
+	if(!collapseWrapper.value)
+		return;
 	if(collapseWrapper.value.contains(event.relatedTarget))
 		return;
 	showCollapse.value = false;
+};
+
+const router = useRouter();
+const onLogout = () => {
+	accountStore.logout(() => router.push("/login"));
 };
 </script>
 <template>
@@ -34,7 +42,7 @@ const onBlur = event => {
 					</button>
 				</li>
 				<li>
-					<button type="button" class="collapse-item">
+					<button type="button" @click="onLogout" class="collapse-item">
 						<ArrowRightOnRectangleIcon class="icon text-red-500" />
 						<div>
 							<h6 class="text-red-700">Log Out</h6>

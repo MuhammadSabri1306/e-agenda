@@ -1,23 +1,81 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useAgendaStore } from "@/stores/agenda";
+import { useViewStore } from "@/stores/view";
 import { useDateId, toTimeStr } from "@/modules/date-id";
 import CardTable from "@/components/ui/CardTable.vue";
 import SwitchToggle from "@/components/ui/SwitchToggle.vue";
 import CardQrCode from "@/components/CardQrCode.vue";
-import ButtonBack from "@/components/ButtonBack.vue";
-
-const route = useRoute();
-const attId = computed(() => route.params.id);
+import ButtonBack from "@/components/ButtonBack.vue";``
 
 const isAttLoaded = ref(false);
 const agendaStore = useAgendaStore();
-const currAtt = computed(() => agendaStore.attendance.find(item => item.id == attId.value));
-agendaStore.fetchAttendance(false, success => isAttLoaded.value = success);
+const route = useRoute();
+
+const attendance = computed(() => agendaStore.attendance);
+const agendaId = computed(() => route.params.id);
+const isAvailable = ref(false);
+
+const currAtt = computed(() => {
+	if(attendance.value.length < 1)
+		return {};
+
+	const data = attendance.value.find(item => item.id == agendaId.value);
+	return {
+		title: data.nama,
+		available: Boolean(Number(data.status_rapat)),
+		qrCode: data.qr_code,
+		list: data.absen
+	};
+});
+
+const viewStore = useViewStore();
+const initAttendance = success => {
+	if(success)
+		isAvailable.value = currAtt.value.available;
+	else
+		viewStore.showToast("Koneksi gagal", "Terjadi masalah saat menghubungi server.", false);
+	isAttLoaded.value = success;
+};
+
+agendaStore.fetchAttendance(false, initAttendance);
+
+const buildQrCodeAttr = computed(() => {
+	const isLocal = document.location.href.search("localhost") >= 0;
+	const baseUrl = isLocal ? "http://localhost:5173" : "https://e-rapat-sulsel.netlify.app";
+	
+	const targetUrl = baseUrl + "/att/room/" + currAtt.value.qrCode;
+	const filename = "e-rapat_" + currAtt.value.qrCode;
+
+	return { targetUrl, filename };
+});
 
 const isUpdate = ref(false);
-const qrcodeFilename = uniqueKey => "e-rapat_" + uniqueKey;
+const qrcodeFilename = qrCode => "e-rapat_" + qrCode;
+
+const switchToggle = ref(null);
+const isUpdatingStatus = ref(false);
+const onSwitchStatus = () => {
+	if(!switchToggle.value)
+		return;
+
+	isUpdatingStatus.value = true;
+	const status = !isAvailable.value;
+	agendaStore.updateAgendaStatus(agendaId.value, status, success => {
+		if(!success) {
+			viewStore.showToast("Koneksi gagal", "Terjadi masalah saat menghubungi server.", false);
+			return;
+		}
+
+		switchToggle.value.setValue(status);
+		agendaStore.fetchAttendance(true, initAttendance);
+
+		const message = status ? "Absensi Rapat diaktifkan." : "Absensi Rapat dimatikan.";
+		viewStore.showToast("Absensi", message, true);
+		isUpdatingStatus.value = false;
+	});
+};
 </script>
 <template>
 	<div>
@@ -29,7 +87,7 @@ const qrcodeFilename = uniqueKey => "e-rapat_" + uniqueKey;
 			<div class="mb-8 flex flex-wrap items-start gap-8">
 				<div class="basic-card card-attendance-desc">
 					<div class="form-group mb-4">
-						<label>Name Agenda :<br>{{ currAtt.agenda.title }}</label>
+						<label>Name Rapat :<br>{{ currAtt.title }}</label>
 					</div>
 					<div class="form-group">
 						<label>Status :</label>
@@ -38,18 +96,15 @@ const qrcodeFilename = uniqueKey => "e-rapat_" + uniqueKey;
 								<font-awesome-icon icon="fa-solid fa-circle-notch" spin fixed-width />
 							</span>
 							<label>Tidak Aktif</label>
-							<SwitchToggle :value="currAtt.available" />
+							<SwitchToggle ref="switchToggle" :value="currAtt.available" :disabled="true" @click="onSwitchStatus" :class="{ 'opacity-50': isUpdatingStatus }" />
 							<label>Aktif</label>
 						</div>
 					</div>
 				</div>
-				<CardQrCode :targetUrl="currAtt.roomUrl" :filename="qrcodeFilename(currAtt.uniqueKey)" />
+				<CardQrCode v-bind="buildQrCodeAttr" />
 			</div>
 			<h2 class="text-gray-800 text-xl font-body mb-4 ml-4 font-semibold">Daftar Hadir</h2>
-			<div v-if="currAtt.member.length < 1">
-				<p class="text-sm font-semibold text-gray-700">Belum ada peserta.</p>
-			</div>
-			<div v-else>
+			<div>
 				<CardTable :hoverable="true" class="table-attendance">
 					<template #thead>
 						<tr>
@@ -60,7 +115,10 @@ const qrcodeFilename = uniqueKey => "e-rapat_" + uniqueKey;
 						</tr>
 					</template>
 					<template #tbody>
-						<tr v-for="(item, index) in currAtt.member">
+						<tr v-if="currAtt.list.length < 1">
+							<td colspan="4"><p class="text-center text-sm font-semibold text-gray-700">Belum ada peserta.</p></td>
+						</tr>
+						<tr v-for="(item, index) in currAtt.list">
 							<td>{{ index + 1 }}</td>
 							<td class="whitespace-nowrap">{{ item.dateTime }}</td>
 							<td class="whitespace-nowrap">{{ item.name }}</td>

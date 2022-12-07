@@ -14,7 +14,7 @@ const appliedFilter = ref(1);
 const isAgendaLoaded = ref(false);
 
 const agendaStore = useAgendaStore();
-const agenda = computed(() => agendaStore.agenda);
+const agenda = computed(() => agendaStore.list);
 agendaStore.fetchAgenda(false, success => isAgendaLoaded.value = success);
 
 const getAddUrl = agendaId => `/inv/new/${ agendaId }`;

@@ -3,12 +3,19 @@ import { ref } from "vue";
 
 const emit = defineEmits(["toggle"]);
 const props = defineProps({
-	value: { type: Boolean, default: false }
+	value: { type: Boolean, default: false },
+	disabled: { type : Boolean, default: false }
 });
 
 const toggleVal = ref(props.value);
 
+const setValue = val => toggleVal.value = val;
+defineExpose({ setValue });
+
 const onTogglerClick = () => {
+	if(props.disabled)
+		return;
+
 	toggleVal.value = !toggleVal.value;
 	emit("toggle", toggleVal.value);
 };

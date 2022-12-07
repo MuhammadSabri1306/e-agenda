@@ -6,8 +6,9 @@ const props = defineProps({
 	options: { type: Array, default: [] },
 	value: { default: null },
 	defaultTitle: { type: String, default: "Choose a option" },
-	labelKey: { type: String, default: "key"},
-	valueKey: { type: String, default: "value"}
+	labelKey: { type: String, default: "key" },
+	valueKey: { type: String, default: "value" },
+	position: { type: String, default: "bottom" }
 });
 
 const selectedIndex = ref(-1);
@@ -66,7 +67,7 @@ const getItemTitle = index => {
 			</span>
 		</button>
 		<Transition name="fade">
-			<div v-show="showOptions" ref="dropdownCollapse" class="dropdown-collapse">
+			<div v-show="showOptions" ref="dropdownCollapse" :class="{ 'collapse-top': position == 'top' }" class="dropdown-collapse">
 				<ul @focusout="onDropdownBlur" tabindex="-1">
 					<li v-for="(item, index) in options">
 						<button v-if="index == selectedIndex" type="button" class="dropdown-item active" disabled>{{ getItemTitle(index) }}</button>
@@ -95,6 +96,10 @@ const getItemTitle = index => {
 	@apply overflow-hidden absolute w-full left-0 top-full bg-white z-[2] border;
 }
 
+.dropdown-collapse.collapse-top {
+	@apply top-auto bottom-full;
+}
+
 .dropdown-collapse ul {
 	@apply flex flex-col;
 }
@@ -115,6 +120,11 @@ const getItemTitle = index => {
 .fade-enter-from,
 .fade-leave-to {
 	@apply opacity-0 -mt-2 mb-2;
+}
+
+.fade-enter-from.collapse-top,
+.fade-leave-to.collapse-top {
+	@apply mt-2 -mb-2;
 }
 
 .dropdown-toggler {

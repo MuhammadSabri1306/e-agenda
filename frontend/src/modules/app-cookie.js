@@ -19,3 +19,7 @@ export const setCookie = (key, val, expires = null) => {
 	else
 		Cookies.set(getName(key), dataJson, { expires });
 };
+
+export const deleteCookie = key => {
+	Cookies.remove(getName(key), { path: "" });
+};

@@ -24,15 +24,14 @@ const onHidden = () => {
 
 const storeAgenda = useAgendaStore();
 const currAgenda = computed(() => {
-	return storeAgenda.agenda.find(item => item.id == props.agendaId);
+	return storeAgenda.getById(props.agendaId);
 });
 
 const agendaDate = computed(() => {
 	if(!currAgenda.value)
 		return;
 
-	const start = useDateId(new Date(currAgenda.value.startDate));
-	const end = useDateId(new Date(currAgenda.value.endDate));
+	const { start, end } = currAgenda.value.date;
 	return { start: start.toDateStr(), end: end.toDateStr() };
 });
 
@@ -40,11 +39,8 @@ const agendaTime = computed(() => {
 	if(!currAgenda.value)
 		return;
 
-	const date = new Date();
-	const startTime = objToTimeStr(currAgenda.value.startTime);
-	const endTime = objToTimeStr(currAgenda.value.endTime);
-
-	return `${ startTime.time } - ${ endTime.time }`;
+	const { start, end } = currAgenda.value.time;
+	return `${ start.h }:${ start.m } - ${ end.h }:${ end.m }`;
 });
 </script>
 <template>

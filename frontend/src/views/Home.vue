@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { useAccountStore } from "@/stores/account";
 import FormLogin from "@/components/FormLogin.vue";
 import FormAttRegist from "@/components/FormAttRegist.vue";
 
@@ -12,6 +13,15 @@ const isAttPage = computed(() => route.name == "attendanceRegist");
 const onFormLoad = () => {
 	const inputElm = document.querySelector("input");
 	inputElm && inputElm.focus();
+};
+
+const router = useRouter();
+const accountStore = useAccountStore();
+const startApp = () => {
+	if(accountStore.isRolePublic)
+		router.push("/login");
+	else
+		router.push("/agenda");
 };
 </script>
 <template>
@@ -32,12 +42,12 @@ const onFormLoad = () => {
 					</div>
 					<p class="text-lg text-black/80 text-center md:text-left md:ml-1 mb-16">Cek agenda yang akan dilaksanakan hari ini atau dalam waktu dekat. Anda juga bisa memeriksa aktifitas lama yang telah diagendakan.</p>
 					<div class="px-4 flex justify-center md:justify-start">
-						<RouterLink to="/login" class="btn-primary">
+						<a role="button" @click="startApp" class="btn-primary">
 							<span class="mr-2">Mulai Sekarang</span>
 							<span class="text-sm mt-1">
 								<font-awesome-icon icon="fa-solid fa-play" fixed-width />
 							</span>
-						</RouterLink>
+						</a>
 					</div>
 				</div>
 			</div>

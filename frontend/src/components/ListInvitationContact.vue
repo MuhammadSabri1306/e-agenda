@@ -17,9 +17,6 @@ const categoryFraksi = computed(() => contactStore.fraksi);
 contactStore.fetchKomisi();
 const categoryKomisi = computed(() => contactStore.komisi);
 
-contactStore.fetchPansus();
-const categoryPansus = computed(() => contactStore.pansus);
-
 contactStore.fetchOpd();
 const categoryOpd = computed(() => contactStore.opd);
 
@@ -70,9 +67,6 @@ watch(checkedFraksi, (newVal, oldVal) => onCategoryChanged("fraksi", newVal, old
 const checkedKomisi = ref([]);
 watch(checkedKomisi, (newVal, oldVal) => onCategoryChanged("komisi", newVal, oldVal,));
 
-const checkedPansus = ref([]);
-watch(checkedPansus, (newVal, oldVal) => onCategoryChanged("pansus", newVal, oldVal,));
-
 const checkedOpd = ref([]);
 watch(checkedOpd, (newVal, oldVal) => onCategoryChanged("opd", newVal, oldVal,));
 
@@ -89,7 +83,7 @@ watch(checkedContact, val => {
 				<div class="category-wrapper">
 					<div v-for="(item, index) in categoryFraksi" class="flex items-center gap-2">
 						<input type="checkbox" v-model="checkedFraksi" :value="item.id" :id="'cbFraksi' + index">
-						<label :for="'cbFraksi' + index">{{ item.name }}</label>
+						<label :for="'cbFraksi' + index">{{ item.nama_fraksi }}</label>
 					</div>
 				</div>
 			</div>
@@ -98,16 +92,7 @@ watch(checkedContact, val => {
 				<div class="category-wrapper">
 					<div v-for="(item, index) in categoryKomisi" class="flex items-center gap-2">
 						<input type="checkbox" v-model="checkedKomisi" :value="item.id" :id="'cbKomisi' + index">
-						<label :for="'cbKomisi' + index">{{ item.name }}</label>
-					</div>
-				</div>
-			</div>
-			<div v-if="categoryPansus.length > 0" class="form-group">
-				<label>Pansus</label>
-				<div class="category-wrapper">
-					<div v-for="(item, index) in categoryPansus" class="flex items-center gap-2">
-						<input type="checkbox" v-model="checkedPansus" :value="item.id" :id="'cbPansus' + index">
-						<label :for="'cbPansus' + index">{{ item.name }}</label>
+						<label :for="'cbKomisi' + index">{{ item.name_komisi }}</label>
 					</div>
 				</div>
 			</div>
@@ -136,7 +121,6 @@ watch(checkedContact, val => {
 						<div class="flex flex-wrap items-start gap-2">
 							<span v-if="item.fraksi" class="badge-contact-category">{{ item.fraksi.name }}</span>
 							<span v-if="item.komisi" class="badge-contact-category">{{ item.komisi.name }}</span>
-							<span v-if="item.pansus" class="badge-contact-category">{{ item.pansus.name }}</span>
 							<span v-if="item.opd" class="badge-contact-category">{{ item.opd.name }}</span>
 						</div>
 					</td>

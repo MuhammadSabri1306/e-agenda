@@ -140,7 +140,7 @@ const onSubmit = async () => {
 							<label for="textareaAlamat">Alamat</label>
 							<textarea id="textareaAlamat" v-model="v$.alamat.$model" :class="{ 'invalid': hasSubmitted && v$.alamat.$invalid }" rows="4"></textarea>
 						</div>
-						<div class="form-group mb-4 flex items-center gap-4">
+						<div v-if="isMember" class="form-group mb-4 flex items-center gap-4">
 							<label>Pimpinan Dewan</label>
 							<Dropdown :options="pimpinanItem" :value="data.pimpinanDewan" @change="val => data.pimpinanDewan = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
 						</div>
@@ -178,11 +178,11 @@ const onSubmit = async () => {
 							<label class="field-group-title">Komisi</label>
 							<div class="form-group mb-4 flex items-center gap-4">
 								<label>Nama Komisi</label>
-								<Dropdown :options="komisi" :value="data.komisiId" @change="val => data.komisiId = val" labelKey="nama_komisi" valueKey="id" defaultTitle="Pilih Opsi" class="dropdown-category" />
+								<Dropdown :options="komisi" :value="data.komisiId" @change="val => data.komisiId = val" labelKey="nama_komisi" valueKey="id" defaultTitle="Pilih Opsi" position="top" class="dropdown-category" />
 							</div>
 							<div class="form-group flex items-center gap-4">
 								<label>Kedudukan Komisi</label>
-								<Dropdown :options="komisiItem" :value="data.kedudukanKomisi" @change="val => data.kedudukanKomisi = val" defaultTitle="Pilih Opsi" class="dropdown-category" />
+								<Dropdown :options="komisiItem" :value="data.kedudukanKomisi" @change="val => data.kedudukanKomisi = val" defaultTitle="Pilih Opsi" position="top" class="dropdown-category" />
 							</div>
 						</div>
 						<div v-if="!isMember && isOpdLoaded" class="field-group">
@@ -227,14 +227,6 @@ const onSubmit = async () => {
 
 .basic-card {
 	@apply overflow-hidden shadow-lg border;
-}
-
-.field-group {
-	@apply relative p-4 rounded-lg border;
-}
-
-.field-group-title {
-	@apply absolute top-[-10px] left-0 text-xs font-semibold text-gray-600 bg-white py-1 px-2 mx-4;
 }
 
 </style>

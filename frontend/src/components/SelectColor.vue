@@ -11,11 +11,8 @@ const props = defineProps({
 const agendaStore = useAgendaStore();
 const getCalendarColors = () => {
 	const data = [];
-	const { blue, ...calColors } = agendaStore.calendarColors;
-	data.push({ key: "blue", val: blue });
-
-	for(let key in calColors) {
-		data.push({ key, val: calColors[key] });
+	for(let key in agendaStore.calendarColors) {
+		data.push({ key, val: agendaStore.calendarColors[key] });
 	}
 	return data;
 };

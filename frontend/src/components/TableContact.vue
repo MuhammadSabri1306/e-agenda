@@ -23,17 +23,17 @@ const getCategory = item => {
 	if(item.pimpinan_dewan != "Anggota")
 		result.push(item.pimpinan_dewan + " DPRD");
 	if(item.kedudukan_badan_kehormatan != "Bukan Anggota")
-		result.push(item.kedudukan_badan_kehormatan + "Badan Kehormatan");
+		result.push(item.kedudukan_badan_kehormatan + " Badan Kehormatan");
 	if(item.kedudukan_badan_anggaran != "Bukan Anggota")
-		result.push(item.kedudukan_badan_anggaran + "Badan Anggaran");
+		result.push(item.kedudukan_badan_anggaran + " Badan Anggaran");
 	if(item.kedudukan_badan_musyawarah != "Bukan Anggota")
-		result.push(item.kedudukan_badan_musyawarah + "Badan Musyawarah");
+		result.push(item.kedudukan_badan_musyawarah + " Badan Musyawarah");
 	if(item.kedudukan_badan_pembentukan_perda != "Bukan Anggota")
-		result.push(item.kedudukan_badan_pembentukan_perda + "Badan Perda");
-	if(item.fraksi && item.fraksi.nama_fraksi)
-		result.push(item.fraksi.nama_fraksi.replace("Partai ", ""));
+		result.push(item.kedudukan_badan_pembentukan_perda + " Badan Perda");
 	if(item.kedudukan_komisi && item.kedudukan_komisi != "Bukan Anggota" && item.komisi && item.komisi.nama_komisi)
-		item.komisi.nama_komisi;
+		result.push(item.kedudukan_komisi + " " + item.komisi.nama_komisi);
+	if(item.fraksi && item.fraksi.nama_fraksi)
+		result.push(item.kedudukan_fraksi + " " + item.fraksi.nama_fraksi.replace("Partai ", ""));
 
 	return result.join(", ");
 };

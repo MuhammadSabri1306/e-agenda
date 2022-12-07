@@ -14,12 +14,14 @@ const agenda = computed(() => {
 
 	const startDate = data.date.start,
 		endDate = data.date.end;
+	const date = `${ startDate.date }/${ startDate.monthNum }/${ startDate.year } - ${ endDate.date }/${ endDate.monthNum }/${ endDate.year }`;
 
-	const date = `${ startDate.date }/${ startDate.month }/${ startDate.year } - ${ endDate.date }/${ endDate.month }/${ endDate.year }`;
-	const title = data.title;
-	const twColor = data.color;
+	const startTime = data.time.start,
+		endTime = data.time.end;
+	const time = `${ startTime.h }:${ startTime.m } - ${ endTime.h }:${ endTime.m }`;
 
-	return { date, title, twColor };
+	const { title, twColor } = data;
+	return { date, time, title, twColor };
 });
 
 const showCollapse = ref(false);

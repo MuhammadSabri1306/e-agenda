@@ -1,3 +1,5 @@
+import { useDateId, useTime } from "@/modules/date-id";
+
 export default {
 	switchSortBy: state => {
 		if(!state.sort.use)
@@ -8,27 +10,34 @@ export default {
 	},
 	selectedCategory: state => state.category.items[state.category.selectedIndex],
 	list: state => {
+		let colorIndex = 0;
+		const colorKeys = Object.keys(state.calendarColors);
+
 		return state.agenda.map(agenda => {
-			const { id, title, ket, tempat } = agenda;
-			const color = state.calendarColors[agenda.color];
-			const time = { start: agenda.startTime, end: agenda.endTime }
+			const color = state.calendarColors[colorKeys[colorIndex]];
+			colorIndex++;
+			if(colorIndex == state.calendarColors.length)
+				colorIndex = 0;
 
-			const startDate = new Date(agenda.startDate),
-				endDate = new Date(agenda.endDate);
+			const startDate = new Date(agenda.tanggal_mulai),
+				endDate = new Date(agenda.tanggal_selesai);
 
-			const date = {
-				start: {
-					date: startDate.getDate(),
-					month: startDate.getMonth() + 1,
-					year: startDate.getFullYear() },
-				end: {
-					date: endDate.getDate(),
-					month: endDate.getMonth() + 1,
-					year: endDate.getFullYear()
-				}
+			return {
+				id: agenda.id,
+				color: agenda.warna,
+				twColor: state.calendarColors[agenda.warna],
+				title: agenda.nama,
+				date: {
+					start: useDateId(startDate),
+					end: useDateId(endDate)
+				},
+				time: {
+					start: useTime(agenda.mulai_pukul),
+					end: useTime(agenda.sampai_pukul)
+				},
+				ket: agenda.deskripsi,
+				location: agenda.tempat
 			};
-
-			return { id, title, date, time, ket, tempat, color };
 		});
 	},
 	getById(){

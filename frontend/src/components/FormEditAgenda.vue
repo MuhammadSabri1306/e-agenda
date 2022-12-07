@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useAgendaStore } from "@/stores/agenda";
+import { useViewStore } from "@/stores/view";
 import { required } from "@vuelidate/validators";
 import { useDataForm } from "@/modules/data-form";
 import { objToTimeStr } from "@/modules/date-id";
@@ -13,8 +14,8 @@ import ButtonBack from "@/components/ButtonBack.vue";
 const { data, v$ } = useDataForm({
 	title: { required },
 	location: { required },
-	color: { required },
-	desc: { required },
+	color: { value: "blue", required },
+	desc: {},
 	date: {
 		value: {
 			start: new Date(),
@@ -34,7 +35,7 @@ agendaStore.fetchAgenda(false, success => {
 	if(!success)
 		return;
 
-	const currAgenda = agendaStore.agenda.find(item => item.id == agendaId.value);
+	const currAgenda = agendaStore.getById(agendaId.value);
 	if(!currAgenda)
 		return;
 
@@ -42,15 +43,18 @@ agendaStore.fetchAgenda(false, success => {
 	data.location = currAgenda.location;
 	data.color = currAgenda.color;
 	data.desc = currAgenda.desc;
-	data.date.start = new Date(currAgenda.startDate);
-	data.date.end = new Date(currAgenda.endDate);
-	data.startTime = objToTimeStr(currAgenda.startTime, ":").time;
-	data.endTime = objToTimeStr(currAgenda.endTime, ":").time;
+	data.date.start = currAgenda.date.start.dateObj;
+	data.date.end = currAgenda.date.end.dateObj;
+	data.startTime = currAgenda.time.start.h + ":" + currAgenda.time.start.m;
+	data.endTime = currAgenda.time.end.h + ":" + currAgenda.time.end.m;
 	isLoaded.value = true;
 });
 
 const showLoader = ref(false);
 const hasSubmitted = ref(false);
+const viewStore = useViewStore();
+const router = useRouter();
+
 const onSubmit = async () => {
 	hasSubmitted.value = true;
 	const isValid = await v$.value.$validate();
@@ -58,17 +62,29 @@ const onSubmit = async () => {
 		return;
 
 	const body = {
-		title: data.title,
-		location: data.location,
-		color: data.color,
-		desc: data.desc,
-		startDate: data.date.start,
-		endDate: data.date.end,
-		startTime: data.startTime,
-		endTime: data.endTime
+		nama: data.title,
+		tempat: data.location,
+		warna: data.color,
+		tanggal_mulai: data.date.start.toISOString().split("T")[0],
+		tanggal_selesai: data.date.end.toISOString().split("T")[0],
+		mulai_pukul: data.startTime,
+		sampai_pukul: data.endTime
 	};
+
+	if(data.desc)
+		body.deskripsi = data.desc;
+
 	showLoader.value = true;
-	console.log(body);
+	agendaStore.updateAgenda(agendaId.value, body, success => {
+		showLoader.value = false;
+		if(!success) {
+			viewStore.showToast("Gagal menyimpan perubahan", "Terjadi masalah saat menghubungi server.", false);
+			return;
+		}
+
+		agendaStore.fetchAgenda(true);
+		router.push("/agenda");
+	});
 };
 </script>
 <template>
@@ -119,7 +135,7 @@ const onSubmit = async () => {
 					</div>
 				</div>
 				<div class="flex justify-end pb-8 px-8">
-					<button type="submit" class="btn text-white hover-margin bg-primary-700 hover:bg-primary-600">Buat Agenda</button>
+					<button type="submit" class="btn text-white hover-margin bg-primary-700 hover:bg-primary-600">Simpan Perubahan</button>
 				</div>
 			</div>
 		</form>

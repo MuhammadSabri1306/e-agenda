@@ -1,3 +1,5 @@
+import http from "@/modules/http-common";
+import { useAccountStore } from "@/stores/account";
 import { fetchAgenda, fetchInvitation, fetchAttendance } from "@/modules/sample-data";
 
 export default {
@@ -17,9 +19,11 @@ export default {
 			return callback && callback(true);
 
 		try {
+			const accountStore = useAccountStore();
+			const headers = { "Authorization": "Bearer " + accountStore.token };
 
-			const response = await fetchAgenda();
-			const data = response.data;
+			const response = await http.get("/rapat", { headers });
+			const data = response.data.data;
 
 			if(!data)
 				return callback && callback(false);
@@ -57,14 +61,60 @@ export default {
 			return callback && callback(true);
 
 		try {
+			const accountStore = useAccountStore();
+			const headers = { "Authorization": "Bearer " + accountStore.token };
 
-			const response = await fetchAttendance();
-			const data = response.data;
+			const response = await http.get("/absen", { headers });
+			const data = response.data.data;
 
 			if(!data)
 				return callback && callback(false);
 			this.attendance = data;
 			callback && callback(true);
+		
+		} catch(err) {
+			console.error(err);
+			callback && callback(false);
+		}
+	},
+
+	async addAgenda(body, callback = null) {
+		try {
+			const accountStore = useAccountStore();
+			const headers = { "Authorization": "Bearer " + accountStore.token };
+
+			const response = await http.post("/rapat", body, { headers });
+			const success = response.data.success;
+			callback && callback(success);
+		
+		} catch(err) {
+			console.error(err);
+			callback && callback(false);
+		}
+	},
+
+	async updateAgenda(agendaId, body, callback = null) {
+		try {
+			const accountStore = useAccountStore();
+			const headers = { "Authorization": "Bearer " + accountStore.token };
+			console.log(body);
+			const response = await http.post("/rapat/" + agendaId, body, { headers });
+			const success = response.data.success;
+			callback && callback(success);
+		
+		} catch(err) {
+			console.error(err);
+			callback && callback(false);
+		}
+	},
+
+	async updateAgendaStatus(agendaId, status, callback = null) {
+		try {
+			const accountStore = useAccountStore();
+			const headers = { "Authorization": "Bearer " + accountStore.token };
+			const response = await http.put("/rapat/" + agendaId, { "status_rapat": status }, { headers });
+			const success = response.data.success;
+			callback && callback(success);
 		
 		} catch(err) {
 			console.error(err);

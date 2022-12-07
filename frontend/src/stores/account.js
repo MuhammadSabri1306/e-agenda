@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getCookie, setCookie } from "@/modules/app-cookie";
+import { getCookie, setCookie, deleteCookie } from "@/modules/app-cookie";
 import http from "@/modules/http-common";
 import { useViewStore } from "@/stores/view";
 
@@ -36,6 +36,14 @@ export const useAccountStore = defineStore("account", {
 				console.error(err);
 				callback && callback(false);
 			}
+		},
+
+		logout(callback = null) {
+			deleteCookie("user");
+			this.name = null;
+			this.token = null;
+			this.role = null;
+			callback && callback();
 		},
 
 		updateAccount(params, updateCookie = true) {

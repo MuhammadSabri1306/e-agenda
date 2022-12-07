@@ -115,7 +115,7 @@ const saveContactMember = () => {
 			return viewStore.showToast("Kontak tidak tersimpan", "Terjadi masalah saat menghubungi server.", false);
 		
 		contactStore.fetchContact(true);
-		viewStore.showToast("Kontak", "Berhasil menyimpan perubahan.", true);
+		router.push("/contact");
 	});
 };
 
@@ -282,14 +282,6 @@ const confirmDelete = async () => {
 
 .basic-card {
 	@apply overflow-hidden shadow-lg border;
-}
-
-.field-group {
-	@apply relative p-4 rounded-lg border;
-}
-
-.field-group-title {
-	@apply absolute top-[-10px] left-0 text-xs font-semibold text-gray-600 bg-white py-1 px-2 mx-4;
 }
 
 </style>

@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from "vue";
+import { useAgendaStore } from "@/stores/agenda";
+import { useViewStore } from "@/stores/view";
 import { required } from "@vuelidate/validators";
 import { useDataForm } from "@/modules/data-form";
 import SelectColor from "@/components/SelectColor.vue";
@@ -10,8 +12,8 @@ import ButtonBack from "@/components/ButtonBack.vue";
 const { data, v$ } = useDataForm({
 	title: { required },
 	location: { required },
-	color: { required },
-	desc: { required },
+	color: { value: "blue", required },
+	desc: {},
 	date: {
 		value: {
 			start: new Date(),
@@ -22,8 +24,12 @@ const { data, v$ } = useDataForm({
 	endTime: { value: "00:00" }
 });
 
+const agendaStore = useAgendaStore();
+const viewStore = useViewStore();
+
 const showLoader = ref(false);
 const hasSubmitted = ref(false);
+
 const onSubmit = async () => {
 	hasSubmitted.value = true;
 	const isValid = await v$.value.$validate();
@@ -33,14 +39,25 @@ const onSubmit = async () => {
 	const body = {
 		nama: data.title,
 		tempat: data.location,
-		color: data.color,
-		desc: data.desc,
-		tanggal_mulai: data.date.start,
-		tanggal_selesai: data.date.end,
+		warna: data.color,
+		tanggal_mulai: data.date.start.toISOString().split("T")[0],
+		tanggal_selesai: data.date.end.toISOString().split("T")[0],
 		mulai_pukul: data.startTime,
 		sampai_pukul: data.endTime
 	};
-	console.log(body);
+
+	if(data.desc)
+		body.deskripsi = data.desc;
+
+	showLoader.value = true;
+	agendaStore.addAgenda(body, success => {
+		showLoader.value = false;
+		if(!success)
+			return viewStore.showToast("Agenda tidak tersimpan", "Terjadi masalah saat menghubungi server.", false);
+		
+		agendaStore.fetchAgenda(true);
+		router.push("/agenda");
+	});
 };
 </script>
 <template>
