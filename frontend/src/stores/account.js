@@ -21,7 +21,7 @@ export const useAccountStore = defineStore("account", {
 		async login({ email, password }, callback = null) {
 			try {
 
-				const response = await http.post("/login", { email, password }, );
+				const response = await http.post("/login", { email, password });
 				const data = response.data.success;
 				
 				if(!data) {
