@@ -120,5 +120,20 @@ export default {
 			console.error(err);
 			callback && callback(false);
 		}
+	},
+
+	async registAttendance(body, callback = null) {
+		try {
+			const accountStore = useAccountStore();
+			const headers = { "Authorization": "Bearer " + accountStore.token };
+
+			const response = await http.post("/absen", body, { headers });
+			const success = response.data.success;
+			callback && callback(success);
+		
+		} catch(err) {
+			console.error(err);
+			callback && callback(false);
+		}
 	}
 };

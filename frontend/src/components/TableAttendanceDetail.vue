@@ -76,6 +76,13 @@ const onSwitchStatus = () => {
 		isUpdatingStatus.value = false;
 	});
 };
+
+const buildTimestamp = dateTime => {
+	const { date, monthNum, year } = useDateId(new Date(dateTime));
+	const { time } = toTimeStr(new Date(dateTime), ":");
+
+	return `${ year }/${ monthNum }/${ date } ${ time }`;
+};
 </script>
 <template>
 	<div>
@@ -110,7 +117,7 @@ const onSwitchStatus = () => {
 						<tr>
 							<th>No</th>
 							<th>Waktu</th>
-							<th>Nama</th>
+							<th>Peserta</th>
 							<th>No. Whatsapp</th>
 						</tr>
 					</template>
@@ -120,9 +127,9 @@ const onSwitchStatus = () => {
 						</tr>
 						<tr v-for="(item, index) in currAtt.list">
 							<td>{{ index + 1 }}</td>
-							<td class="whitespace-nowrap">{{ item.dateTime }}</td>
-							<td class="whitespace-nowrap">{{ item.name }}</td>
-							<td>{{ item.wa }}</td>
+							<td class="whitespace-nowrap">{{ buildTimestamp(item.created_at) }}</td>
+							<td class="whitespace-nowrap">{{ item.nama }}<b class="pl-2">{{ item.jenis_kelamin == 'perempuan' ? '(P)' : '(L)' }}</b></td>
+							<td>{{ item.no_hp }}</td>
 						</tr>
 					</template>
 				</CardTable>
