@@ -74,6 +74,27 @@ contactStore.fetchContact();
 watch(checkedContact, val => {
 	emit("change", val);
 });
+
+const getCategory = item => {
+	const result = [];
+
+	if(item.pimpinan_dewan != "Anggota")
+		result.push(item.pimpinan_dewan + " DPRD");
+	if(item.kedudukan_badan_kehormatan != "Bukan Anggota")
+		result.push(item.kedudukan_badan_kehormatan + " Badan Kehormatan");
+	if(item.kedudukan_badan_anggaran != "Bukan Anggota")
+		result.push(item.kedudukan_badan_anggaran + " Badan Anggaran");
+	if(item.kedudukan_badan_musyawarah != "Bukan Anggota")
+		result.push(item.kedudukan_badan_musyawarah + " Badan Musyawarah");
+	if(item.kedudukan_badan_pembentukan_perda != "Bukan Anggota")
+		result.push(item.kedudukan_badan_pembentukan_perda + " Badan Perda");
+	if(item.kedudukan_komisi && item.kedudukan_komisi != "Bukan Anggota" && item.komisi && item.komisi.nama_komisi)
+		result.push(item.kedudukan_komisi + " " + item.komisi.nama_komisi);
+	if(item.fraksi && item.fraksi.nama_fraksi)
+		result.push(item.kedudukan_fraksi + " " + item.fraksi.nama_fraksi.replace("Partai ", ""));
+
+	return result.join(", ");
+};
 </script>
 <template>
 	<div class="rounded overflow-hidden border">
@@ -92,7 +113,7 @@ watch(checkedContact, val => {
 				<div class="category-wrapper">
 					<div v-for="(item, index) in categoryKomisi" class="flex items-center gap-2">
 						<input type="checkbox" v-model="checkedKomisi" :value="item.id" :id="'cbKomisi' + index">
-						<label :for="'cbKomisi' + index">{{ item.name_komisi }}</label>
+						<label :for="'cbKomisi' + index">{{ item.nama_komisi }}</label>
 					</div>
 				</div>
 			</div>
@@ -113,17 +134,11 @@ watch(checkedContact, val => {
 						<div class="flex items-center gap-2">
 							<input type="checkbox" v-model="checkedContact" :value="item.id" :id="'cbContact' + index">
 							<div class="form-group">
-								<label :for="'cbContact'+index" class="leading-none">{{ item.name }}</label>
+								<label :for="'cbContact'+index" class="leading-none">{{ item.nama }}</label>
 							</div>
 						</div>
 					</td>
-					<td>
-						<div class="flex flex-wrap items-start gap-2">
-							<span v-if="item.fraksi" class="badge-contact-category">{{ item.fraksi.name }}</span>
-							<span v-if="item.komisi" class="badge-contact-category">{{ item.komisi.name }}</span>
-							<span v-if="item.opd" class="badge-contact-category">{{ item.opd.name }}</span>
-						</div>
-					</td>
+					<td class="text-xs font-medium">{{ getCategory(item) }}</td>
 				</tr>
 			</table>
 		</div>

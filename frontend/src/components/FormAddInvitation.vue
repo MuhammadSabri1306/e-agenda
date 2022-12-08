@@ -13,7 +13,7 @@ const route = useRoute();
 const agendaId = computed(() => route.params.agendaId);
 const agendaStore = useAgendaStore();
 
-const agenda = computed(() => agendaStore.agenda);
+const agenda = computed(() => agendaStore.list);
 const isAgendaLoaded = ref(false);
 agendaStore.fetchAgenda(false, success => isAgendaLoaded.value = success);
 

@@ -42,7 +42,7 @@ const onSubmit = async () => {
 	<Modal ref="modal" @close="$emit('cancel')">
 		<template #header>
 			<div class="p-4">
-				<h3 class="text-lg text-gray-700">Kategori Baru</h3>
+				<h3 class="text-lg text-gray-700">{{ !props.categoryId ? 'Kategori Baru' : 'Update Kategori' }}</h3>
 			</div>
 		</template>
 		<template #body>
