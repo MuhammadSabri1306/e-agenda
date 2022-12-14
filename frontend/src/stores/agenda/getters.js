@@ -36,7 +36,11 @@ export default {
 					end: useTime(agenda.sampai_pukul)
 				},
 				ket: agenda.deskripsi,
-				location: agenda.tempat
+				location: agenda.tempat,
+				letter: agenda.file,
+				letterNo: agenda.no_surat,
+				message: agenda.pesan,
+				hasInvitation: (!agenda.file && !agenda.no_surat && !agenda.pesan) ? false : true
 			};
 		});
 	},

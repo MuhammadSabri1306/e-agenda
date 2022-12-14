@@ -122,12 +122,45 @@ export default {
 		}
 	},
 
+	async getAttRoomInfo(attUId, callback) {
+		let data = null;
+		let success = false;
+		try {
+
+			const response = await http.get("/rapat/detail/" + attUId);
+			data = response.data.data;
+
+			if(data)
+				success = true;
+			callback({ success, data });
+		
+		} catch(err) {
+			console.error(err);
+			callback({ success, data });
+		}
+	},
+
 	async registAttendance(body, callback = null) {
 		try {
 			const accountStore = useAccountStore();
 			const headers = { "Authorization": "Bearer " + accountStore.token };
 
 			const response = await http.post("/absen", body, { headers });
+			const success = response.data.success;
+			callback && callback(success);
+		
+		} catch(err) {
+			console.error(err);
+			callback && callback(false);
+		}
+	},
+
+	async saveInvitation(agendaId, body, callback = null) {
+		try {
+			const accountStore = useAccountStore();
+			const headers = { "Authorization": "Bearer " + accountStore.token };
+
+			const response = await http.post("/rapat/" + agendaId, body, { headers });
 			const success = response.data.success;
 			callback && callback(success);
 		

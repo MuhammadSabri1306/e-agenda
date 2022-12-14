@@ -24,23 +24,24 @@ const { data, v$ } = useDataForm({
 
 const route = useRoute();
 const uniqueKey = computed(() => route.params.ukey);
+
 const agendaStore = useAgendaStore();
-agendaStore.fetchAttendance(false, success => {
-	if(!success)
-		return;
+const viewStore = useViewStore();
 
-	const currAtt = agendaStore.attendance.find(item => item.qr_code == uniqueKey.value);
-	if(!currAtt)
+agendaStore.getAttRoomInfo(uniqueKey.value, response => {
+	if(!response.success) {
+		showLoader.value = false;
+		viewStore.showToast("Koneksi gagal", "Terjadi masalah saat menghubungi server.", false);
 		return;
+	}
 
-	agendaName.value = currAtt.nama;
-	agendaId.value = currAtt.id;
-	isAvailable.value = Boolean(Number(currAtt.status_rapat));
+	agendaName.value = response.data.nama;
+	agendaId.value = null;
+	isAvailable.value = Boolean(Number(response.data.status_rapat));
 	isLoaded.value = true;
 	showLoader.value = false;
 });
 
-const viewStore = useViewStore();
 const isRegistSuccess = ref(false);
 const showInstructionText = computed(() => {
 	const showIfLoaded = isLoaded && isAvailable && !isRegistSuccess.value;
