@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 import { useAgendaStore } from "@/stores/agenda";
+import { useViewStore } from "@/stores/view";
+import ConfirmDialog from "@/components/ui/ConfirmDialog.vue";
 
 const agendaStore = useAgendaStore();
 const emit = defineEmits(["expand"]);
@@ -33,6 +36,25 @@ const onCollapseBlur = event => {
 		return;
 	showCollapse.value = false;
 };
+
+const router = useRouter();
+const viewStore = useViewStore();
+const confirmDialog = ref(false);
+
+const confirmDelete = async () => {
+	const isConfirm = await confirmDialog.value.confirm();
+	if(!isConfirm)
+		return;
+
+	agendaStore.deleteAgenda(props.id, success => {
+		if(!success)
+			return viewStore.showToast("Koneksi Gagal", "Terjadi masalah saat menghubungi server.", false);
+		
+		viewStore.showToast("Rapat", "Berhasil menghapus agenda rapat.", true);
+		agendaStore.fetchAgenda(true);
+		router.push("/agenda");
+	});
+};
 </script>
 <template>
 	<div class="basic-card relative hover:bg-white/50 group">
@@ -63,19 +85,27 @@ const onCollapseBlur = event => {
 								<button type="button">Undangan Rapat</button>
 							</li>
 							<li class="card-collapse-item">
-								<button type="button">Hapus Rapat</button>
+								<button type="button" @click="confirmDelete">Hapus Rapat</button>
 							</li>
 						</ul>
 					</div>
 				</Transition>
 			</div>
 		</div>
+		<ConfirmDialog ref="confirmDialog" icon="fa-solid fa-circle-exclamation">
+			<template #text>
+				<p class="text-sm font-medium text-gray-700">Anda akan menghapus rapat <b>{{ agenda.title }}</b>. Lanjutkan?</p>
+			</template>
+			<template #btnConfirm="{ clicked }">
+				<button type="button" @click="clicked" class="px-4 py-2 text-sm text-white rounded transition-colors bg-red-500 hover:bg-red-600">Hapus Rapat</button>
+			</template>
+		</ConfirmDialog>
 	</div>
 </template>
 <style scoped>
 	
 .card-collapse {
-	@apply bg-white py-2 rounded overflow-hidden shadow absolute right-full top-0;
+	@apply bg-white py-2 rounded overflow-hidden shadow absolute right-full top-0 z-[2];
 }
 
 .card-collapse-item > button {

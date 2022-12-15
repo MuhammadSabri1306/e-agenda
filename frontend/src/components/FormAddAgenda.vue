@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
+import { useRouter } from "vue-router";
 import { useAgendaStore } from "@/stores/agenda";
 import { useViewStore } from "@/stores/view";
 import LoadingLine from "@/components/ui/LoadingLine.vue";
@@ -25,32 +26,32 @@ const data = reactive({
 const agendaStore = useAgendaStore();
 const viewStore = useViewStore();
 const showLoader = ref(false);
+const router = useRouter();
 
 const saveAgenda = () => {
-	const body = {
-		nama: data.title,
-		tempat: data.location,
-		warna: data.color,
-		tanggal_mulai: data.startDate,
-		tanggal_selesai: data.endDate,
-		mulai_pukul: data.startTime,
-		sampai_pukul: data.endTime
-	};
+	const formData = new FormData();
+	formData.append("nama", data.title);
+	formData.append("tempat", data.location);
+	formData.append("warna", data.color);
+	formData.append("tanggal_mulai", data.startDate);
+	formData.append("tanggal_selesai", data.endDate);
+	formData.append("mulai_pukul", data.startTime);
+	formData.append("sampai_pukul", data.endTime);
 
 	if(data.desc)
-		body.deskripsi = data.desc;
-	if(data.pesan)
-		body.pesan = data.message;
+		formData.append("deskripsi", data.desc);
+	if(data.message)
+		formData.append("pesan", data.message);
 	if(data.letter)
-		body.file = data.letter;
+		formData.append("file", data.letter);
 	if(data.letterNo)
-		body.no_surat = data.letterNo;
+		formData.append("no_surat", data.letterNo);
 
 	showLoader.value = true;
-	agendaStore.addAgenda(body, success => {
+	agendaStore.addAgenda(formData, success => {
 		showLoader.value = false;
 		if(!success)
-			return viewStore.showToast("Agenda tidak tersimpan", "Terjadi masalah saat menghubungi server.", false);
+			return viewStore.showToast("Data rapat tidak tersimpan", "Terjadi masalah saat menghubungi server.", false);
 		
 		agendaStore.fetchAgenda(true);
 		router.push("/agenda");
@@ -148,11 +149,6 @@ const onForm3Next = async () => {
 						</div>
 					</template>
 				</FormAgenda3>
-			</div>
-		</div>
-		<div v-if="showLoader" class="fixed z-[8889] top-0 left-0 w-screen h-screen bg-white/40 flex justify-center items-center p-8">
-			<div class="h-2 w-[28rem]">
-				<LoadingLine class="border border-gray-400" />
 			</div>
 		</div>
 	</div>

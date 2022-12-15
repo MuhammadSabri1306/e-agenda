@@ -1,34 +1,31 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, reactive, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAgendaStore } from "@/stores/agenda";
 import { useViewStore } from "@/stores/view";
-import { required } from "@vuelidate/validators";
-import { useDataForm } from "@/modules/data-form";
-import { objToTimeStr } from "@/modules/date-id";
-import SelectColor from "@/components/SelectColor.vue";
-import { DatePicker } from "v-calendar";
 import LoadingLine from "@/components/ui/LoadingLine.vue";
 import ButtonBack from "@/components/ButtonBack.vue";
-
-const { data, v$ } = useDataForm({
-	title: { required },
-	location: { required },
-	color: { value: "blue", required },
-	desc: {},
-	date: {
-		value: {
-			start: new Date(),
-			end: new Date()
-		}
-	},
-	startTime: { value: "00:00" },
-	endTime: { value: "00:00" }
-});
+import FormAgenda1 from "@/components/form-agenda/Section1.vue";
+import FormAgenda2 from "@/components/form-agenda/Section2.vue";
+import FormAgenda3 from "@/components/form-agenda/Section3.vue";
 
 const isLoaded = ref(false);
 const route = useRoute();
 const agendaId = computed(() => route.params.id);
+
+const data = reactive({
+	title: null,
+	color: null,
+	desc: null,
+	location: null,
+	startDate: null,
+	endDate: null,
+	startTime: null,
+	endTime: null,
+	message: null,
+	letter: null,
+	letterNo: null
+});
 
 const agendaStore = useAgendaStore();
 agendaStore.fetchAgenda(false, success => {
@@ -43,108 +40,165 @@ agendaStore.fetchAgenda(false, success => {
 	data.location = currAgenda.location;
 	data.color = currAgenda.color;
 	data.desc = currAgenda.desc;
-	data.date.start = currAgenda.date.start.dateObj;
-	data.date.end = currAgenda.date.end.dateObj;
+	data.startDate = currAgenda.date.start.dateObj;
+	data.endDate = currAgenda.date.end.dateObj;
 	data.startTime = currAgenda.time.start.h + ":" + currAgenda.time.start.m;
 	data.endTime = currAgenda.time.end.h + ":" + currAgenda.time.end.m;
+	data.message = currAgenda.message;
+	data.letterNo = currAgenda.letterNo;
 	isLoaded.value = true;
 });
 
-const showLoader = ref(false);
-const hasSubmitted = ref(false);
 const viewStore = useViewStore();
+const showLoader = ref(false);
 const router = useRouter();
 
-const onSubmit = async () => {
-	hasSubmitted.value = true;
-	const isValid = await v$.value.$validate();
-	if(!isValid)
-		return;
-
-	const body = {
-		nama: data.title,
-		tempat: data.location,
-		warna: data.color,
-		tanggal_mulai: data.date.start.toISOString().split("T")[0],
-		tanggal_selesai: data.date.end.toISOString().split("T")[0],
-		mulai_pukul: data.startTime,
-		sampai_pukul: data.endTime
-	};
+const saveAgenda = () => {
+	const formData = new FormData();
+	formData.append("nama", data.title);
+	formData.append("tempat", data.location);
+	formData.append("warna", data.color);
+	formData.append("tanggal_mulai", data.startDate.toISOString().split("T")[0]);
+	formData.append("tanggal_selesai", data.endDate.toISOString().split("T")[0]);
+	formData.append("mulai_pukul", data.startTime);
+	formData.append("sampai_pukul", data.endTime);
 
 	if(data.desc)
-		body.deskripsi = data.desc;
+		formData.append("deskripsi", data.desc);
+	if(data.message)
+		formData.append("pesan", data.message);
+	if(data.letter)
+		formData.append("file", data.letter);
+	if(data.letterNo)
+		formData.append("no_surat", data.letterNo);
 
 	showLoader.value = true;
-	agendaStore.updateAgenda(agendaId.value, body, success => {
+	agendaStore.updateAgenda(agendaId.value, formData, success => {
 		showLoader.value = false;
-		if(!success) {
-			viewStore.showToast("Gagal menyimpan perubahan", "Terjadi masalah saat menghubungi server.", false);
-			return;
-		}
-
+		if(!success)
+			return viewStore.showToast("Perubahan tidak tersimpan", "Terjadi masalah saat menghubungi server.", false);
+		
 		agendaStore.fetchAgenda(true);
-		router.push("/agenda");
+		viewStore.showToast("Rapat", "Berhasil menyimpan perubahan.", true);
 	});
+};
+
+const formIndex = ref(0);
+const formElm1 = ref(null);
+const formElm2 = ref(null);
+const formElm3 = ref(null);
+
+const onFormSubmit = async () => {
+	const result1 = await formElm1.value.getValue();
+	if(result1) {
+		data.title = result1.title;
+		data.color = result1.color;
+		data.desc = result1.desc;
+	}
+
+	const result2 = await formElm2.value.getValue();
+	if(result2) {
+		data.location = result2.location;
+		data.startDate = result2.startDate;
+		data.endDate = result2.endDate;
+		data.startTime = result2.startTime;
+		data.endTime = result2.endTime;
+	}
+
+	const result3 = await formElm3.value.getValue();
+	if(result3) {
+		data.message = result3.message;
+		data.letter = result3.letter;
+		data.letterNo = result3.letterNo;
+	}
+
+	saveAgenda();
 };
 </script>
 <template>
 	<div>
 		<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Rapat</h2>
-		<div class="flex items-center mb-8">
+		<div class="flex items-center mb-16">
 			<ButtonBack />
 		</div>
-		<form v-if="isLoaded" @submit.prevent="onSubmit">
-			<div class="basic-card">
-				<div class="h-1 relative">
-					<LoadingLine v-if="showLoader" />
-				</div>
-				<div class="grid grid-cols-1 gap-8 p-8">
-					<div class="form-group">
-						<label for="inputTitle">Judul Rapat *</label>
-						<input type="text" v-model="v$.title.$model" :class="{ 'invalid': hasSubmitted && v$.title.$invalid }" id="inputTitle">
-					</div>
-					<div class="form-group">
-						<label for="textDesc">Deskripsi *</label>
-						<textarea v-model="v$.desc.$model" :class="{ 'invalid': hasSubmitted && v$.desc.$invalid }" rows="4"></textarea>
-					</div>
-					<div class="flex flex-wrap items-start gap-8">
-						<div class="grow grid grid-cols-1 gap-8">
-							<div class="form-group">
-								<label for="inputLocation">Tempat *</label>
-								<input type="text" v-model="v$.location.$model" :class="{ 'invalid': hasSubmitted && v$.location.$invalid }" id="inputLocation">
-							</div>
-							<div class="form-group">
-								<label>Waktu *</label>
-								<div class="grid grid-cols-[1fr_auto_1fr] gap-2 form-group items-center">
-									<input type="time" v-model="v$.startTime.$model">
-									<span class="text-gray-500 text-sm">
-										<font-awesome-icon icon="fa-solid fa-left-right" />
-									</span>
-									<input type="time" v-model="v$.endTime.$model">
-								</div>
-							</div>
-							<div class="form-group">
-								<label>Warna *</label>
-								<SelectColor position="top" :defaultValue="data.color" @change="value => data.color = value" class="w-[10rem]" />
-							</div>
-						</div>
-						<div class="form-group">
-							<label>Tanggal *</label>
-							<DatePicker v-model="data.date" :color="data.color" is-range />
-						</div>
-					</div>
-				</div>
-				<div class="flex justify-end pb-8 px-8">
-					<button type="submit" class="btn text-white hover-margin bg-primary-700 hover:bg-primary-600">Simpan Perubahan</button>
-				</div>
+		<div v-if="isLoaded" class="flex flex-col justify-center items-center">
+			<div class="flex items-center justify-center gap-4 mb-8">
+				<button type="button" @click="formIndex = 0" :class="{ 'active': formIndex === 0 }" class="btn-step">
+					<font-awesome-icon icon="fa-solid fa-circle" fixed-width />
+				</button>
+				<button type="button" @click="formIndex = 1" :class="{ 'active': formIndex === 1 }" class="btn-step">
+					<font-awesome-icon icon="fa-solid fa-circle" fixed-width />
+				</button>
+				<button type="button" @click="formIndex = 2" :class="{ 'active': formIndex === 2 }" class="btn-step">
+					<font-awesome-icon icon="fa-solid fa-circle" fixed-width />
+				</button>
 			</div>
-		</form>
+			<div class="w-full md:w-[30rem]">
+				<FormAgenda1 v-show="formIndex === 0" ref="formElm1" @submit.prevent="onFormSubmit" :title="data.title" :color="data.color" :desc="data.desc">
+					<template #loader>
+						<div class="h-1 relative">
+							<LoadingLine v-if="showLoader" />
+						</div>
+					</template>
+					<template #handler>
+						<div class="flex items-center pb-6 mt-4 px-8">
+							<button type="submit" class="ml-auto btn btn-icon text-white transition-colors bg-primary-700 hover:bg-primary-600">
+								<font-awesome-icon icon="fa-solid fa-check" fixed-width />
+								<span>Simpan</span>
+							</button>
+						</div>
+					</template>
+				</FormAgenda1>
+				<FormAgenda2 v-show="formIndex === 1" ref="formElm2" @submit.prevent="onFormSubmit" :location="data.location" :startDate="data.startDate" :endDate="data.endDate" :startTime="data.startTime" :endTime="data.endTime">
+					<template #loader>
+						<div class="h-1 relative">
+							<LoadingLine v-if="showLoader" />
+						</div>
+					</template>
+					<template #handler>
+						<div class="flex items-center pb-6 mt-4 px-8">
+							<button type="submit" class="ml-auto btn btn-icon text-white transition-colors bg-primary-700 hover:bg-primary-600">
+								<font-awesome-icon icon="fa-solid fa-check" fixed-width />
+								<span>Simpan</span>
+							</button>
+						</div>
+					</template>
+				</FormAgenda2>
+				<FormAgenda3 v-show="formIndex === 2" ref="formElm3" @submit.prevent="onFormSubmit" :message="data.message" :letterNo="data.letterNo">
+					<template #loader>
+						<div class="h-1 relative">
+							<LoadingLine v-if="showLoader" />
+						</div>
+					</template>
+					<template #handler>
+						<div class="flex items-center pb-6 mt-4 px-8">
+							<button type="submit" class="ml-auto btn btn-icon text-white transition-colors bg-primary-700 hover:bg-primary-600">
+								<font-awesome-icon icon="fa-solid fa-check" fixed-width />
+								<span>Simpan</span>
+							</button>
+						</div>
+					</template>
+				</FormAgenda3>
+			</div>
+		</div>
 	</div>
 </template>
 <style scoped>
 
 .basic-card {
 	@apply overflow-hidden;
+}
+
+.btn-icon {
+	@apply gap-2;
+}
+
+.btn-step {
+	@apply text-gray-400 text-xs;
+}
+
+.btn-step.active {
+	@apply text-primary-500 text-base;
 }
 
 </style>

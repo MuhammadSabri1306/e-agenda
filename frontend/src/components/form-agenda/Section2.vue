@@ -33,8 +33,8 @@ const getValue = async () => {
 
 	return {
 		location: data.location,
-		startDate: data.date.start.toISOString().split("T")[0],
-		endDate: data.date.end.toISOString().split("T")[0],
+		startDate: data.date.start,
+		endDate: data.date.end,
 		startTime: data.startTime,
 		endTime: data.endTime
 	};

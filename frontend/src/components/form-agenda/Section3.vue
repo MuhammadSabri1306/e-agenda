@@ -7,14 +7,13 @@ import FileUploadAttachment from "@/components/FileUploadAttachment.vue";
 
 const props = defineProps({
 	message: { type: String, default: null },
-	letter: { type: String, default: null },
 	letterNo: { type: String, default: null }
 });
 
 const { data, v$ } = useDataForm({
-	message: { value: null },
+	message: { value: props.message },
 	letter: { value: null },
-	letterNo: { value: null }
+	letterNo: { value: props.letterNo }
 });
 
 const changeAttachment = file => data.letter = file;

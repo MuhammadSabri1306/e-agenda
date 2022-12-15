@@ -78,12 +78,12 @@ export default {
 		}
 	},
 
-	async addAgenda(body, callback = null) {
+	async addAgenda(formData, callback = null) {
 		try {
 			const accountStore = useAccountStore();
 			const headers = { "Authorization": "Bearer " + accountStore.token };
 
-			const response = await http.post("/rapat", body, { headers });
+			const response = await http.post("/rapat", formData, { headers });
 			const success = response.data.success;
 			callback && callback(success);
 		
@@ -93,12 +93,26 @@ export default {
 		}
 	},
 
-	async updateAgenda(agendaId, body, callback = null) {
+	async deleteAgenda(agendaId, callback = null) {
 		try {
 			const accountStore = useAccountStore();
 			const headers = { "Authorization": "Bearer " + accountStore.token };
-			console.log(body);
-			const response = await http.post("/rapat/" + agendaId, body, { headers });
+
+			const response = await http.delete("/rapat/" + agendaId, { headers });
+			const success = response.data.success;
+			callback && callback(success);
+		
+		} catch(err) {
+			console.error(err);
+			callback && callback(false);
+		}
+	},
+
+	async updateAgenda(agendaId, formData, callback = null) {
+		try {
+			const accountStore = useAccountStore();
+			const headers = { "Authorization": "Bearer " + accountStore.token };
+			const response = await http.post("/rapat/" + agendaId, formData, { headers });
 			const success = response.data.success;
 			callback && callback(success);
 		
