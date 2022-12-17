@@ -29,8 +29,8 @@ const onScanFailed = () => {
 
 const onDecode = roomUrl => {
 	showScanner.value = false;
-	
-	if(roomUrl || roomUrl === undefined)
+
+	if(!roomUrl || roomUrl === undefined)
 		return onScanFailed();
 	
 	roomUrl = roomUrl.split("/");
