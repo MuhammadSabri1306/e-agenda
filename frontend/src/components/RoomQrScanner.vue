@@ -22,15 +22,20 @@ const onHidden = () => {
 const showScanner = ref(false);
 const viewStore = useViewStore();
 
+const onScanFailed = () => {
+	viewStore.showToast("QR Code", "QR Code Rapat tidak terdeteksi.", false);
+	showScanner.value = true;
+};
+
 const onDecode = roomUrl => {
 	showScanner.value = false;
-	alert(roomUrl);
-	if(roomUrl && roomUrl !== undefined)
-		return viewStore.showToast("QR Code", "QR Code Rapat tidak terdeteksi.", false);
+	
+	if(roomUrl || roomUrl === undefined)
+		return onScanFailed();
 	
 	roomUrl = roomUrl.split("/");
 	if(roomUrl.length < 1)
-		return viewStore.showToast("QR Code", "QR Code Rapat tidak terdeteksi.", false);
+		return onScanFailed();
 	
 	emit("scan", roomUrl[roomUrl.length - 1]);
 };
