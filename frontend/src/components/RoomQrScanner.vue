@@ -24,6 +24,7 @@ const viewStore = useViewStore();
 
 const onDecode = roomUrl => {
 	showScanner.value = false;
+	alert(roomUrl);
 	if(roomUrl && roomUrl !== undefined)
 		return viewStore.showToast("QR Code", "QR Code Rapat tidak terdeteksi.", false);
 	

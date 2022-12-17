@@ -145,7 +145,7 @@ const onScanned = qrCode => {
 }
 
 .btn-home {
-	@apply relative z-[1] rounded inline-flex items-center overflow-hidden;
+	@apply relative z-[1] rounded inline-flex items-center overflow-hidden whitespace-nowrap;
 }
 
 .btn-primary {
