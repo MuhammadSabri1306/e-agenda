@@ -117,7 +117,6 @@ const onFormSubmit = async () => {
 </script>
 <template>
 	<div>
-		<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Rapat</h2>
 		<div class="flex items-center mb-16">
 			<ButtonBack />
 		</div>

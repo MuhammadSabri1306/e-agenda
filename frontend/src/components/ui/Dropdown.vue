@@ -12,7 +12,7 @@ const props = defineProps({
 });
 
 const selectedIndex = ref(-1);
-if(props.value) {
+if(props.value || props.value === 0) {
 	selectedIndex.value = props.options.findIndex(item => {
 		if(typeof item == "string")
 			return item == props.value;
@@ -128,7 +128,7 @@ const getItemTitle = index => {
 }
 
 .dropdown-toggler {
-	@apply bg-white px-4 py-2 min-w-[10rem] text-sm rounded border transition-colors text-gray-600 border-gray-300;
+	@apply bg-white px-4 py-2 min-w-[10rem] text-sm rounded border transition-colors text-gray-600 border-gray-200;
 }
 
 .dropdown-collapse {

@@ -8,6 +8,7 @@ const contactStore = useContactStore();
 
 const fraksi = computed(() => contactStore.fraksi);
 const komisi = computed(() => contactStore.komisi);
+const opd = computed(() => contactStore.opd);
 
 const typeFilter = computed(() => contactStore.categoryTypeFilter);
 const type = computed(() => contactStore.categoryType);
@@ -28,7 +29,12 @@ const category = computed(() => {
 			return { id, name, type };
 		});
 	} else {
-		return [];
+		return opd.value.map(item => {
+			const id = item.id;
+			const name = item.name;
+			const type = "opd";
+			return { id, name, type };
+		});
 	}
 });
 
@@ -38,10 +44,12 @@ const fetchData = (...items) => {
 			contactStore.fetchFraksi();
 		else if(key == "komisi")
 			contactStore.fetchKomisi();
+		else if(key == "opd")
+			contactStore.fetchOpd();
 	})
 };
 
-fetchData("fraksi", "komisi");
+fetchData("fraksi", "komisi", "opd");
 const onTypeFilterChange = val => contactStore.filterCategoryType(val);
 
 const dataModalForm = reactive({
@@ -93,9 +101,9 @@ const saveEditCategory = (categoryType, categoryId, categoryName) => {
 		<h2 class="text-gray-800 text-lg font-bold p-4 border-t-4 border-primary-500 mb-4">Kategori</h2>
 		<div class="flex items-center mb-4 gap-2">
 			<Dropdown :value="typeFilter" :options="type" @change="onTypeFilterChange" class="dropdown-category-filter grow" />
-			<!-- <button type="button" @click="openFormNewCategory" class="ml-auto rounded w-10 h-10 flex justify-center items-center text-gray-500 transition-colors bg-transparent hover:bg-gray-100 focus:bg-gray-100">
+			<button type="button" @click="openFormNewCategory" class="ml-auto rounded w-10 h-10 flex justify-center items-center text-gray-500 transition-colors bg-transparent hover:bg-gray-100 focus:bg-gray-100">
 				<font-awesome-icon icon="fa-solid fa-plus" />
-			</button> -->
+			</button>
 		</div>
 		<div v-if="category.length < 1">
 			<p class="text-sm font-semibold text-gray-700">Belum ada kategori.</p>
@@ -103,12 +111,12 @@ const saveEditCategory = (categoryType, categoryId, categoryName) => {
 		<ul v-else class="category-list">
 			<li v-for="(item, index) in category" class="group">
 				<span>{{ item.name }}</span>
-				<!-- <button type="button" @click="openFormEditCategory(index)" class="ml-auto text-lg p-2 transition-all text-gray-400 hover:text-gray-600 opacity-30 group-hover:opacity-100">
+				<button type="button" @click="openFormEditCategory(index)" class="ml-auto text-lg p-2 transition-all text-gray-400 hover:text-gray-600 opacity-30 group-hover:opacity-100">
 					<font-awesome-icon icon="fa-solid fa-pencil" />
 				</button>
 				<button type="button" class="text-lg p-2 transition-all text-gray-400 hover:text-gray-600 opacity-30 group-hover:opacity-100">
 					<font-awesome-icon icon="fa-solid fa-xmark" />
-				</button> -->
+				</button>
 			</li>
 		</ul>
 		<ModalFormContactCategory v-if="dataModalForm.show" v-bind="modalFormAttrs" @cancel="onModalFormClosed" @new="saveNewCategory" @update="saveEditCategory" />
@@ -122,7 +130,7 @@ const saveEditCategory = (categoryType, categoryId, categoryName) => {
 }
 
 .category-list li {
-	@apply flex items-center px-4 py-2 text-sm font-medium text-gray-600;
+	@apply block flex items-center px-4 py-1 text-xs font-semibold text-gray-600;
 }
 
 .category-list li:not(:last-child) {

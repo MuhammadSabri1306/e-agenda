@@ -21,6 +21,7 @@ const currAtt = computed(() => {
 	if(attendance.value.length < 1)
 		return {};
 
+	console.log(attendance.value)
 	const data = attendance.value.find(item => item.id == agendaId.value);
 	return {
 		title: data.nama,
@@ -86,7 +87,6 @@ const buildTimestamp = dateTime => {
 </script>
 <template>
 	<div>
-		<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Absensi Rapat</h2>
 		<div class="flex items-center mb-8">
 			<ButtonBack />
 		</div>

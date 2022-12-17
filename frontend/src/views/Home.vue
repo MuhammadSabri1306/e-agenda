@@ -1,9 +1,10 @@
 <script setup>
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAccountStore } from "@/stores/account";
 import FormLogin from "@/components/FormLogin.vue";
 import FormAttRegist from "@/components/FormAttRegist.vue";
+import RoomQrScanner from "@/components/RoomQrScanner.vue";
 
 const route = useRoute();
 const isHomePage = computed(() => route.name == "home");
@@ -23,6 +24,11 @@ const startApp = () => {
 	else
 		router.push("/agenda");
 };
+
+const showScanner = ref(false);
+const onScanned = qrCode => {
+	router.push("/att/room/" + qrCode);
+};
 </script>
 <template>
 	<div class="relative w-screen overflow-x-hidden">
@@ -41,12 +47,18 @@ const startApp = () => {
 						<p class="text-sm font-body font-bold mb-3 text-black/90 text-center ml-1">V1.0.0</p>
 					</div>
 					<p class="text-lg text-black/80 text-center md:text-left md:ml-1 mb-16">Cek agenda yang akan dilaksanakan hari ini atau dalam waktu dekat. Anda juga bisa memeriksa aktifitas lama yang telah diagendakan.</p>
-					<div class="px-4 flex justify-center md:justify-start">
-						<a role="button" @click="startApp" class="btn-primary">
-							<span class="mr-2">Mulai Sekarang</span>
+					<div class="px-4 flex justify-center md:justify-start items-center gap-8">
+						<a role="button" @click="startApp" class="btn-home btn-primary">
+							<span class="mr-2">Mulai</span>
 							<span class="text-sm mt-1">
 								<font-awesome-icon icon="fa-solid fa-play" fixed-width />
 							</span>
+						</a>
+						<a role="button" @click="showScanner = true" class="btn-home btn-secondary">
+							<span>
+								<font-awesome-icon icon="fa-solid fa-qrcode" fixed-width />
+							</span>
+							<span class="ml-2">Scan Rapat</span>
 						</a>
 					</div>
 				</div>
@@ -74,6 +86,7 @@ const startApp = () => {
 		<footer class="absolute w-full left-0 bottom-0 px-6 py-4">
 			<p :class="{ 'text-black/70': isHomePage, 'text-gray-700 md:text-white': !isHomePage }" class="text-sm font-bold text-center md:text-left">&copy; Copyright 2022 DPRD Provinsi Sulawesi Selatan. All rights reserved.</p>
 		</footer>
+		<RoomQrScanner v-if="showScanner" @close="showScanner = false" @scan="onScanned" />
 	</div>
 </template>
 <style scoped>
@@ -131,11 +144,19 @@ const startApp = () => {
 	right: -100%;
 }
 
-.btn-primary {
-	@apply relative z-[1] rounded inline-flex items-center overflow-hidden bg-blue-600 text-white px-6 py-3 transition-all text-lg hover:text-xl;
+.btn-home {
+	@apply relative z-[1] rounded inline-flex items-center overflow-hidden;
 }
 
-.btn-primary:before, .btn-primary:after {
+.btn-primary {
+	@apply text-white bg-blue-600 px-6 py-3 transition-all text-lg hover:text-xl;
+}
+
+.btn-secondary {
+	@apply text-white bg-black px-6 py-3 transition-all text-base md:hover:text-lg;
+}
+
+.btn-home:before, .btn-home:after {
 	content: "";
 	position: absolute;
 	z-index: -1;
@@ -144,7 +165,7 @@ const startApp = () => {
 	transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
-.btn-primary:before {
+.btn-home:before {
 	left: 50%;
 	transform: translateX(-50%) scaleY(1) scaleX(1.25);
 	top: 100%;
@@ -153,7 +174,7 @@ const startApp = () => {
 	background-color: rgba(0, 0, 0, 0.05);
 }
 
-.btn-primary:after {
+.btn-home:after {
 	content: "";
 	position: absolute;
 	left: 55%;
@@ -161,19 +182,30 @@ const startApp = () => {
 	top: 180%;
 	width: 160%;
 	height: 190%;
+}
+
+.btn-primary:after {
 	background-color: theme(colors.primary.700);
+}
+
+.btn-secondary:after {
+	background-color: theme(colors.gray.700);
 }
 
 .btn-primary:hover:before, .btn-primary:hover:after {
 	@apply bg-black;
 }
 
-.btn-primary:hover:before {
+.btn-secondary:hover:before, .btn-secondary:hover:after {
+	@apply bg-blue-600;
+}
+
+.btn-home:hover:before {
 	top: -35%;
 	transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
-.btn-primary:hover:after {
+.btn-home:hover:after {
 	top: -45%;
 	transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }

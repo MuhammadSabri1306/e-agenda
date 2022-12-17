@@ -21,8 +21,9 @@ const { data, v$ } = useDataForm({
 	contact: { value: [] }
 });
 
-const isLoaded = ref(false);
+const isLoaded = ref(true);
 agendaStore.fetchInvitation(false, success => {
+	return;
 	if(!success)
 		return;
 
@@ -35,6 +36,7 @@ agendaStore.fetchInvitation(false, success => {
 	attachmentFilename.value = currInv.attachment;
 	data.contact = currInv.contact;
 	isLoaded.value = true;
+	console.log("Terjadi")
 });
 
 const changeContact = contactList => data.contact = contactList;
@@ -95,25 +97,7 @@ const onSend = async () => {
 					<div class="h-1 relative">
 						<LoadingLine v-if="isSaving" />
 					</div>
-					<div class="grid grid-cols-2 gap-8 p-8">
-						<div class="flex flex-col gap-8">
-							<div class="form-group">
-								<label>Nama Agenda:</label>
-								<p class="text-gray-800">{{ agendaName }}</p>
-							</div>
-							<div class="form-group">
-								<label for="textDesc">Pesan Undangan:</label>
-								<textarea v-model="v$.message.$model" :class="{ 'invalid': hasSubmitted && v$.message.$invalid }" rows="4"></textarea>
-							</div>
-						</div>
-						<div class="flex flex-col gap-8">
-							<div class="form-group">
-								<label for="inputAttachment">Lampiran <span class="text-xs font-semibold">(*.pdf)</span></label>
-								<FileUpload :uploadedFilename="attachmentFilename" fieldId="inputAttachment" @change="changeAttachment" />
-							</div>
-						</div>
-					</div>
-					<div class="form-group px-8 pb-8">
+					<div class="form-group p-8">
 						<label>Kontak:</label>
 						<ListInvitationContact :value="data.contact" @change="changeContact" />
 					</div>

@@ -31,14 +31,8 @@ const getEditUrl = invitationId => `/inv/edit/${ invitationId }`;
 		</div>
 		<ul v-else class="category-list">
 			<li v-for="item in agenda">
-				<router-link v-if="!item.hasInvitation" :to="getAddUrl(item.id)">
+				<router-link :to="'/inv/edit/' + item.id">
 					<span class="beep-circle text-gray-500">
-						<font-awesome-icon icon="fa-solid fa-circle" />
-					</span>
-					<span>{{ item.title }}</span>
-				</router-link>
-				<router-link v-else :to="getEditUrl(item.invitationId)">
-					<span class="beep-circle text-green-500">
 						<font-awesome-icon icon="fa-solid fa-circle" />
 					</span>
 					<span>{{ item.title }}</span>

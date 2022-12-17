@@ -19,6 +19,7 @@ const showDetail = computed(() => route.name == "attendanceDetail");
 						<ListAttendance />
 					</div>
 					<div class="w-full overflow-x-hidden">
+						<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Absensi Rapat</h2>
 						<TableAttendanceDetail v-if="showDetail" />
 						<HeroAttendance v-else />
 					</div>

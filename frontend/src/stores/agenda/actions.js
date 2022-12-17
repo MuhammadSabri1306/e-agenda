@@ -3,11 +3,11 @@ import { useAccountStore } from "@/stores/account";
 import { fetchAgenda, fetchInvitation, fetchAttendance } from "@/modules/sample-data";
 
 export default {
-	setCategoryIndex(index) {
-		if(index < 0 || index >= this.category.items.lenth)
+	setFilterIndex(index) {
+		if(index < 0 || index >= this.filter.items.length)
 			return;
 		
-		this.category.selectedIndex = index;
+		this.filter.selectedIndex = index;
 	},
 
 	toggleSortAsc() {

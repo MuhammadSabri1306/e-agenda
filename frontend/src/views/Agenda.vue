@@ -8,28 +8,41 @@ import OffcanvasAgenda from "@/components/OffcanvasAgenda.vue";
 import ListAgenda from "@/components/ListAgenda.vue";
 import FormAddAgenda from "@/components/FormAddAgenda.vue";
 import FormEditAgenda from "@/components/FormEditAgenda.vue";
+import ToolbarFilter from "@/components/ToolbarFilter.vue";
 
 const detailAgendaId = ref(null);
 const route = useRoute();
-const showFormAdd = computed(() => route.name == "agendaNew");
-const showFormEdit = computed(() => route.name == "agendaEdit");
+const isFormAdd = computed(() => route.name == "agendaNew");
+const isFormEdit = computed(() => route.name == "agendaEdit");
+const isNotForm = computed(() => !isFormAdd.value && !isFormEdit.value);
 </script>
 <template>
 	<BasicLayout @new="$router.push('/agenda/new')" baseBgClass="bg-gray-100">
 		<template #main>
 			<div class="p-8 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8">
-				<div>
-					<Calendar @select="val => detailAgendaId = val" class="basic-card mb-4" />
-					<div class="basic-card py-6">
-						<h4 class="text-gray-800 text-xl leading-tight mb-4 px-4">Rapat hari ini</h4>
-						<div class="h-96 overflow-y-auto border-y custom-scrollbar">
-							<TableTimePoint />
+				<div class="row-start-2 row-end-3 md:row-start-1 md:row-end-2 mt-8 flex flex-col gap-8">
+					<button type="button" v-if="isNotForm" @click="$router.push('/agenda/new')" class="btn btn-icon text-white transition-colors bg-primary-600 hover:bg-primary-500 focus:bg-primary-500">
+						<font-awesome-icon icon="fa-solid fa-plus" fixed-width />
+						<span class="ml-2">Rapat Baru</span>
+					</button>
+					<div v-if="isNotForm" class="basic-card p-8 form-group">
+						<label>Filter</label>
+						<ToolbarFilter />
+					</div>
+					<div>
+						<Calendar @select="val => detailAgendaId = val" class="basic-card mb-4" />
+						<div class="basic-card py-6">
+							<h4 class="text-gray-800 text-xl leading-tight mb-4 px-4">Rapat hari ini</h4>
+							<div class="h-96 overflow-y-auto border-y custom-scrollbar">
+								<TableTimePoint />
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="w-full overflow-x-hidden">
-					<FormAddAgenda v-if="showFormAdd" />
-					<FormEditAgenda v-else-if="showFormEdit" />
+					<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Rapat</h2>
+					<FormAddAgenda v-if="isFormAdd" />
+					<FormEditAgenda v-else-if="isFormEdit" />
 					<ListAgenda v-else @showDetail="val => detailAgendaId = val" />
 				</div>
 				<OffcanvasAgenda v-if="detailAgendaId" :agendaId="detailAgendaId" @close="detailAgendaId = null" />

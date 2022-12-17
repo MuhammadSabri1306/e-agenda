@@ -15,8 +15,7 @@ const routes = {
     agendaEdit: { path: "/agenda/edit/:id", component: Agenda, meta: { needLogin: true } },
 
     invitation: { path: "/inv", component: Invitation, meta: { needLogin: true } },
-    invitationNew: { path: "/inv/new/:agendaId", component: Invitation, meta: { needLogin: true } },
-    invitationEdit: { path: "/inv/edit/:id", component: Invitation, meta: { needLogin: true } },
+    invitationEdit: { path: "/inv/edit/:agendaId", component: Invitation, meta: { needLogin: true } },
 
     contact: { path: "/contact", component: Contact, meta: { needLogin: true } },
     contactNew: { path: "/contact/new", component: Contact, meta: { needLogin: true } },

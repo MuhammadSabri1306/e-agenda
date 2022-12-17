@@ -43,7 +43,7 @@ const onDayClick = val => {
 };
 </script>
 <template>
-    <div v-if="isAgendaLoaded" class="bg-white px-4 lg:px-6 py-6 lg:py-4">
+    <div v-if="isAgendaLoaded" class="bg-white px-4 lg:px-6 py-6 lg:py-4 flex justify-center items-center">
         <Calendar :attributes="calendarAttrs" @dayclick="onDayClick" class="rounded-none border-0" />
     </div>
 </template>

@@ -1,54 +1,42 @@
 import { useDateId, useTime } from "@/modules/date-id";
+import { inYearRange, inMonthRange, inDateRange } from "@/modules/filter-date";
 
 export default {
-	switchSortBy: state => {
-		if(!state.sort.use)
-			state.sort.use = true;
-
-		state.sort.sortBy.time = !state.sort.sortBy.time;
-		state.sort.sortBy.alphabet = !state.sort.sortBy.alphabet;
-	},
-	selectedCategory: state => state.category.items[state.category.selectedIndex],
 	list: state => {
 		let colorIndex = 0;
 		const colorKeys = Object.keys(state.calendarColors);
 
 		return state.agenda.map(agenda => {
-			const color = state.calendarColors[colorKeys[colorIndex]];
-			colorIndex++;
-			if(colorIndex == state.calendarColors.length)
-				colorIndex = 0;
-
 			const startDate = new Date(agenda.tanggal_mulai),
 				endDate = new Date(agenda.tanggal_selesai);
 
-			return {
-				id: agenda.id,
-				color: agenda.warna,
-				twColor: state.calendarColors[agenda.warna],
-				title: agenda.nama,
-				date: {
-					start: useDateId(startDate),
-					end: useDateId(endDate)
-				},
-				time: {
-					start: useTime(agenda.mulai_pukul),
-					end: useTime(agenda.sampai_pukul)
-				},
-				ket: agenda.deskripsi,
-				location: agenda.tempat,
-				letter: agenda.file,
-				letterNo: agenda.no_surat,
-				message: agenda.pesan,
-				hasInvitation: (!agenda.file && !agenda.no_surat && !agenda.pesan) ? false : true
+			const id = agenda.id;
+			const color = agenda.warna;
+			const twColor = state.calendarColors[agenda.warna];
+			const title = agenda.nama;
+			const date = {
+				start: useDateId(startDate),
+				end: useDateId(endDate)
 			};
+			const time = {
+				start: useTime(agenda.mulai_pukul),
+				end: useTime(agenda.sampai_pukul)
+			};
+			const ket = agenda.deskripsi;
+			const location = agenda.tempat;
+			const letter = agenda.file;
+			const letterNo = agenda.no_surat;
+			const message = agenda.pesan;
+			const hasInvitation = (!agenda.file && !agenda.no_surat && !agenda.pesan) ? false : true;
+
+			return { id, color, twColor, title, date, time, ket, location, letter, letterNo, message, hasInvitation };
 		});
 	},
-	getById(){
+	getById() {
 		const list = this.list;
 		return id => list.find(lItem => lItem.id == id);;
 	},
-	today(){
+	today() {
 		const curDate = new Date();
 		return this.list.filter(item => {
 
@@ -62,12 +50,7 @@ export default {
 		
 		});
 	},
-	timeString: () => {
-		return timeObj => {
-			let { m, s } = timeObj;
-			m = (m.toString().length == 1) ? "0" + m.toString() : m.toString();
-			s = (s.toString().length == 1) ? "0" + s.toString() : s.toString();
-			return m + ":" + s;
-		};
-	}
+	/*attendanceFormat: state => {
+		return state.attendance.map(item => {});
+	}*/
 };

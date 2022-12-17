@@ -3,12 +3,12 @@ import http from "@/modules/http-common";
 import { useAccountStore } from "@/stores/account";
 
 import { orderCategory } from "@/modules/contact";
-import { fetchContact, fetchKomisi, fetchFraksi, fetchPansus, fetchOpd } from "@/modules/sample-data";
+import { fetchContact, fetchKomisi, fetchFraksi, fetchPansus } from "@/modules/sample-data";
 
 export const useContactStore = defineStore("contact", {
 	state: () => ({
 		contact: [],
-		categoryType: ["fraksi", "komisi", "opd"],
+		categoryType: ["fraksi", "komisi"],
 		categoryTypeFilter: "fraksi",
 		fraksi: [],
 		komisi: [],
@@ -88,30 +88,6 @@ export const useContactStore = defineStore("contact", {
 				}
 
 				this.komisi = data;
-				callback && callback(true);
-			} catch(err) {
-				console.error(err);
-				callback && callback(false);
-			}
-		},
-
-		async fetchOpd(force = false, callback = null) {
-			if(!force && this.opd.length > 0) {
-				callback && callback(true);
-				return;
-			}
-
-			try {
-				const response = await fetchOpd();
-				const data = response.data;
-				
-				if(!data) {
-					console.log(response.data);
-					callback && callback(false);
-					return;
-				}
-
-				this.opd = data;
 				callback && callback(true);
 			} catch(err) {
 				console.error(err);

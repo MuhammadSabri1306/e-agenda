@@ -12,7 +12,6 @@ import ButtonBack from "@/components/ButtonBack.vue";
 
 const emit = defineEmits(["cancel"]);
 const contactStore = useContactStore();
-const isMember = ref(true);
 
 const pimpinanItem = ["Ketua", "Wakil Ketua", "Anggota"];
 const badanItem = ["Ketua", "Wakil Ketua", "Anggota", "Bukan Anggota"];
@@ -22,7 +21,7 @@ const komisiItem = ["Ketua", "Wakil Ketua", "Sekretaris", "Anggota", "Bukan Angg
 const { data, v$ } = useDataForm({
 	nama: { required },
 	noHp: { required },
-	isJkelP: { value: false },
+	jkel: { value: "laki-laki" },
 	tmpLahir: {},
 	alamat: {},
 	fraksiId: {},
@@ -33,8 +32,7 @@ const { data, v$ } = useDataForm({
 	kedudukanBadanMusyawarah: { value: badanItem[badanItem.length - 1] },
 	kedudukanBadanPembentukanPerda: { value: badanItem[badanItem.length - 1] },
 	kedudukanBadanAnggaran: { value: badanItem[badanItem.length - 1] },
-	kedudukanBadanKehormatan: { value: badanItem[badanItem.length - 1] },
-	jabatanOpd: {}
+	kedudukanBadanKehormatan: { value: badanItem[badanItem.length - 1] }
 });
 
 const isFraksiLoaded = ref(false);
@@ -49,21 +47,22 @@ const isKomisiLoaded = ref(false);
 const komisi = computed(() => contactStore.komisi);
 contactStore.fetchKomisi(false, success => isKomisiLoaded.value = true);
 
-const isOpdLoaded = ref(false);
-const opd = computed(() => contactStore.opd);
-contactStore.fetchOpd(false, success => isOpdLoaded.value = true);
-
 const showLoader = ref(false);
 const hasSubmitted = ref(false);
 const router = useRouter();
 const viewStore = useViewStore();
 
-const saveContactMember = () => {
+const onSubmit = async () => {
+	hasSubmitted.value = true;
+	const isValid = await v$.value.$validate();
+	if(!isValid)
+		return;
+
 	showLoader.value = true;
 	const body = {
 		nama: data.nama,
 		no_hp: data.noHp,
-		jenis_kelamin: data.isJkelP ? "perempuan" : "laki-laki",
+		jenis_kelamin: data.jkel,
 		alamat: data.alamat,
 		tempat_lahir: data.tmpLahir,
 		fraksi_id: data.fraksiId,
@@ -86,16 +85,6 @@ const saveContactMember = () => {
 		router.push("/contact");
 	});
 };
-
-const onSubmit = async () => {
-	hasSubmitted.value = true;
-	const isValid = await v$.value.$validate();
-	if(!isValid)
-		return;
-
-	if(isMember.value)
-		saveContactMember();
-};
 </script>
 <template>
 	<div>
@@ -107,13 +96,6 @@ const onSubmit = async () => {
 			<form @submit.prevent="onSubmit">
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 m-8">
 					<div>
-						<div class="field-group form-group mb-8">
-							<label class="field-group-title">Status</label>
-							<div class="flex items-center gap-2 ml-8">
-								<label>Anggota DPRD</label>
-								<SwitchToggle :value="true" @toggle="val => isMember = val" />
-							</div>
-						</div>
 						<div class="form-group mb-8">
 							<label for="inputName">Nama Kontak *</label>
 							<input type="text" v-model="v$.nama.$model" :class="{ 'invalid': hasSubmitted && v$.nama.$invalid }" id="inputName">
@@ -124,27 +106,31 @@ const onSubmit = async () => {
 						</div>
 						<div class="field-group form-group mb-8">
 							<label class="field-group-title">Jenis Kelamin</label>
-							<div class="flex items-center gap-2 ml-8">
-								<label>Laki-laki</label>
-								<SwitchToggle :value="data.isJkelP" @toggle="val => data.isJkelP = val" />
-								<label>Perempuan</label>
+							<div class="flex flex-wrap gap-4 ml-8 mt-2">
+								<div class="flex items-center gap-1">
+									<input type="radio" v-model="data.jkel" value="laki-laki" id="jkelL">
+									<label for="jkelL" class="whitespace-nowrap">Laki-laki</label>
+								</div>
+								<div class="flex items-center gap-1">
+									<input type="radio" v-model="data.jkel" value="perempuan" id="jkelP">
+									<label for="jkelP">Perempuan</label>
+								</div>
 							</div>
 						</div>
-						<div v-if="isMember" class="form-group mb-8">
+						<div class="form-group mb-8">
 							<label for="textareaAlamat">Alamat</label>
 							<textarea id="textareaAlamat" v-model="v$.alamat.$model" :class="{ 'invalid': hasSubmitted && v$.alamat.$invalid }" rows="4"></textarea>
+						</div>
+						<div class="field-group mb-8">
+							<label class="field-group-title">Pimpinan Dewan</label>
+							<div class="form-group flex items-center gap-4">
+								<label>Kedudukan</label>
+								<Dropdown :options="pimpinanItem" :value="data.pimpinanDewan" @change="val => data.pimpinanDewan = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
+							</div>
 						</div>
 					</div>
 					<div>
-						<div v-if="!isMember" class="form-group mb-8">
-							<label for="textareaAlamat">Alamat</label>
-							<textarea id="textareaAlamat" v-model="v$.alamat.$model" :class="{ 'invalid': hasSubmitted && v$.alamat.$invalid }" rows="4"></textarea>
-						</div>
-						<div v-if="isMember" class="form-group mb-4 flex items-center gap-4">
-							<label>Pimpinan Dewan</label>
-							<Dropdown :options="pimpinanItem" :value="data.pimpinanDewan" @change="val => data.pimpinanDewan = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
-						</div>
-						<div v-if="isMember" class="field-group mb-8">
+						<div class="field-group mb-8">
 							<label class="field-group-title">Badan Kelengkapan</label>
 							<div class="form-group mb-4 flex items-center gap-4">
 								<label>Badan Musyawarah</label>
@@ -163,7 +149,7 @@ const onSubmit = async () => {
 								<Dropdown :options="badanItem" :value="data.kedudukanBadanKehormatan" @change="val => data.kedudukanBadanKehormatan = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
 							</div>
 						</div>
-						<div v-if="isMember && isFraksiLoaded" class="field-group mb-8">
+						<div v-if="isFraksiLoaded" class="field-group mb-8">
 							<label class="field-group-title">Fraksi</label>
 							<div class="form-group mb-4 flex items-center gap-4">
 								<label>Nama Fraksi</label>
@@ -174,7 +160,7 @@ const onSubmit = async () => {
 								<Dropdown :options="fraksiItem" :value="data.kedudukanFraksi" @change="val => data.kedudukanFraksi = val" defaultTitle="Pilih Opsi" class="dropdown-category" />
 							</div>
 						</div>
-						<div v-if="isMember && isKomisiLoaded" class="field-group">
+						<div v-if="isKomisiLoaded" class="field-group">
 							<label class="field-group-title">Komisi</label>
 							<div class="form-group mb-4 flex items-center gap-4">
 								<label>Nama Komisi</label>
@@ -183,17 +169,6 @@ const onSubmit = async () => {
 							<div class="form-group flex items-center gap-4">
 								<label>Kedudukan Komisi</label>
 								<Dropdown :options="komisiItem" :value="data.kedudukanKomisi" @change="val => data.kedudukanKomisi = val" defaultTitle="Pilih Opsi" position="top" class="dropdown-category" />
-							</div>
-						</div>
-						<div v-if="!isMember && isOpdLoaded" class="field-group">
-							<label class="field-group-title">OPD</label>
-							<div class="form-group mb-4 flex items-center gap-4">
-								<label>Nama OPD</label>
-								<Dropdown :options="opd" labelKey="name" valueKey="id" defaultTitle="Pilih Opsi" class="dropdown-category" />
-							</div>
-							<div class="form-group flex items-center gap-4">
-								<label>Jabatan OPD</label>
-								<Dropdown :options="opd" labelKey="name" valueKey="id" defaultTitle="Pilih Opsi" class="dropdown-category" />
 							</div>
 						</div>
 					</div>

@@ -36,7 +36,7 @@ agendaStore.getAttRoomInfo(uniqueKey.value, response => {
 	}
 
 	agendaName.value = response.data.nama;
-	agendaId.value = null;
+	agendaId.value = response.data.id;
 	isAvailable.value = Boolean(Number(response.data.status_rapat));
 	isLoaded.value = true;
 	showLoader.value = false;

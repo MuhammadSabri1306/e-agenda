@@ -8,7 +8,6 @@ import FormAddInvitation from "@/components/FormAddInvitation.vue";
 import FormEditInvitation from "@/components/FormEditInvitation.vue";
 
 const route = useRoute();
-const showFormNew = computed(() => route.name == "invitationNew");
 const showFormEdit = computed(() => route.name == "invitationEdit");
 </script>
 <template>
@@ -20,8 +19,7 @@ const showFormEdit = computed(() => route.name == "invitationEdit");
 						<ListInvitation />
 					</div>
 					<div class="w-full overflow-x-hidden">
-						<FormAddInvitation v-if="showFormNew" />
-						<FormEditInvitation v-else-if="showFormEdit" />
+						<FormEditInvitation v-if="showFormEdit" />
 						<HeroInvitation v-else />
 					</div>
 				</div>

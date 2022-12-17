@@ -41,7 +41,7 @@
 <style scoped>
 	
 .basic-bottomnav {
-	@apply bg-white z-[9999] fixed md:hidden bottom-0 left-0 w-full border-t border-gray-400 shadow;
+	@apply bg-white z-[8886] fixed md:hidden bottom-0 left-0 w-full border-t border-gray-400 shadow;
 }
 
 .nav-menu {
