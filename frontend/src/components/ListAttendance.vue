@@ -23,7 +23,7 @@ const showFormAdd = ref(false);
 </script>
 <template>
 	<div>
-		<h2 class="text-gray-800 text-lg font-bold p-4 border-t-4 border-primary-500 mb-4">Agenda Rapat</h2>
+		<h2 class="side-title">Agenda Rapat</h2>
 		<ToolbarFilter class="mb-4" />
 		<div v-if="isAttLoaded && att.length < 1">
 			<p class="text-sm font-semibold text-gray-700">Belum ada agenda rapat.</p>

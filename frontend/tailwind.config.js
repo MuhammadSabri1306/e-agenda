@@ -6,6 +6,16 @@ const colors = require("tailwindcss/colors");
 module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js}"],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '8rem',
+        xl: '8rem',
+        '2xl': '8rem'
+      },
+    },
     fontFamily: {
       "display": ["Josefin Sans", ...defaultTheme.fontFamily.sans],
       "body": ["Open Sans", ...defaultTheme.fontFamily.sans],

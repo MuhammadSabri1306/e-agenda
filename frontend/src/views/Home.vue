@@ -28,6 +28,7 @@ const startApp = () => {
 const showScanner = ref(false);
 const onScanned = qrCode => {
 	router.push("/att/room/" + qrCode);
+	showScanner.value = false;
 };
 </script>
 <template>

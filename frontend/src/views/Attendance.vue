@@ -15,7 +15,7 @@ const showDetail = computed(() => route.name == "attendanceDetail");
 		<template #main>
 			<div class="container py-8 px-4 md:px-0">
 				<div class="grid grid-cols-1 md:grid-cols-[17rem_1fr] gap-8">
-					<div>
+					<div class="row-start-2 row-end-3 md:row-start-1 md:row-end-2">
 						<ListAttendance />
 					</div>
 					<div class="w-full overflow-x-hidden">

@@ -1,12 +1,10 @@
 <script setup>
 import ButtonOptions from "./ButtonOptions.vue";
 import ButtonAccount from "./ButtonAccount.vue";
-
-defineEmits(["new"]);
 </script>
 <template>
     <nav class="basic-navbar">
-        <div class="container">
+        <div class="container hidden md:block">
             <div class="flex items-stretch px-16">
             	<ul class="nav-menu">
             		<li>
@@ -46,12 +44,13 @@ defineEmits(["new"]);
                 <ButtonAccount />
             </div>
         </div>
+        <slot></slot>
     </nav>
 </template>
 <style scoped>
 	
 .basic-navbar {
-	@apply bg-white z-[2] md:sticky top-0 w-full md:shadow-sm;
+	@apply bg-white z-[2] sticky top-0 w-full md:shadow-sm;
 }
 
 .nav-menu {

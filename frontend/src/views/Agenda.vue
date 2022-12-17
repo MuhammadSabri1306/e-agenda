@@ -18,16 +18,24 @@ const isNotForm = computed(() => !isFormAdd.value && !isFormEdit.value);
 </script>
 <template>
 	<BasicLayout @new="$router.push('/agenda/new')" baseBgClass="bg-gray-100">
+		<template #toolbar>
+			<div class="py-2 border-t">
+				<div class="container flex items-center justify-end gap-8">
+					<div class="form-group">
+						<label>Filter</label>
+					</div>
+					<ToolbarFilter />
+				</div>
+			</div>
+		</template>
 		<template #main>
 			<div class="p-8 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8">
-				<div class="row-start-2 row-end-3 md:row-start-1 md:row-end-2 mt-8 flex flex-col gap-8">
-					<button type="button" v-if="isNotForm" @click="$router.push('/agenda/new')" class="btn btn-icon text-white transition-colors bg-primary-600 hover:bg-primary-500 focus:bg-primary-500">
-						<font-awesome-icon icon="fa-solid fa-plus" fixed-width />
-						<span class="ml-2">Rapat Baru</span>
-					</button>
-					<div v-if="isNotForm" class="basic-card p-8 form-group">
-						<label>Filter</label>
-						<ToolbarFilter />
+				<div class="row-start-2 row-end-3 md:row-start-1 md:row-end-2 mt-8">
+					<div v-if="isNotForm" class="hidden md:flex flex-col gap-8 mb-8">
+						<button type="button" @click="$router.push('/agenda/new')" class="btn btn-icon text-white transition-colors bg-primary-600 hover:bg-primary-500 focus:bg-primary-500">
+							<font-awesome-icon icon="fa-solid fa-plus" fixed-width />
+							<span class="ml-2">Rapat Baru</span>
+						</button>
 					</div>
 					<div>
 						<Calendar @select="val => detailAgendaId = val" class="basic-card mb-4" />
@@ -41,6 +49,12 @@ const isNotForm = computed(() => !isFormAdd.value && !isFormEdit.value);
 				</div>
 				<div class="w-full overflow-x-hidden">
 					<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Rapat</h2>
+					<div v-if="isNotForm" class="flex md:hidden flex-col gap-8 mb-8">
+						<button type="button" @click="$router.push('/agenda/new')" class="btn btn-icon text-white transition-colors bg-primary-600 hover:bg-primary-500 focus:bg-primary-500">
+							<font-awesome-icon icon="fa-solid fa-plus" fixed-width />
+							<span class="ml-2">Rapat Baru</span>
+						</button>
+					</div>
 					<FormAddAgenda v-if="isFormAdd" />
 					<FormEditAgenda v-else-if="isFormEdit" />
 					<ListAgenda v-else @showDetail="val => detailAgendaId = val" />
