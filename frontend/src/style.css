@@ -113,7 +113,23 @@
 	}
 
 	.side-title {
-		@apply opacity-0 md:opacity-100 text-gray-800 text-lg font-bold p-4 border-t-4 border-primary-500 mb-4;
+		@apply hidden md:block text-gray-800 text-lg font-bold p-4 border-t-4 border-primary-500 mb-4;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar {
+		@apply w-3;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-track {
+		@apply bg-white/50;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		@apply bg-gray-300 rounded-[50rem];
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		@apply bg-gray-400;
 	}
 }
 

@@ -1,7 +1,7 @@
 <script setup>
 import BasicLayout from "@/components/basic-layout/Layout.vue";
 import ListInvitation from "@/components/ListInvitation.vue";
-import HeroInvitation from "@/components/HeroInvitation.vue";
+import FormInvitation from "@/components/FormInvitation.vue";
 </script>
 <template>
 	<BasicLayout>
@@ -13,10 +13,7 @@ import HeroInvitation from "@/components/HeroInvitation.vue";
 					</div>
 					<div class="w-full overflow-x-hidden">
 						<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Undangan Rapat</h2>
-						<div class="block md:hidden mb-16">
-							<ListInvitation />
-						</div>
-						<HeroInvitation />
+						<FormInvitation />
 					</div>
 				</div>
 			</div>

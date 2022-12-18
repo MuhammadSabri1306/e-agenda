@@ -4,7 +4,7 @@ import ButtonAccount from "./ButtonAccount.vue";
 </script>
 <template>
 	<header class="basic-header">
-		<div class="container mb-4 md:mb-0 my-12">
+		<div class="container my-12">
 			<router-link to="/" class="flex justify-center items-center p-4 transition-opacity opacity-100 hover:opacity-90">
 				<h1 class="text-3xl md:text-4xl text-primary-600 font-bold font-body mr-4 leading-none text-shadow-black">E-RAPAT</h1>
 				<div class="flex items-center">

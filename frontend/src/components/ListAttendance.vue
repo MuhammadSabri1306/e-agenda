@@ -49,7 +49,11 @@ const showFormAdd = ref(false);
 }
 
 .category-list a {
-	@apply flex items-center gap-2 pl-2 pr-4 py-2 text-sm font-medium text-gray-600 transition-colors bg-white hover:bg-gray-100;
+	@apply flex items-center gap-2 pl-2 pr-4 py-3 md:py-2 md:text-sm md:font-medium text-gray-600 transition-colors bg-white hover:bg-gray-100;
+}
+
+.beep-circle {
+	@apply inline-flex;
 }
 
 .beep-circle svg {

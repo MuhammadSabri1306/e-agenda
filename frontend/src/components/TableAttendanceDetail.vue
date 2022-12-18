@@ -21,7 +21,6 @@ const currAtt = computed(() => {
 	if(attendance.value.length < 1)
 		return {};
 
-	console.log(attendance.value)
 	const data = attendance.value.find(item => item.id == agendaId.value);
 	return {
 		title: data.nama,

@@ -1,9 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./views/Home.vue";
+
 import Agenda from "./views/Agenda.vue";
+import AgendaNew from "./views/AgendaNew.vue";
+import AgendaEdit from "./views/AgendaEdit.vue";
+
 import Invitation from "./views/Invitation.vue";
+import InvitationDetail from "./views/InvitationDetail.vue";
+
 import Contact from "./views/Contact.vue";
+
 import Attendance from "./views/Attendance.vue";
+import AttendanceDetail from "./views/AttendanceDetail.vue";
 
 const useBuildPath = false;
 const routes = {
@@ -11,18 +19,18 @@ const routes = {
     login: { path: "/login", component: Home },
     
     agenda: { path: "/agenda", component: Agenda, meta: { needLogin: true } },
-    agendaNew: { path: "/agenda/new", component: Agenda, meta: { needLogin: true } },
-    agendaEdit: { path: "/agenda/edit/:id", component: Agenda, meta: { needLogin: true } },
+    agendaNew: { path: "/agenda/new", component: AgendaNew, meta: { needLogin: true } },
+    agendaEdit: { path: "/agenda/edit/:id", component: AgendaEdit, meta: { needLogin: true } },
 
     invitation: { path: "/inv", component: Invitation, meta: { needLogin: true } },
-    invitationEdit: { path: "/inv/edit/:agendaId", component: Invitation, meta: { needLogin: true } },
+    invitationDetail: { path: "/inv/detail/:agendaId", component: InvitationDetail, meta: { needLogin: true } },
 
     contact: { path: "/contact", component: Contact, meta: { needLogin: true } },
     contactNew: { path: "/contact/new", component: Contact, meta: { needLogin: true } },
     contactEdit: { path: "/contact/edit/:id", component: Contact, meta: { needLogin: true } },
 
     attendance: { path: "/att", component: Attendance, meta: { needLogin: true } },
-    attendanceDetail: { path: "/att/:id", component: Attendance, meta: { needLogin: true } },
+    attendanceDetail: { path: "/att/:id", component: AttendanceDetail, meta: { needLogin: true } },
     attendanceRegist: { path: "/att/room/:ukey", component: Home }
 };
 
@@ -38,7 +46,7 @@ const defineMyRouter = routesObj => {
         history,
         routes,
         scrollBehavior(to, from, savedPosition){
-            const post = savedPosition || { left:0, top: 0 };
+            const post = savedPosition || { left: 0, top: 0 };
             return post;
         }
     });

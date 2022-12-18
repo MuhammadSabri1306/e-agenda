@@ -1,7 +1,8 @@
 <script setup>
+import { computed } from "vue";
 import BasicLayout from "@/components/basic-layout/Layout.vue";
-import ListInvitation from "@/components/ListInvitation.vue";
-import HeroInvitation from "@/components/HeroInvitation.vue";
+import ListAttendance from "@/components/ListAttendance.vue";
+import TableAttendanceDetail from "@/components/TableAttendanceDetail.vue";
 </script>
 <template>
 	<BasicLayout>
@@ -9,14 +10,11 @@ import HeroInvitation from "@/components/HeroInvitation.vue";
 			<div class="container py-8 px-4 md:px-0">
 				<div class="grid grid-cols-1 md:grid-cols-[17rem_1fr] gap-8">
 					<div class="hidden md:block">
-						<ListInvitation />
+						<ListAttendance />
 					</div>
 					<div class="w-full overflow-x-hidden">
-						<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Undangan Rapat</h2>
-						<div class="block md:hidden mb-16">
-							<ListInvitation />
-						</div>
-						<HeroInvitation />
+						<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Absensi Rapat</h2>
+						<TableAttendanceDetail />
 					</div>
 				</div>
 			</div>
