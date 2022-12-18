@@ -5,9 +5,8 @@ import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 const showCollapse = ref(false);
 const collapseWrapper = ref(null);
 const onBlur = event => {
-	if(collapseWrapper.value.contains(event.relatedTarget))
-		return;
-	showCollapse.value = false;
+	if(collapseWrapper.value && collapseWrapper.value.contains(event.relatedTarget))
+		showCollapse.value = false;
 };
 </script>
 <template>
@@ -18,8 +17,8 @@ const onBlur = event => {
 		<Transition name="fade">
 			<ul v-show="showCollapse" ref="collapseWrapper" @focusout="onBlur" class="collapse-account">
 				<li>
-					<button type="button" class="collapse-item">
-						<span class="mr-auto">Lihat detail Pengguna</span>
+					<button type="button" @click="$router.push('/user')" class="collapse-item">
+						<span class="mr-auto">Buka Data Operator</span>
 						<ChevronRightIcon class="w-4 h-4" />
 					</button>
 				</li>

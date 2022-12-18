@@ -19,7 +19,7 @@ defineProps({
 		<main class="pt-8 pb-16">
 			<slot name="main"></slot>
 		</main>
-		<Footer />
+		<Footer class="pb-24 md:pb-0" />
 		<BottomNav />
 	</div>
 </template>

@@ -98,15 +98,15 @@ const agendaTime = computed(() => {
 							</div>
 						</div>
 						<div class="flex justify-end gap-2">
-							<a href="#" class="offcanvas-agenda-link">
+							<router-link :to="'/agenda/edit/'+agendaId" class="offcanvas-agenda-link">
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-							</a>
-							<a href="#" class="offcanvas-agenda-link">
+							</router-link>
+							<router-link :to="'/inv/detail/'+agendaId" class="offcanvas-agenda-link">
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-							</a>
-							<a href="#" class="offcanvas-agenda-link">
+							</router-link>
+							<router-link :to="'/att/'+agendaId" class="offcanvas-agenda-link">
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-							</a>
+							</router-link>
 						</div>
 					</div>
 				</div>
@@ -117,7 +117,7 @@ const agendaTime = computed(() => {
 <style scoped>
 	
 .offcanvas-agenda {
-	@apply fixed w-screen h-screen top-0 left-0 bg-gray-900/70 z-[7777];
+	@apply fixed w-screen h-screen top-0 left-0 bg-gray-900/70 z-[8888];
 }
 
 .offcanvas-fade-enter-active,

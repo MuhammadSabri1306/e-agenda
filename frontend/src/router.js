@@ -13,6 +13,8 @@ import Contact from "./views/Contact.vue";
 import Attendance from "./views/Attendance.vue";
 import AttendanceDetail from "./views/AttendanceDetail.vue";
 
+import User from "./views/User.vue";
+
 const useBuildPath = false;
 const routes = {
     home: { path: "/", component: Home },
@@ -31,7 +33,9 @@ const routes = {
 
     attendance: { path: "/att", component: Attendance, meta: { needLogin: true } },
     attendanceDetail: { path: "/att/:id", component: AttendanceDetail, meta: { needLogin: true } },
-    attendanceRegist: { path: "/att/room/:ukey", component: Home }
+    attendanceRegist: { path: "/att/room/:ukey", component: Home },
+
+    user: { path: "/user", component: User }
 };
 
 const defineMyRouter = routesObj => {

@@ -57,8 +57,8 @@ const confirmDelete = async () => {
 };
 </script>
 <template>
-	<div class="basic-card relative hover:bg-white/50 group">
-		<div class="flex px-8 pt-8 pb-4">
+	<div class="basic-card relative hover:bg-white/50 group flex flex-col">
+		<div class="flex px-8 pt-8 pb-4 grow">
 			<span class="block w-3 h-3 rounded-full absolute top-0 left-8 mt-10" :class="agenda.twColor"></span>
 			<h6 class="ml-7 text-xl text-gray-600 font-body group-hover:text-sky-600">{{ agenda.title }}</h6>
 		</div>

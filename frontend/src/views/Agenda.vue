@@ -40,7 +40,7 @@ const detailAgendaId = ref(null);
 						</div>
 					</div>
 				</div>
-				<div class="w-full overflow-x-hidden">
+				<div class="w-full overflow-x-visible">
 					<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Rapat</h2>
 					<div class="flex md:hidden flex-col gap-8 mb-8">
 						<button type="button" @click="$router.push('/agenda/new')" class="btn btn-icon text-white transition-colors bg-primary-600 hover:bg-primary-500 focus:bg-primary-500">
