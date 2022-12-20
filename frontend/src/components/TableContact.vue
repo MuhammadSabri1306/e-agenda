@@ -40,7 +40,6 @@ const getCategory = item => {
 </script>
 <template>
 	<div>
-		<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Kontak</h2>
 		<div v-if="isContactLoaded && contact.length < 1">
 			<p class="text-sm font-semibold text-gray-700">
 				<span class="mr-2">Belum ada kontak.</span>

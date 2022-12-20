@@ -5,8 +5,11 @@ import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 const showCollapse = ref(false);
 const collapseWrapper = ref(null);
 const onBlur = event => {
-	if(collapseWrapper.value && collapseWrapper.value.contains(event.relatedTarget))
-		showCollapse.value = false;
+	if(!collapseWrapper.value)
+		return;
+	if(collapseWrapper.value.contains(event.relatedTarget))
+		return;
+	showCollapse.value = false;
 };
 </script>
 <template>

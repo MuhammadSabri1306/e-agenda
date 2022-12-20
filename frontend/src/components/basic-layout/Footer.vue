@@ -1,7 +1,7 @@
 <template>
 	<footer class="bg-gray-900">
 		<div class="container py-16 px-8 md:px-16">
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-x-16">
 				<div>
 					<router-link to="/" class="flex items-center mb-4 transition-opacity opacity-100 hover:opacity-80">
 						<img src="/assets/img/logo-pemprov-sulsel.webp" class="h-16 md:h-24 w-auto">

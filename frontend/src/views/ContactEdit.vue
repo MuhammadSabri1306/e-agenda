@@ -1,7 +1,7 @@
 <script setup>
 import BasicLayout from "@/components/basic-layout/Layout.vue";
 import ListContactCategory from "@/components/ListContactCategory.vue";
-import TableContact from "@/components/TableContact.vue";
+import FormEditContact from "@/components/FormEditContact.vue";
 </script>
 <template>
 	<BasicLayout>
@@ -13,7 +13,7 @@ import TableContact from "@/components/TableContact.vue";
 					</div>
 					<div class="w-full overflow-x-hidden">
 						<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Kontak</h2>
-						<TableContact />
+						<FormEditContact />
 					</div>
 				</div>
 			</div>

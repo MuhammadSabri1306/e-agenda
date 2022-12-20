@@ -88,7 +88,6 @@ const onSubmit = async () => {
 </script>
 <template>
 	<div>
-		<h2 class="text-gray-800 text-3xl font-bold leading-tight mb-8">Kontak</h2>
 		<div class="flex items-center mb-8">
 			<ButtonBack />
 		</div>
@@ -123,7 +122,7 @@ const onSubmit = async () => {
 						</div>
 						<div class="field-group mb-8">
 							<label class="field-group-title">Pimpinan Dewan</label>
-							<div class="form-group flex items-center gap-4">
+							<div class="form-group md:flex items-center gap-4">
 								<label>Kedudukan</label>
 								<Dropdown :options="pimpinanItem" :value="data.pimpinanDewan" @change="val => data.pimpinanDewan = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
 							</div>
@@ -132,41 +131,41 @@ const onSubmit = async () => {
 					<div>
 						<div class="field-group mb-8">
 							<label class="field-group-title">Badan Kelengkapan</label>
-							<div class="form-group mb-4 flex items-center gap-4">
+							<div class="form-group mb-8 md:mb-4 md:flex items-center gap-4">
 								<label>Badan Musyawarah</label>
 								<Dropdown :options="badanItem" :value="data.kedudukanBadanMusyawarah" @change="val => data.kedudukanBadanMusyawarah = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
 							</div>
-							<div class="form-group mb-4 flex items-center gap-4">
+							<div class="form-group mb-8 md:mb-4 md:flex items-center gap-4">
 								<label>Badan Pembentukan<br>Peraturan Daerah</label>
 								<Dropdown :options="badanItem" :value="data.kedudukanBadanPembentukanPerda" @change="val => data.kedudukanBadanPembentukanPerda = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
 							</div>
-							<div class="form-group mb-4 flex items-center gap-4">
+							<div class="form-group mb-8 md:mb-4 md:flex items-center gap-4">
 								<label>Badan Anggaran</label>
 								<Dropdown :options="badanItem" :value="data.kedudukanBadanAnggaran" @change="val => data.kedudukanBadanAnggaran = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
 							</div>
-							<div class="form-group flex items-center gap-4">
+							<div class="form-group md:flex items-center gap-4">
 								<label>Badan Kehormatan</label>
 								<Dropdown :options="badanItem" :value="data.kedudukanBadanKehormatan" @change="val => data.kedudukanBadanKehormatan = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
 							</div>
 						</div>
 						<div v-if="isFraksiLoaded" class="field-group mb-8">
 							<label class="field-group-title">Fraksi</label>
-							<div class="form-group mb-4 flex items-center gap-4">
+							<div class="form-group mb-8 md:mb-4 md:flex items-center gap-4">
 								<label>Nama Fraksi</label>
 								<Dropdown :options="fraksi" :value="data.fraksiId" @change="val => data.fraksiId = val" labelKey="nama_fraksi" valueKey="id" defaultTitle="Pilih Opsi" class="dropdown-category" />
 							</div>
-							<div class="form-group flex items-center gap-4">
+							<div class="form-group md:flex items-center gap-4">
 								<label>Kedudukan Fraksi</label>
 								<Dropdown :options="fraksiItem" :value="data.kedudukanFraksi" @change="val => data.kedudukanFraksi = val" defaultTitle="Pilih Opsi" class="dropdown-category" />
 							</div>
 						</div>
 						<div v-if="isKomisiLoaded" class="field-group">
 							<label class="field-group-title">Komisi</label>
-							<div class="form-group mb-4 flex items-center gap-4">
+							<div class="form-group mb-8 md:mb-4 md:flex items-center gap-4">
 								<label>Nama Komisi</label>
 								<Dropdown :options="komisi" :value="data.komisiId" @change="val => data.komisiId = val" labelKey="nama_komisi" valueKey="id" defaultTitle="Pilih Opsi" position="top" class="dropdown-category" />
 							</div>
-							<div class="form-group flex items-center gap-4">
+							<div class="form-group md:flex items-center gap-4">
 								<label>Kedudukan Komisi</label>
 								<Dropdown :options="komisiItem" :value="data.kedudukanKomisi" @change="val => data.kedudukanKomisi = val" defaultTitle="Pilih Opsi" position="top" class="dropdown-category" />
 							</div>
