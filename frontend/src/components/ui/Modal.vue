@@ -3,7 +3,8 @@ import { ref, onMounted } from "vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps({
-	closeByBackdrop: { type: Boolean, default: true } 
+	closeByBackdrop: { type: Boolean, default: true },
+	useBtnClose: { type: Boolean, default: true }
 });
 
 const open = ref(true);
@@ -33,7 +34,7 @@ const onBackdropClick = () => {
 				<div class="modal">
 					<div class="relative">
 						<slot name="header"></slot>
-						<button type="button" @click="show = false" class="absolute right-2 top-2 text-xl text-gray-400 hover:text-gray-600">
+						<button type="button" v-if="useBtnClose" @click="show = false" class="absolute right-2 top-2 text-xl text-gray-400 hover:text-gray-600">
 							<font-awesome-icon icon="fa-solid fa-circle-xmark" fixed-width />
 						</button>
 					</div>

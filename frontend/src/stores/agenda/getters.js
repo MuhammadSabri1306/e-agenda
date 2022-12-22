@@ -1,41 +1,57 @@
-import { useDateId, useTime } from "@/modules/date-id";
-import { inYearRange, inMonthRange, inDateRange } from "@/modules/filter-date";
+import { formatAgenda, filterByDate } from "@/modules/agenda-format";
 
 export default {
-	list: state => {
-		let colorIndex = 0;
-		const colorKeys = Object.keys(state.calendarColors);
+	
+	list: state => state.agenda.map(item => formatAgenda(item, state.calendarColors)),
 
-		return state.agenda.map(agenda => {
-			const startDate = new Date(agenda.tanggal_mulai),
-				endDate = new Date(agenda.tanggal_selesai);
+	listFiltered: state => {
+		const filterIndex = state.filter.selectedIndex;
+		const filterItems = state.filter.items;
+		const sortAsc = state.sort.isAsc;
 
-			const id = agenda.id;
-			const color = agenda.warna;
-			const twColor = state.calendarColors[agenda.warna];
-			const title = agenda.nama;
-			const date = {
-				start: useDateId(startDate),
-				end: useDateId(endDate)
-			};
-			const time = {
-				start: useTime(agenda.mulai_pukul),
-				end: useTime(agenda.sampai_pukul)
-			};
-			const ket = agenda.deskripsi;
-			const location = agenda.tempat;
-			const letter = agenda.file;
-			const letterNo = agenda.no_surat;
-			const message = agenda.pesan;
-			const hasInvitation = (!agenda.file && !agenda.no_surat && !agenda.pesan) ? false : true;
+		const agenda = state.agenda
+			.map(item => formatAgenda(item, state.calendarColors))
+			.filter(item => {
+				if(filterIndex >= filterItems.length - 1)
+					return true;
+				return filterByDate(item.date, filterIndex);
+			});
 
-			return { id, color, twColor, title, date, time, ket, location, letter, letterNo, message, hasInvitation };
-		});
+		if(!sortAsc)
+			agenda.reverse();
+
+		return agenda;
 	},
+
+	attendanceFiltered: state => {
+		const filterIndex = state.filter.selectedIndex;
+		const filterItems = state.filter.items;
+		const sortAsc = state.sort.isAsc;
+
+		const att = state.attendance
+			.map(item => {
+				return {
+					absen: item.absen,
+					...formatAgenda(item, state.calendarColors)
+				};
+			})
+			.filter(item => {
+				if(filterIndex >= filterItems.length - 1)
+					return true;
+				return filterByDate(item.date, filterIndex);
+			});
+
+		if(!sortAsc)
+			att.reverse();
+		
+		return att;
+	},
+
 	getById() {
 		const list = this.list;
 		return id => list.find(lItem => lItem.id == id);;
 	},
+
 	today() {
 		const curDate = new Date();
 		return this.list.filter(item => {

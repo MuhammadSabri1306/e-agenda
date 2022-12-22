@@ -6,19 +6,11 @@ import ModalFormAttendance from "@/components/ModalFormAttendance.vue";
 import ToolbarFilter from "@/components/ToolbarFilter.vue";
 
 const agendaStore = useAgendaStore();
-const att = computed(() => agendaStore.attendance);
+const att = computed(() => agendaStore.attendanceFiltered);
 const isAttLoaded = ref(false);
 agendaStore.fetchAttendance(false, success => isAttLoaded.value = success);
 
 const getEditUrl = attId => `/att/${ attId }`;
-const getActiveClass = status => {
-	const isActive = Boolean(Number(status));
-	return {
-		'text-gray-500': !isActive,
-		'text-green-500': isActive
-	};
-};
-
 const showFormAdd = ref(false);
 </script>
 <template>
@@ -31,10 +23,10 @@ const showFormAdd = ref(false);
 		<ul v-if="isAttLoaded && att.length > 0" class="category-list">
 			<li v-for="item in att">
 				<router-link :to="getEditUrl(item.id)">
-					<span :class="getActiveClass(item.status_rapat)" class="beep-circle">
+					<span :class="{ 'text-gray-500': !item.isActive, 'text-green-500': item.isActive }" class="beep-circle">
 						<font-awesome-icon icon="fa-solid fa-circle" />
 					</span>
-					<span>{{ item.nama }}</span>
+					<span>{{ item.title }}</span>
 				</router-link>
 			</li>
 		</ul>

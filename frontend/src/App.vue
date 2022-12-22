@@ -1,8 +1,10 @@
 <script setup>
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAccountStore } from "@/stores/account";
-// import { useViewStore } from "@/stores/view";
+import { useOnlineState } from "@/modules/online-state";
 import Toast from "@/components/ui/Toast.vue";
+import AlertOffline from "@/components/AlertOffline.vue";
 
 const accountStore = useAccountStore();
 accountStore.readAccountCookie();
@@ -19,10 +21,12 @@ router.beforeEach((to, from) => {
         return { path: "/login", query: { redirect: to.fullPath } };
 });
 
-// const viewStore = useViewStore();
+const isOnline = useOnlineState();
+const showAlertOffline = computed(() => !isOnline.value);
 // setTimeout(() => viewStore.showToast("Test aja", "Berhasil menghapus data.", true), 500)
 </script>
 <template>
     <router-view />
     <Toast />
+    <AlertOffline v-if="showAlertOffline" />
 </template>

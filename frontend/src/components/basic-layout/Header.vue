@@ -1,6 +1,11 @@
 <script setup>
+import { computed } from "vue";
+import { useAccountStore } from "@/stores/account";
 import ButtonOptions from "./ButtonOptions.vue";
 import ButtonAccount from "./ButtonAccount.vue";
+
+const accountStore = useAccountStore();
+const showOptions = computed(() => accountStore.isRoleAdmin);
 </script>
 <template>
 	<header class="basic-header">
@@ -16,8 +21,8 @@ import ButtonAccount from "./ButtonAccount.vue";
 				</div>
 			</router-link>
 		</div>
-		<div class="container flex md:hidden items-stretch">
-			<ButtonOptions class="ml-auto" />
+		<div class="container flex md:hidden items-stretch justify-end">
+			<ButtonOptions v-if="showOptions" />
             <ButtonAccount />
 		</div>
 	</header>
@@ -33,7 +38,7 @@ import ButtonAccount from "./ButtonAccount.vue";
 }
 
 .basic-header :deep(.navbar-btn) > svg {
-	@apply w-6 h-6;
+	@apply w-8 h-8;
 }
 
 .basic-header :deep(ul) {

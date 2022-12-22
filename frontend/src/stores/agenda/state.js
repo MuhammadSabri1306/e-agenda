@@ -1,6 +1,6 @@
 
 const filter = {
-	items: ["Hari ini", "Kemarin", "Bulan ini", "Tahun ini", "Setahun lalu"],
+	items: ["Hari ini", "Kemarin", "Bulan ini", "Tahun ini", "Setahun lalu", "Semua"],
 	selectedIndex: 2
 };
 

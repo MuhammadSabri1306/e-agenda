@@ -33,8 +33,8 @@ const saveAgenda = () => {
 	formData.append("nama", data.title);
 	formData.append("tempat", data.location);
 	formData.append("warna", data.color);
-	formData.append("tanggal_mulai", data.startDate);
-	formData.append("tanggal_selesai", data.endDate);
+	formData.append("tanggal_mulai", data.startDate.toISOString().split("T")[0]);
+	formData.append("tanggal_selesai", data.endDate.toISOString().split("T")[0]);
 	formData.append("mulai_pukul", data.startTime);
 	formData.append("sampai_pukul", data.endTime);
 

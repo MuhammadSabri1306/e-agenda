@@ -5,17 +5,17 @@ import ToolbarFilter from "@/components/ToolbarFilter.vue";
 
 const isAgendaLoaded = ref(false);
 const agendaStore = useAgendaStore();
-const agenda = computed(() => agendaStore.list);
+const agenda = computed(() => agendaStore.listFiltered);
 agendaStore.fetchAgenda(false, success => isAgendaLoaded.value = success);
 </script>
 <template>
 	<div>
 		<h2 class="side-title">Agenda Rapat</h2>
 		<ToolbarFilter class="mb-4" />
-		<div v-if="!isAgendaLoaded">
+		<div v-if="agenda.length < 1">
 			<p class="text-sm font-semibold text-gray-700">Belum ada agenda rapat.</p>
 		</div>
-		<ul v-else class="category-list">
+		<ul v-if="isAgendaLoaded" class="category-list">
 			<li v-for="item in agenda">
 				<router-link :to="'/inv/detail/' + item.id">
 					<span class="beep-circle text-gray-500">

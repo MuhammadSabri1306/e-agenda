@@ -1,15 +1,19 @@
 <script setup>
+import { computed } from "vue";
+import { useAccountStore } from "@/stores/account";
 import { getNavItems } from "./navigations";
 import ButtonOptions from "./ButtonOptions.vue";
 import ButtonAccount from "./ButtonAccount.vue";
 
 const navItems = getNavItems();
+const accountStore = useAccountStore();
+const showOptions = computed(() => accountStore.isRoleAdmin);
 </script>
 <template>
     <nav class="basic-navbar">
         <div class="container hidden md:block">
             <div class="flex items-stretch px-16">
-            	<ul class="nav-menu">
+            	<ul class="nav-menu mr-auto">
             		<li v-for="item in navItems">
 	        			<router-link :to="item.to" :class="item.activeClass" class="nav-link">
 							<span class="icon">
@@ -19,7 +23,7 @@ const navItems = getNavItems();
 						</router-link>
 					</li>
             	</ul>
-                <ButtonOptions class="ml-auto" />
+                <ButtonOptions v-if="showOptions" />
                 <ButtonAccount />
             </div>
         </div>
