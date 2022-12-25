@@ -25,48 +25,8 @@ const categoryFraksi = computed(() => contactStore.fraksi);
 contactStore.fetchKomisi();
 const categoryKomisi = computed(() => contactStore.komisi);
 
-const getContactByCategory = (categoryType, categoryId) => {
-	return contact.value
-		.filter(item => {
-			const itemCategoryId = item[categoryType] ? item[categoryType].id : null;
-			if(!itemCategoryId)
-				return false;
-			return itemCategoryId == categoryId;
-		})
-		.map(item => item.id);
-};
-
-const dewanTitle = [
-	{ id: 1, typeKey: "dewanTitle", title: "Ketua", text: "Ketua DPRD" },
-	{ id: 2, typeKey: "dewanTitle", title: "Wakil Ketua", text: "Wakil Ketua DPRD" }
-];
-
-const getContactByDewanTitle = id => {
-	const index = dewanTitle.findIndex(item => item.id == id);
-	const currTitle = dewanTitle[index] ? dewanTitle[index].title : null;
-	return contact.value
-		.filter(item => item.pimpinan_dewan == currTitle)
-		.map(item => item.id);
-};
-
-const badanDewan = [
-	{ id: 1, typeKey:"badanDewan", name: "musyawarah", text: "Badan Musyawarah", key: "badan_musyawarah" },
-	{ id: 2, typeKey:"badanDewan", name: "perda", text: "Badan Pembentukan Perda", key: "badan_pembentukan_perda" },
-	{ id: 3, typeKey:"badanDewan", name: "anggaran", text: "Badan Anggaran", key: "badan_anggaran" },
-	{ id: 4, typeKey:"badanDewan", name: "kehormatan", text: "Badan Kehormatan", key: "badan_kehormatan" }
-];
-const getContactByBadanDewan = id => {
-	const index = badanDewan.findIndex(item => item.id == id);
-	const attrKey = index >= 0 ? "kedudukan_" + badanDewan[index].key : "x";
-
-	return contact.value
-		.filter(item => {
-			if(!item[attrKey] || !item[attrKey] === undefined)
-				return false;
-			return item[attrKey] !== "Bukan Anggota";
-		})
-		.map(item => item.id);
-};
+const dewanTitle = contactStore.dewanTitle;
+const badanDewan = contactStore.badanDewan;
 
 const getCategory = item => {
 	const result = [];
@@ -89,7 +49,8 @@ const getCategory = item => {
 	return result.join(", ");
 };
 
-const checkedFilter = reactive([]);
+const checkedFilter = ref([]);
+const checkAll = ref(false);
 
 const getFilter = (type, filter) => {
 	const title = (type == "fraksi") ? filter.nama_fraksi
@@ -100,19 +61,6 @@ const getFilter = (type, filter) => {
 	return { title, type, id: filter.id };
 };
 
-const getMatchedContact = (filter) => {
-	if(filter.type == "fraksi" || filter.type == "komisi")
-		return getContactByCategory(filter.type, filter.id);
-
-	if(filter.type == "dewanTitle")
-		return getContactByDewanTitle(filter.id);
-	
-	if(filter.type == "badanDewan")
-		return getContactByBadanDewan(filter.id);
-	
-	return [];
-};
-
 const addFilter = filter => {
 	const type = filter.nama_fraksi ? "fraksi"
 		: filter.nama_komisi ? "komisi"
@@ -121,63 +69,127 @@ const addFilter = filter => {
 		return;
 
 	const newFilter = getFilter(type, filter);
-	newFilter && checkedFilter.push(newFilter);
+	if(!newFilter)
+		return;
+
+	checkedFilter.value = [...checkedFilter.value, newFilter];
+	checkAll.value = false;
 };
 
 const removeFilter = filter => {
-	const currFilterIndex = checkedFilter.findIndex(item => item.type === filter.type && item.id === filter.id);
+	const currFilterIndex = checkedFilter.value.findIndex(item => item.type === filter.type && item.id === filter.id);
 	if(currFilterIndex < 0)
 		return;
 
-	checkedFilter.splice(currFilterIndex, 1);
+	checkedFilter.value.splice(currFilterIndex, 1);
+	checkAll.value = false;
 };
 
-watch(checkedFilter, filters => {
-	checkedContact.value = [];
-	let matchedContact = [];
+const filteredContact = computed(() => {
+	return contact.value.filter(item => {
+		if(checkedFilter.value.length < 1)
+			return true;
 
-	filters.forEach(item => {
-		matchedContact = [...getMatchedContact(item), ...matchedContact];
+		let show = false;
+		checkedFilter.value.forEach(filter => {
+			if(show)
+				return;
+
+			if(filter.type == "fraksi" && item.fraksi) {
+				show = item.fraksi.id === filter.id;
+				return;
+			}
+
+			if(filter.type == "komisi" && item.komisi) {
+				show = item.komisi.id === filter.id;
+				return;
+			}
+
+			if(filter.type == "dewanTitle" && item.pimpinan_dewan) {
+				const index = dewanTitle.findIndex(itemDewanTitle => itemDewanTitle.id == filter.id);
+				const currTitle = dewanTitle[index] ? dewanTitle[index].title : null;
+				
+				show = item.pimpinan_dewan == currTitle;
+				return;
+			}
+
+			if(filter.type == "badanDewan") {
+				const index = badanDewan.findIndex(itemBadanDewan => itemBadanDewan.id == filter.id);
+				const attrKey = index >= 0 ? "kedudukan_" + badanDewan[index].key : "x";
+
+				if(item[attrKey] )
+					show = item[attrKey] !== "Bukan Anggota";
+				return;
+			}
+		});
+
+		return show;
 	});
-	
-	const checkedContactsId = [...matchedContact, ...checkedContact.value];
-	checkedContact.value = [...new Set(checkedContactsId)];
+});
+
+watch(checkAll, isChecked => {
+	checkedContact.value = [];
+	if(!isChecked)
+		return;
+	checkedContact.value = filteredContact.value.map(item => item.id);
 });
 </script>
 <template>
 	<div>
 		<div class="mb-8">
+			<div class="form-group mb-4">
+				<label>Kategori: </label>
+			</div>
 			<div class="grid grid-cols-1 md:flex flex-wrap items-center gap-4 mb-8">
-				<ListBox :list="dewanTitle" title="Pimpinan Dewan" labelKey="text" @select="addFilter" />
-				<ListBox :list="badanDewan" title="Badan Kelengkapan" labelKey="text" @select="addFilter" />
+				<ListBox :list="dewanTitle" title="Kedudukan" labelKey="text" @select="addFilter" />
+				<ListBox :list="badanDewan" title="Alat Kelengkapan" labelKey="text" @select="addFilter" />
 				<ListBox v-if="categoryKomisi.length > 0" :list="categoryKomisi" title="Komisi" labelKey="nama_komisi" @select="addFilter" />
 				<ListBox v-if="categoryFraksi.length > 0" :list="categoryFraksi" title="Fraksi" labelKey="nama_fraksi" @select="addFilter" />
 			</div>
 			<div class="form-group mb-4">
-				<label>Kategori: </label>
+				<label>Filter: </label>
 			</div>
 			<div class="p-4 flex flex-wrap items-center gap-4 min-h-[5rem] border bg-gray-100 rounded">
 				<ChipsClosable v-for="item in checkedFilter" :item="item" labelKey="title" @close="removeFilter" />
 			</div>
 		</div>
-		<CardTable v-if="contact.length > 0">
+		<CardTable v-if="filteredContact && filteredContact.length > 0">
 			<template #thead>
 				<tr>
+					<th>
+						<div class="flex items-center gap-2">
+							<input type="checkbox" v-model="checkAll" aria-label="check all">
+							<span>No</span>
+						</div>
+					</th>
 					<th>Nama</th>
 					<th>Kategori</th>
 				</tr>
 			</template>
 			<template #tbody>
-				<tr v-for="(item, index) in contact">
+				<tr v-for="(item, index) in filteredContact">
 					<td>
 						<div class="flex items-center gap-2">
-							<input type="checkbox" v-model="checkedContact" :value="item.id" :id="'cbContact' + index">
-							<div class="form-group">
-								<label :for="'cbContact'+index" class="leading-none">{{ item.nama }}</label>
-							</div>
+							<input type="checkbox" v-model="checkedContact" :value="item.id" :id="'cbContact' + index" :aria-label="item.nama">
+							<span>{{ index + 1 }}</span>
 						</div>
 					</td>
+					<td>{{ item.nama }}</td>
 					<td class="text-sm text-gray-700">{{ getCategory(item) }}</td>
+				</tr>
+			</template>
+		</CardTable>
+		<CardTable v-else>
+			<template #thead>
+				<tr>
+					<th>No</th>
+					<th>Nama</th>
+					<th>Kategori</th>
+				</tr>
+			</template>
+			<template #tbody>
+				<tr>
+					<td colspan="3"><p class="text-center">Data kosong.</p></td>
 				</tr>
 			</template>
 		</CardTable>

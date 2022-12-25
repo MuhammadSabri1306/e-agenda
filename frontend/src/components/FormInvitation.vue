@@ -24,11 +24,12 @@ agendaStore.fetchAgenda(false, success => {
 });
 
 const { data, v$ } = useDataForm({
-	contact: { value: [] }
+	contact: { value: [], required }
 });
 
-const isSaving = ref(false);
 const hasSubmitted = ref(false);
+const isSaving = ref(false);
+
 const onSubmit = async () => {
 	hasSubmitted.value = true;
 	const isValid = await v$.value.$validate();
@@ -55,8 +56,10 @@ const onSend = async () => {
 		rapatId: agendaId.value,
 		contacts: data.contact
 	};
-	isSending.value = true;
+	// isSending.value = true;
 	console.log(body);
+	viewStore.showToast("Undangan Rapat", "Fitur ini belum tersedia. Anda dapat menggunakan fitur ini setelah fase pengembangan selesai.");
+	hasSubmitted.value = false;
 };
 </script>
 <template>
@@ -79,6 +82,7 @@ const onSend = async () => {
 				</div>
 				<div class="py-8 md:px-8">
 					<ListInvitationContact :value="data.contact" @change="val => data.contact = val" />
+					<p v-if="hasSubmitted && v$.contact.$invalid" class="shaked-text mt-4 px-8 text-sm font-semibold text-red-700 text-center">Belum ada kontak yang dipilih</p>
 				</div>
 				<div class="flex justify-end p-8">
 					<button type="button" @click="onSend" class="btn btn-icon text-white hover-margin bg-green-600 hover:bg-green-500">

@@ -85,6 +85,11 @@
 	.form-group input.invalid:not([type=checkbox]),
 	.form-group textarea.invalid {
 		@apply border-red-400 bg-red-300/10;
+	}
+
+	.form-group input.invalid:not([type=checkbox]),
+	.form-group textarea.invalid,
+	.shaked-text {
 		animation: justshake 0.3s forwards;
 	}
 

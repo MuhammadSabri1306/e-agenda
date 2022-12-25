@@ -129,6 +129,25 @@ export default {
 			console.error(err);
 			callback && callback(false);
 		}
+	},
+
+	addFilter(type, filter) {
+		const title = (type == "fraksi") ? filter.nama_fraksi
+			: (type == "komisi") ? filter.nama_komisi
+			: (type == "dewanTitle" || type == "badanDewan") ? filter.text
+			: null;
+
+		const newFilter = { id: filter.id, title, type };
+		this.appliedFilter = [...this.appliedFilter, newFilter];
+	},
+
+	removeFilter(filter) {
+		const currIndex = this.appliedFilter
+			.findIndex(({ type, id }) => {
+				return type === filter.type && id === filter.id;
+			});
+		if(currIndex >= 0)
+			this.appliedFilter.splice(currIndex, 1);
 	}
 
 }
