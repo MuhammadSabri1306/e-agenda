@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import ErrorNotFound from "./views/ErrorNotFound.vue";
+import Guide from "./views/Guide.vue";
 
 import Agenda from "./views/Agenda.vue";
 import AgendaNew from "./views/AgendaNew.vue";
@@ -40,7 +41,8 @@ const routes = {
 
     user: { path: "/user", component: User },
 
-    e404: { path: '/:pathMatch(.*)*', component: ErrorNotFound }
+    guide: { path: "/guide/:section?", component: Guide },
+    e404: { path: "/:pathMatch(.*)*", component: ErrorNotFound }
 };
 
 const defineMyRouter = routesObj => {
