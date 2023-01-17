@@ -45,7 +45,7 @@ const onScanned = qrCode => {
 					<h2 class="text-2xl md:text-4xl font-body font-bold text-black text-center md:text-left md:ml-1 hover-margin mb-6">Selamat Datang di</h2>
 					<div class="flex items-end justify-center md:justify-start mb-6">
 						<h1 class="text-5xl md:text-7xl font-black whitespace-nowrap text-blue-600 text-center md:text-left">E-RAPAT</h1>
-						<p class="text-sm font-body font-bold mb-3 text-black/90 text-center ml-1">V1.0.0</p>
+						<p class="text-sm font-body font-bold mb-3 text-black/90 text-center ml-1">V1.0.3</p>
 					</div>
 					<p class="text-lg text-black/80 text-center md:text-left md:ml-1 mb-16">Cek agenda yang akan dilaksanakan hari ini atau dalam waktu dekat. Anda juga bisa memeriksa aktifitas lama yang telah diagendakan.</p>
 					<div class="px-4 flex justify-center md:justify-start items-center gap-8">

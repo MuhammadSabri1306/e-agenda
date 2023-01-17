@@ -1,0 +1,29 @@
+
+.skeleton-loader {
+	@apply animate-[skeleton-loading_1s_linear_infinite_alternate];
+}
+
+@keyframes skeleton-loading {
+	0% { background-color: hsl(200, 20%, 80%); }
+	100% { background-color: hsl(200, 20%, 95%); }
+}
+
+.skeleton-loader.skeleton-logo {
+	@apply w-full aspect-square rounded-full;
+}
+
+.skeleton-loader.skeleton-img {
+	@apply w-full aspect-square rounded-xl;
+}
+
+.skeleton-loader.skeleton-text {
+	@apply h-4 rounded-[50rem];
+}
+
+.skeleton-loader.skeleton-text-lg {
+	@apply h-8 rounded-[50rem];
+}
+
+.skeleton-loader.skeleton-paragraph {
+	@apply rounded-xl;
+}

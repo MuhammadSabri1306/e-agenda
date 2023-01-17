@@ -11,6 +11,7 @@ import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 
 import "v-calendar/dist/style.css";
+import "./styles/skeleton.css";
 import "./style.css";
 import App from "./App.vue";
 

@@ -97,6 +97,38 @@ const onSend = async () => {
 				</div>
 			</div>
 		</form>
+		<div v-else class="p-8 space-y-2.5">
+			<div class="flex items-center w-full space-x-2">
+		        <div class="skeleton-loader skeleton-text w-32"></div>
+		        <div class="skeleton-loader skeleton-text w-24"></div>
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		    </div>
+		    <div class="flex items-center w-full space-x-2 max-w-[480px]">
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		        <div class="skeleton-loader skeleton-text w-24"></div>
+		    </div>
+		    <div class="flex items-center w-full space-x-2 max-w-[400px]">
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		        <div class="skeleton-loader skeleton-text w-80"></div>
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		    </div>
+		    <div class="flex items-center w-full space-x-2 max-w-[480px]">
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		        <div class="skeleton-loader skeleton-text w-24"></div>
+		    </div>
+		    <div class="flex items-center w-full space-x-2 max-w-[440px]">
+		        <div class="skeleton-loader skeleton-text w-32"></div>
+		        <div class="skeleton-loader skeleton-text w-24"></div>
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		    </div>
+		    <div class="flex items-center w-full space-x-2 max-w-[360px]">
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		        <div class="skeleton-loader skeleton-text w-80"></div>
+		        <div class="skeleton-loader skeleton-text w-full"></div>
+		    </div>
+		</div>
 	</div>
 </template>
 <style scoped>

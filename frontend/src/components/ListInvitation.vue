@@ -12,7 +12,7 @@ agendaStore.fetchAgenda(false, success => isAgendaLoaded.value = success);
 	<div>
 		<h2 class="side-title">Agenda Rapat</h2>
 		<ToolbarFilter class="mb-4" />
-		<div v-if="agenda.length < 1">
+		<div v-if="isAgendaLoaded && agenda.length < 1">
 			<p class="text-sm font-semibold text-gray-700">Belum ada agenda rapat.</p>
 		</div>
 		<ul v-if="isAgendaLoaded" class="category-list">
@@ -23,6 +23,11 @@ agendaStore.fetchAgenda(false, success => isAgendaLoaded.value = success);
 					</span>
 					<span>{{ item.title }}</span>
 				</router-link>
+			</li>
+		</ul>
+		<ul v-else class="category-list">
+			<li v-for="n in 5" class="py-3 md:py-2 px-4">
+				<div class="skeleton-loader skeleton-text"></div>
 			</li>
 		</ul>
 	</div>
