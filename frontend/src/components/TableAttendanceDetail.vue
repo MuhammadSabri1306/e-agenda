@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useAgendaStore } from "@/stores/agenda";
 import { useViewStore } from "@/stores/view";
@@ -7,7 +7,9 @@ import { useDateId, toTimeStr } from "@/modules/date-id";
 import CardTable from "@/components/ui/CardTable.vue";
 import SwitchToggle from "@/components/ui/SwitchToggle.vue";
 import CardQrCode from "@/components/CardQrCode.vue";
-import ButtonBack from "@/components/ButtonBack.vue";``
+import ButtonBack from "@/components/ButtonBack.vue";
+import ModalUploadRapatFile from "@/components/ModalUploadRapatFile.vue";
+import { ArrowUpTrayIcon, DocumentTextIcon } from "@heroicons/vue/24/outline";
 
 const isAttLoaded = ref(false);
 const agendaStore = useAgendaStore();
@@ -26,7 +28,8 @@ const currAtt = computed(() => {
 		title: data.nama,
 		available: Boolean(Number(data.status_rapat)),
 		qrCode: data.qr_code,
-		list: data.absen
+		list: data.absen,
+		file: data.file_absen
 	};
 });
 
@@ -83,13 +86,22 @@ const buildTimestamp = dateTime => {
 
 	return `${ year }/${ monthNum }/${ date } ${ time }`;
 };
+
+const activeTab = ref(0);
+const hasFile = computed(() => currAtt.value.file && currAtt.value.file !== undefined);
+const showModalFile = ref(false);
 </script>
 <template>
 	<div>
 		<div class="flex items-center mb-8">
 			<ButtonBack />
 		</div>
-		<div v-if="isAttLoaded">
+		<div class="mb-8 flex items-end">
+			<a role="button" @click="activeTab = 0" :class="{ 'active': activeTab === 0 }" class="nav-tab">Data Sesi</a>
+			<a role="button" @click="activeTab = 1" :class="{ 'active': activeTab === 1 }" class="nav-tab">Arsip</a>
+			<div class="grow border-b border-gray-300"></div>
+		</div>
+		<div v-if="isAttLoaded && activeTab === 0">
 			<div class="mb-8 flex flex-wrap items-start gap-8">
 				<div class="basic-card card-attendance-desc">
 					<div class="form-group mb-4">
@@ -134,6 +146,18 @@ const buildTimestamp = dateTime => {
 				</CardTable>
 			</div>
 		</div>
+		<div v-if="isAttLoaded && activeTab === 1">
+			<div class="flex flex-col justify-center items-center">
+				<button type="button" @click="showModalFile = true" class="btn-upload basic-card group">
+					<div :class="{ 'has-file': hasFile }">
+						<span><DocumentTextIcon class="h-6 w-6 text-gray-600" /></span>
+						<span><ArrowUpTrayIcon class="h-6 w-6 text-primary-600" /></span>
+					</div>
+				</button>
+				<span class="mt-3 truncate text-center text-[0.8125rem] leading-6 text-gray-500">{{ hasFile ? currAtt.file : 'Upload File' }}</span>
+			</div>
+			<ModalUploadRapatFile v-if="showModalFile" @cancel="showModalFile = false" />
+		</div>
 	</div>
 </template>
 <style scoped>
@@ -144,6 +168,35 @@ const buildTimestamp = dateTime => {
 
 td {
 	@apply text-sm font-medium text-gray-600 !important;
+}
+
+.nav-tab {
+	@apply px-6 py-2 text-sm font-semibold text-gray-600 border-b border-gray-300 transition-colors;
+}
+
+.nav-tab.active {
+	@apply text-primary-600 border-b-2 border-primary-600;
+}
+
+.btn-upload {
+	@apply p-8 overflow-hidden relative bg-white shadow-none border border-gray-300;
+}
+
+.btn-upload > div {
+	@apply absolute left-0 -top-full;
+}
+
+.btn-upload > div.has-file {
+	@apply transition-all top-0 hover:-top-full;
+}
+
+.btn-upload,
+.btn-upload span {
+	@apply w-[8rem] h-[8.5rem];
+}
+
+.btn-upload span {
+	@apply flex justify-center items-center;
 }
 
 </style>

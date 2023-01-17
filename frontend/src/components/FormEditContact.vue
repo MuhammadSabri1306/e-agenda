@@ -72,7 +72,7 @@ contactStore.fetchContact(false, success => {
 const isFraksiLoaded = ref(false);
 const fraksi = computed(() => contactStore.fraksi);
 contactStore.fetchFraksi(false, success => {
-	if(success)
+	if(success && !isContactLoaded.value)
 		data.fraksiId = fraksi.value[0].id;
 	isFraksiLoaded.value = true;
 });
