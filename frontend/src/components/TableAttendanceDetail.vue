@@ -90,6 +90,13 @@ const buildTimestamp = dateTime => {
 const activeTab = ref(0);
 const hasFile = computed(() => currAtt.value.file && currAtt.value.file !== undefined);
 const showModalFile = ref(false);
+
+const onFileChanged = () => {
+	isAttLoaded.value = false;
+	isAvailable.value = false;
+	showModalFile.value = false;
+	agendaStore.fetchAttendance(true, initAttendance);
+};
 </script>
 <template>
 	<div>
@@ -154,9 +161,9 @@ const showModalFile = ref(false);
 						<span><ArrowUpTrayIcon class="h-6 w-6 text-primary-600" /></span>
 					</div>
 				</button>
-				<span class="mt-3 truncate text-center text-[0.8125rem] leading-6 text-gray-500">{{ hasFile ? currAtt.file : 'Upload File' }}</span>
+				<span v-if="!hasFile" class="mt-3 truncate text-center text-[0.8125rem] leading-6 text-gray-500">Upload File</span>
 			</div>
-			<ModalUploadRapatFile v-if="showModalFile" @cancel="showModalFile = false" />
+			<ModalUploadRapatFile v-if="showModalFile" :agendaId="agendaId" @cancel="showModalFile = false" @changed="onFileChanged" />
 		</div>
 	</div>
 </template>

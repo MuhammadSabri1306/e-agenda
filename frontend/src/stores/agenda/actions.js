@@ -162,5 +162,23 @@ export default {
 			console.error(err);
 			callback && callback(false);
 		}
+	},
+
+	async uploadAttFile(agendaId, file, callback = null) {
+		try {
+			const accountStore = useAccountStore();
+			const headers = { "Authorization": "Bearer " + accountStore.token };
+
+			const formData = new FormData();
+			formData.append("file_absen", file);
+
+			const response = await http.post("/rapat/absen/" + agendaId, formData, { headers });
+			const success = response.data.success;
+			callback && callback(success);
+		
+		} catch(err) {
+			console.error(err);
+			callback && callback(false);
+		}
 	}
 };

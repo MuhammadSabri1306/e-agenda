@@ -2,6 +2,7 @@
 import { ref, computed } from "vue";
 import { required } from "@vuelidate/validators";
 import { useAgendaStore } from "@/stores/agenda";
+import { useViewStore } from "@/stores/view";
 import { useDataForm } from "@/modules/data-form";
 import Modal from "@/components/ui/Modal.vue";
 import FileUpload from "@/components/ui/FileUpload.vue";
@@ -18,6 +19,7 @@ const { data, v$ } = useDataForm({
 const isAgendaLoaded = ref(false);
 const agendaStore = useAgendaStore();
 
+const viewStore = useViewStore();
 const hasSubmitted = ref(false);
 const showLoader = ref(false);
 
@@ -28,7 +30,15 @@ const onSubmit = async () => {
 		return;
 
 	showLoader.value = true;
-	console.log(data.file);
+	agendaStore.uploadAttFile(props.agendaId, data.file, success => {
+		showLoader.value = false;
+		if(!success) {
+			viewStore.showToast("File tidak tersimpan", "Terjadi masalah saat menghubungi server.", false);
+			return;
+		}
+		
+		emit("changed");
+	});
 };
 
 const onFileChange = files => {
