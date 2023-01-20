@@ -36,7 +36,7 @@ const onSubmit = async () => {
 			viewStore.showToast("File tidak tersimpan", "Terjadi masalah saat menghubungi server.", false);
 			return;
 		}
-		
+		viewStore.showToast("File Absensi", "Berhasil mengupload file.", true);
 		emit("changed");
 	});
 };
@@ -58,7 +58,7 @@ const onFileChange = files => {
 					<LoadingLine v-if="showLoader" />
 				</div>
 				<form @submit.prevent="onSubmit" class="py-4 px-8">
-					<FileUpload @change="onFileChange" class="mb-8" />
+					<FileUpload fieldAccept="application/pdf" regexAccept="pdf|PDF" @change="onFileChange" class="mb-8" />
 					<div class="flex justify-end mb-4">
 						<button type="submit" class="btn btn-icon text-white transition-colors bg-primary-600 hover:bg-primary-500">
 							<font-awesome-icon icon="fa-solid fa-plus" fixed-width />

@@ -7,6 +7,7 @@ const props = defineProps({
 	defaultValue: { type: String, default: "blue" },
 	position: { type: String, default: "bottom" }
 });
+console.log(props.defaultValue)
 
 const agendaStore = useAgendaStore();
 const getCalendarColors = () => {

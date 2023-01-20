@@ -41,7 +41,7 @@ defineExpose({ getValue });
 			<div class="grid grid-cols-1 gap-8 p-8">
 				<div class="form-group">
 					<label>Warna *</label>
-					<SelectColor position="top" defaultValue="data.color" @change="value => data.color = value" class="w-[10rem]" />
+					<SelectColor position="top" :defaultValue="data.color" @change="value => data.color = value" class="w-[10rem]" />
 				</div>
 				<div class="form-group">
 					<label for="inputTitle">Judul Rapat *</label>

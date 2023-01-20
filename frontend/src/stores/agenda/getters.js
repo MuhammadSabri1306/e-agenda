@@ -52,19 +52,19 @@ export default {
 		return id => list.find(lItem => lItem.id == id);;
 	},
 
-	today() {
+	today(state) {
 		const curDate = new Date();
-		return this.list.filter(item => {
-
-			if(item.date.start.year > curDate.getFullYear() || item.date.end.year < curDate.getFullYear())
-				return false;
-			if(item.date.start.month > (curDate.getMonth() + 1) || item.date.end.month < (curDate.getMonth() + 1))
-				return false;
-			if(item.date.start.date > curDate.getDate() || item.date.end.date < curDate.getDate())
-				return false;
-			return true;
-		
-		});
+		return this.list
+			.filter(item => {
+				if(item.date.start.year > curDate.getFullYear() || item.date.end.year < curDate.getFullYear())
+					return false;
+				if(item.date.start.month > (curDate.getMonth() + 1) || item.date.end.month < (curDate.getMonth() + 1))
+					return false;
+				if(item.date.start.date > curDate.getDate() || item.date.end.date < curDate.getDate())
+					return false;
+				return true;
+			})
+			.sort((a, b) => a.date.start.dateObj.getTime() - b.date.start.dateObj.getTime());
 	},
 	/*attendanceFormat: state => {
 		return state.attendance.map(item => {});

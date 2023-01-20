@@ -12,16 +12,31 @@ const agendaToday = computed(() => agendaStore.today);
 const getTimeItem = () => Array.from(new Array(24).keys()).map(item => item + 1);
 
 const point = computed(() => {
-	return getTimeItem().map(tItem => {
+	const agenda = agendaStore.today;
+	const dateNow = new Date();
+
+	const dateStart = new Date(dateNow.getFullYear(), dateNow.getMonth() + 1, dateNow.getDate());
+	const dateEnd = new Date(dateNow.getFullYear(), dateNow.getMonth() + 1, dateNow.getDate() + 1, 0);
+	
+	const timeItem = getTimeItem().map((tItem, index) => {
 		const key = tItem.toString().length === 1 ? `0${ tItem }:00` : `${ tItem }:00`;
+		const items = agenda
+			.filter(aItem =>  {
+				const inStartRange = tItem >= aItem.time.start.date.getHours();
+				const inEndRange = tItem <= aItem.time.end.date.getHours();
+				// console.log(aItem.time.start.date.getHours(), tItem, inStartRange);
 
-		const items = agendaStore.today
-			.filter(aItem =>  tItem >= aItem.time.start.h && tItem <= aItem.time.end.h)
-			.map(aItem => aItem.color);
+				return inStartRange && inEndRange;
+			})
+			.map(aItem => aItem.twColor);
 
-		const bgColor = (items.length < 1) ? "bg-transparent" : items[0];
+		const bgColor = (items.length >= 1) ? items[items.length - 1] : "bg-transparent";
+		// console.log(`index:${ index }\nbg:${ bgColor }\nitems:`)
+		// console.log(items)
 		return { key, bgColor };
 	});
+
+	return timeItem;
 });
 
 </script>

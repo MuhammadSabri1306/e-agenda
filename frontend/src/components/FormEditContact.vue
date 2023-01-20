@@ -184,7 +184,7 @@ const confirmDelete = async () => {
 					</div>
 					<div>
 						<div class="field-group mb-8">
-							<label class="field-group-title">Badan Kelengkapan</label>
+							<label class="field-group-title">Alat Kelengkapan Dewan</label>
 							<div class="form-group mb-8 md:mb-4 md:flex items-center gap-4">
 								<label>Badan Musyawarah</label>
 								<Dropdown :options="badanItem" :value="data.kedudukanBadanMusyawarah" @change="val => data.kedudukanBadanMusyawarah = val" defaultTitle="Pilih Jabatan" class="dropdown-category" />
