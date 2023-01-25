@@ -149,12 +149,12 @@ export default {
 		}
 	},
 
-	async saveInvitation(agendaId, body, callback = null) {
+	async sendInvitation(body, callback = null) {
 		try {
 			const accountStore = useAccountStore();
 			const headers = { "Authorization": "Bearer " + accountStore.token };
 
-			const response = await http.post("/rapat/" + agendaId, body, { headers });
+			const response = await http.post("/detail/rapat", body, { headers });
 			const success = response.data.success;
 			callback && callback(success);
 		

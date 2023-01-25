@@ -3,8 +3,6 @@ import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useAgendaStore } from "@/stores/agenda";
 import { useViewStore } from "@/stores/view";
-import { required } from "@vuelidate/validators";
-import { useDataForm } from "@/modules/data-form";
 import LoadingLine from "@/components/ui/LoadingLine.vue";
 import ButtonBack from "@/components/ButtonBack.vue";
 import FileUpload from "@/components/ui/FileUpload.vue";
@@ -23,43 +21,33 @@ agendaStore.fetchAgenda(false, success => {
 	isLoaded.value = true;
 });
 
-const { data, v$ } = useDataForm({
-	contact: { value: [], required }
-});
-
+const contacts = ref([]);
 const hasSubmitted = ref(false);
-const isSaving = ref(false);
-
-const onSubmit = async () => {
-	hasSubmitted.value = true;
-	const isValid = await v$.value.$validate();
-	if(!isValid || isSaving.value)
-		return;
-
-	const body = {
-		rapatId: agendaId.value,
-		contacts: data.contact
-	};
-
-	isSaving.value = true;
-	console.log(body);
-};
-
 const isSending = ref(false);
+
 const onSend = async () => {
 	hasSubmitted.value = true;
-	const isValid = await v$.value.$validate();
-	if(!isValid || isSending.value)
+	if(contacts.value.length < 1)
 		return;
 
 	const body = {
 		rapatId: agendaId.value,
-		contacts: data.contact
+		contacts: contacts.value
 	};
-	// isSending.value = true;
-	console.log(body);
-	viewStore.showToast("Undangan Rapat", "Fitur ini belum tersedia. Anda dapat menggunakan fitur ini setelah fase pengembangan selesai.");
-	hasSubmitted.value = false;
+
+	isSending.value = true;
+	agendaStore.sendInvitation(body, success => {
+		isSending.value = false;
+		hasSubmitted.value = false;
+
+		if(!success) {
+			viewStore.showToast("Koneksi gagal", "Terjadi masalah saat menghubungi server.", false);
+			return;
+		}
+		
+		viewStore.showToast("Undangan Rapat", "Undangan rapat anda telah tersimpan di server untuk segera dikirim.", true);
+		contacts.value.splice(0);
+	});
 };
 </script>
 <template>
@@ -68,31 +56,23 @@ const onSend = async () => {
 			<div>
 				<div class="flex items-center mb-8 gap-4">
 					<ButtonBack />
-					<!-- <button type="submit" class="ml-auto btn btn-icon btn-toolbar text-white hover-margin bg-primary-600 hover:bg-primary-500">
-						<font-awesome-icon icon="fa-solid fa-check" />
-						<span class="ml-2">Simpan Draft</span>
-					</button>
-					<button type="button" class="btn btn-icon btn-toolbar text-white hover-margin bg-red-500 hover:bg-red-400">
-						<font-awesome-icon icon="fa-solid fa-xmark" />
-						<span class="ml-2">Reset Draft</span>
-					</button> -->
-				</div>
-				<div class="h-1 relative pt-4">
-					<LoadingLine v-if="isSaving" />
 				</div>
 				<div class="py-8 md:px-8">
-					<ListInvitationContact :value="data.contact" @change="val => data.contact = val" />
-					<p v-if="hasSubmitted && v$.contact.$invalid" class="shaked-text mt-4 px-8 text-sm font-semibold text-red-700 text-center">Belum ada kontak yang dipilih</p>
+					<ListInvitationContact :value="contacts" @change="val => contacts = val" />
+					<p v-if="hasSubmitted && contacts.length < 1" class="shaked-text mt-4 px-8 text-sm font-semibold text-red-700 text-center">Belum ada kontak yang dipilih</p>
 				</div>
 				<div class="flex justify-end p-8">
-					<button type="button" @click="onSend" class="btn btn-icon text-white hover-margin bg-green-600 hover:bg-green-500">
-						<span v-if="isSending">
-							<font-awesome-icon icon="fa-solid fa-circle-notch" spin fixed-width />
-						</span>
-						<span v-else class="icon-wa">
+					<button v-if="!isSending" type="button" @click="onSend" class="btn btn-icon text-white hover-margin bg-green-600 hover:bg-green-500">
+						<span class="icon-wa">
 							<font-awesome-icon icon="fa-brands fa-whatsapp" fixed-width />
 						</span>
 						<span class="ml-2">Kirim Undangan</span>
+					</button>
+					<button v-else type="button" disabled class="btn btn-icon text-white bg-green-500">
+						<span>
+							<font-awesome-icon icon="fa-solid fa-circle-notch" spin fixed-width />
+						</span>
+						<span class="ml-2">Mengirim</span>
 					</button>
 				</div>
 			</div>
